@@ -92,4 +92,8 @@ public class CasperTasksBean {
         quartz.resumeJob(jobKey);
     }
 
+    public JobDetail getJobDetail(JobKey jobKey) throws SchedulerException {
+        return quartz.getJobDetail(jobKey);
+    }
+
 }
