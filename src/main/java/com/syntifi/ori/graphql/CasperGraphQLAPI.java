@@ -11,21 +11,24 @@ import org.eclipse.microprofile.graphql.Description;
 import javax.inject.Inject;
 import javax.ws.rs.QueryParam;
 
+import org.quartz.JobKey;
+
+import com.syntifi.ori.task.CasperTasksBean;
 import com.syntifi.casper.model.info.get.peers.CasperNode;
 import com.syntifi.casper.model.chain.get.block.CasperBlock;
 import com.syntifi.casper.model.chain.get.block.transfer.CasperTransfer;
 import com.syntifi.casper.Casper;
 
-import org.jboss.logging.Logger;
 
 @GraphQLApi
 public class CasperGraphQLAPI {
-
-    private static final Logger LOG = Logger.getLogger(CasperGraphQLAPI.class);
+    @Inject 
+    CasperTasksBean casperTasksBean;
 
     Casper casperService = new Casper(
         ConfigProvider.getConfig().getValue("casper.node", String.class),
-        ConfigProvider.getConfig().getValue("casper.port", int.class));
+        ConfigProvider.getConfig().getValue("casper.port", int.class),
+        ConfigProvider.getConfig().getValue("casper.timeout", int.class));
 
     @Query
     @Description("Get Casper block information ")
@@ -50,4 +53,51 @@ public class CasperGraphQLAPI {
         return casperService.getTransfers(blockHash);
     }
 
+    @Query
+    @Description("Start Casper update job running repeatedly")
+    public boolean getStartCasperUpdateJob() {
+        var jobKey = new JobKey("updateJob", "Casper");
+        try {
+            casperTasksBean.resumeJob(jobKey);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Query
+    @Description("Pause Casper update job running repeatedly")
+    public boolean getPauseCasperUpdateJob() {
+        var jobKey = new JobKey("updateJob", "Casper");
+        try {
+            casperTasksBean.pauseJob(jobKey);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Query
+    @Description("Start Casper batch job running in smaller parts")
+    public boolean getStartCasperCrawlJob() {
+        var jobKey = new JobKey("crawlJob", "Casper");
+        try {
+            casperTasksBean.resumeJob(jobKey);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Query
+    @Description("Pause Casper batch job")
+    public boolean getStopCasperCrawlJob() {
+        var jobKey = new JobKey("crawlJob", "Casper");
+        try {
+            casperTasksBean.pauseJob(jobKey);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 }

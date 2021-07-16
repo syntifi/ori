@@ -77,6 +77,10 @@
       <artifactId>casper-sdk</artifactId>
       <version>0.1.0</version>
     </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-quartz</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
