@@ -59,6 +59,10 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-elasticsearch-rest-client</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-graphql</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
