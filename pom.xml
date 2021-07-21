@@ -65,17 +65,17 @@
     </dependency>
     <!-- INSTALLING FROM A FILE
   mvn install:install-file \
-      -Dfile="../casper-sdk/lib/build/libs/casper-sdk-0.1.0.jar" \
+      -Dfile="../casper-sdk/lib/build/libs/casper-sdk-0.1.1.jar" \
       -DgroupId=com.syntifi.casper \
       -DartifactId=casper-sdk \
-      -Dversion=0.1.0\
+      -Dversion=0.1.1\
       -Dpackaging=jar \
       -DgeneratePom=true
   -->
     <dependency>
       <groupId>com.syntifi.casper</groupId>
       <artifactId>casper-sdk</artifactId>
-      <version>0.1.0</version>
+      <version>0.1.1</version>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>

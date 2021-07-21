@@ -1,7 +1,6 @@
 package com.syntifi.ori.graphql;
 
 import org.quartz.JobKey;
-import org.quartz.SchedulerException;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Query;
 import org.eclipse.microprofile.graphql.Description;
@@ -9,8 +8,6 @@ import org.eclipse.microprofile.graphql.Description;
 import javax.inject.Inject;
 
 import com.syntifi.ori.task.CasperTasksBean;
-import org.quartz.JobDetail;
-
 
 @GraphQLApi
 public class TaskGraphQLAPI {

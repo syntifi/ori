@@ -22,10 +22,11 @@ import org.jboss.logging.Logger;
 @ApplicationScoped 
 public class CasperUpdateJob implements Job {
     private static final Logger LOG = Logger.getLogger(CasperUpdateJob.class);
-    private static final Casper casperService = new Casper(
+    Casper casperService = new Casper(
         ConfigProvider.getConfig().getValue("casper.node", String.class),
         ConfigProvider.getConfig().getValue("casper.port", int.class),
-        ConfigProvider.getConfig().getValue("casper.timeout", int.class));
+        ConfigProvider.getConfig().getValue("casper.timeout", int.class),
+        ConfigProvider.getConfig().getValue("casper.threads", int.class));
 
     @Inject
     BlockService blockService;
@@ -46,9 +47,9 @@ public class CasperUpdateJob implements Job {
         }
 
         try {
-            var lastBlock = casperService.getBlock();
+            var lastBlock = casperService.getLastBlock();
             for (long i=lastLocalBlockHeight; i<=lastBlock.header.height; i++) {
-                var block = casperService.getBlock(i);
+                var block = casperService.getBlockByHeight(i);
                 blockService.index(new Block(block.header.timeStamp, 
                                                 block.hash,
                                                 block.header.height,
@@ -56,7 +57,7 @@ public class CasperUpdateJob implements Job {
                                                 block.header.parentHash,
                                                 block.header.stateRootHash,
                                                 block.body.proposer));
-                var transfers = casperService.getTransfers(i);
+                var transfers = casperService.getTransfersByBlockHeight(i);
                 List<Transaction> transactions = transfers.stream()
                                     .map(transfer -> new Transaction(block.header.timeStamp,
                                                             transfer.deployHash,

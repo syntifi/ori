@@ -22,18 +22,19 @@ public class CasperGraphQLAPI {
     Casper casperService = new Casper(
         ConfigProvider.getConfig().getValue("casper.node", String.class),
         ConfigProvider.getConfig().getValue("casper.port", int.class),
-        ConfigProvider.getConfig().getValue("casper.timeout", int.class));
+        ConfigProvider.getConfig().getValue("casper.timeout", int.class),
+        ConfigProvider.getConfig().getValue("casper.threads", int.class));
 
     @Query
     @Description("Get Casper block information ")
     public CasperBlock getCasperBlockByHash(@QueryParam("blockHash") String blockHash) throws IOException, InterruptedException {
-        return casperService.getBlock(blockHash);
+        return casperService.getBlockByHash(blockHash);
     }
 
     @Query
     @Description("Get Casper block information ")
     public CasperBlock getCasperBlockByHeight(@QueryParam("blockHeight") long blockHeight) throws IOException, InterruptedException {
-        return casperService.getBlock(blockHeight);
+        return casperService.getBlockByHeight(blockHeight);
     }
     @Query
     @Description("Get Casper nodes")
@@ -44,7 +45,7 @@ public class CasperGraphQLAPI {
     @Query
     @Description("Get block transfers")
     public List<CasperTransfer> getCasperTransfers(@QueryParam("blockHash") String blockHash) throws IOException, InterruptedException {
-        return casperService.getTransfers(blockHash);
+        return casperService.getTransfersByBlockHash(blockHash);
     }
 
 
