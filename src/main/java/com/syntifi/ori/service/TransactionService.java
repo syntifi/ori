@@ -1,8 +1,11 @@
 package com.syntifi.ori.service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Request;
@@ -62,7 +65,7 @@ public class TransactionService {
         JsonObject matchJson = new JsonObject().put("match_all", new JsonObject());
         JsonObject queryJson = new JsonObject().put("query", matchJson);
         // queryJson.put("size", size);
-        return queryTransaction(queryJson);
+        return queryTransaction(queryJson, "desc");
     }
 
     public List<Transaction> getOutgoingTransactions(String from) throws IOException {
@@ -81,6 +84,43 @@ public class TransactionService {
         return getFromToTransactions(from, to, "must");
     }
 
+    public List<Transaction> reverseGraphWalk(String account, LocalDateTime fromDate, LocalDateTime toDate) throws IOException {
+        return graphWalk(account, fromDate, toDate, "desc");
+    }
+
+    public List<Transaction> forwardGraphWalk(String account, LocalDateTime fromDate, LocalDateTime toDate) throws IOException {
+        return graphWalk(account, fromDate, toDate, "asc");
+    }
+
+    public List<Transaction> graphWalk(String account, LocalDateTime fromDate, LocalDateTime toDate, String direction) throws IOException {
+        // construct a Json query like   "query": { "range": {  "timestamp": {
+        //     "gte": <fromDate>,  "lte": <toDate>  } } } 
+        JsonObject dateRangeJson = new JsonObject().put("gte", fromDate);
+        dateRangeJson.put("lte", toDate);
+        JsonObject timeStampJson = new JsonObject().put("timeStamp", dateRangeJson);
+        JsonObject rangeJson = new JsonObject().put("range", timeStampJson);
+        JsonObject queryJson = new JsonObject().put("query", rangeJson);       
+        List<Transaction> transactions = queryTransaction(queryJson, direction, 10000);
+        // This only works because the list is sorted by time
+        Set<String> nodes = new HashSet<>();
+        nodes.add(account);
+        List<Transaction> graph = new ArrayList<>();
+        for (Transaction transaction: transactions){
+            if (graph.size() >= 100) {
+                break;
+            }
+            if (direction.equals("desc") && nodes.contains(transaction.to)) {
+                nodes.add(transaction.from);
+                graph.add(transaction);
+            }
+            if (direction.equals("asc") && nodes.contains(transaction.from)) {
+                nodes.add(transaction.to);
+                graph.add(transaction);
+            }
+        }
+        return graph;
+    }
+
     public List<Transaction> getFromToTransactions(String from, String to, String term) throws IOException {
         // construct a JSON query like {"query": {"bool": {"should": [{"term":
         // {"<term1>": "<match>"}}, ..]}}}
@@ -94,9 +134,7 @@ public class TransactionService {
             termJson.put("minimum_should_match", 1);
         JsonObject matchJson = new JsonObject().put("bool", termJson);
         JsonObject queryJson = new JsonObject().put("query", matchJson);
-        LOG.info("===============");
-        LOG.info(queryJson.toString());
-        return queryTransaction(queryJson);
+        return queryTransaction(queryJson, "desc");
     }
 
     private List<Transaction> search(String term, String match) throws IOException {
@@ -104,14 +142,18 @@ public class TransactionService {
         JsonObject termJson = new JsonObject().put(term, match);
         JsonObject matchJson = new JsonObject().put("match_phrase", termJson);
         JsonObject queryJson = new JsonObject().put("query", matchJson);
-        return queryTransaction(queryJson);
+        return queryTransaction(queryJson, "desc");
     }
 
-    private List<Transaction> queryTransaction(JsonObject queryJson) throws IOException {
+    private List<Transaction> queryTransaction(JsonObject queryJson, String timeSort) throws IOException {
+        return queryTransaction(queryJson, timeSort, 10);
+    }
+
+    private List<Transaction> queryTransaction(JsonObject queryJson, String timeSort, int size) throws IOException {
         JsonArray sortTerm = new JsonArray();
-        sortTerm.add(new JsonObject().put("timeStamp", "desc"));
+        sortTerm.add(new JsonObject().put("timeStamp", timeSort==null ? "desc" : timeSort));
         queryJson.put("sort", sortTerm);
-        Request request = new Request("GET", "/transaction/_search?scroll=1m");
+        Request request = new Request("GET", "/transaction/_search?scroll=1m&size=" + size);
         request.setJsonEntity(queryJson.encode());
         Response response = restClient.performRequest(request);
         String responseBody = EntityUtils.toString(response.getEntity());
