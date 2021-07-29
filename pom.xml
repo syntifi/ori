@@ -65,17 +65,17 @@
     </dependency>
     <!-- INSTALLING FROM A FILE
   mvn install:install-file \
-      -Dfile="../casper-sdk/lib/build/libs/casper-sdk-0.1.1.jar" \
+      -Dfile="../casper-sdk/lib/build/libs/casper-sdk-0.1.2.jar" \
       -DgroupId=com.syntifi.casper \
       -DartifactId=casper-sdk \
-      -Dversion=0.1.1\
+      -Dversion=0.1.2\
       -Dpackaging=jar \
       -DgeneratePom=true
   -->
     <dependency>
       <groupId>com.syntifi.casper</groupId>
       <artifactId>casper-sdk</artifactId>
-      <version>0.1.1</version>
+      <version>0.1.2</version>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -83,6 +83,15 @@
     </dependency>
   </dependencies>
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>src/main/frontend/build</directory>
+        <targetPath>frontend</targetPath>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>${quarkus.platform.group-id}</groupId>
@@ -152,6 +161,49 @@
       <properties>
         <quarkus.package.type>native</quarkus.package.type>
       </properties>
+    </profile>
+    <profile>
+      <id>build-frontend</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>${version.exec-maven-plugin}</version>
+            <executions>
+              <execution>
+                <id>npm-install</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <workingDirectory>src/main/frontend</workingDirectory>
+                  <executable>npm</executable>
+                  <arguments>
+                    <argument>install</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>npm-build</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <workingDirectory>src/main/frontend</workingDirectory>
+                  <executable>npm</executable>
+                  <arguments>
+                    <argument>run</argument>
+                    <argument>build</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>

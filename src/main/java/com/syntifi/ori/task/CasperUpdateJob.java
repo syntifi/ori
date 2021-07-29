@@ -58,7 +58,7 @@ public class CasperUpdateJob implements Job {
                                                 block.header.stateRootHash,
                                                 block.body.proposer));
                 var transfers = casperService.getTransfersByBlockHeight(i);
-                List<Transaction> transactions = transfers.stream()
+                List<Transaction> transactions = transfers.transfers.stream()
                                     .map(transfer -> new Transaction(block.header.timeStamp,
                                                             transfer.deployHash,
                                                             transfer.from,

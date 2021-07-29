@@ -69,7 +69,7 @@ public class BlockService {
             sortTerm.add(new JsonObject().put("timeStamp", "desc"));
             queryJson.put("sort", sortTerm);
         }
-        Request request = new Request("GET", "/block/_search?scroll=1m");
+        Request request = new Request("GET", "/block/_search?scroll=1m&size=100");
         request.setJsonEntity(queryJson.encode());
         Response response = restClient.performRequest(request);
         String responseBody = EntityUtils.toString(response.getEntity());

@@ -1,6 +1,8 @@
 package com.syntifi.ori.task;
 
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +16,7 @@ import javax.inject.Inject;
 
 import com.syntifi.casper.Casper;
 import com.syntifi.casper.model.chain.get.block.CasperBlock;
-import com.syntifi.casper.model.chain.get.block.transfer.CasperTransfer;
+import com.syntifi.casper.model.chain.get.block.transfer.CasperTransferData;
 import com.syntifi.ori.model.Block;
 import com.syntifi.ori.model.Transaction;
 import com.syntifi.ori.service.BlockService;
@@ -25,6 +27,7 @@ import org.jboss.logging.Logger;
 @ApplicationScoped 
 public class CasperCrawlJob implements Job {
     private static final Logger LOG = Logger.getLogger(CasperCrawlJob.class);
+    int threads = ConfigProvider.getConfig().getValue("casper.threads", int.class);
     Casper casperService = new Casper(
         Arrays.asList(ConfigProvider.getConfig().getValue("casper.nodes", String.class).split(",")),
         ConfigProvider.getConfig().getValue("casper.port", int.class),
@@ -53,15 +56,25 @@ public class CasperCrawlJob implements Job {
         } catch (Exception e){
             i = 0;
         }
-
+        
+        List<Long> heights = new LinkedList<>();
         if (i < lastBlockHeight){
             try {
-                List<Long> heights = Arrays.asList(i, i+1, i+2, i+3, i+4);
+                for (long k=0; k<threads; k++) {
+                    heights.add(i+k);
+                }
+                LOG.info(threads);
+                LOG.info("========= Querying blocks with heights : " + 
+                            heights.stream().map(Object::toString).collect(Collectors.joining(",")));
                 List<CasperBlock> blocks = casperService.getBlocksByBlockHeights(heights);
-                List<List<CasperTransfer>> transferss = casperService.getTransfersByBlockHeights(heights);
-                for (int k=0; k<heights.size(); k++) {
-                    CasperBlock block = blocks.get(k);
-                    List<CasperTransfer> transfers = transferss.get(k);
+                List<CasperTransferData> transferss = casperService.getTransfersByBlockHeights(heights);
+                LOG.info(blocks.size());
+                LOG.info(transferss.size());
+                for (CasperBlock block: blocks){
+                    CasperTransferData transfers = transferss.stream()
+                                .filter(x -> block.hash.equals(x.blockHash))
+                                .findAny()
+                                .orElse(null);
                     blockService.index(new Block(block.header.timeStamp, 
                                                     block.hash,
                                                     block.header.height,
@@ -69,7 +82,7 @@ public class CasperCrawlJob implements Job {
                                                     block.header.parentHash,
                                                     block.header.stateRootHash,
                                                     block.body.proposer));
-                    List<Transaction> transactions = transfers.stream()
+                    List<Transaction> transactions = transfers.transfers.stream()
                                         .map(transfer -> new Transaction(block.header.timeStamp,
                                                                 transfer.deployHash,
                                                                 transfer.from,
@@ -77,11 +90,14 @@ public class CasperCrawlJob implements Job {
                                                                 transfer.amount,
                                                                 block.hash))
                                         .collect(Collectors.toList());
+                    LOG.info("========= Transactions: " + transactions.size()); 
                     for (Transaction transaction : transactions) {
                         transactionService.index(transaction);
                     }
+                    heights.remove(block.header.height);
                 }
-            } catch (Exception e){
+
+            } catch (Exception e) {
                 LOG.info("========= Exception in CrawlJob ==========");
                 LOG.info(e.getMessage());
             }

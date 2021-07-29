@@ -45,7 +45,7 @@ public class CasperGraphQLAPI {
     @Query
     @Description("Get block transfers")
     public List<CasperTransfer> getCasperTransfers(@QueryParam("blockHash") String blockHash) throws IOException, InterruptedException {
-        return casperService.getTransfersByBlockHash(blockHash);
+        return casperService.getTransfersByBlockHash(blockHash).transfers;
     }
 
 
