@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Query;
-import org.jboss.logging.Logger;
 import org.eclipse.microprofile.graphql.Mutation;
 import org.eclipse.microprofile.graphql.Description;
 import io.smallrye.graphql.api.Subscription;
@@ -18,15 +17,11 @@ import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Transaction;
 import com.syntifi.ori.service.TransactionService;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.inject.Inject;
 
 @GraphQLApi
 public class TransactionGraphQLAPI {
 
-    private static final Logger LOG = Logger.getLogger(TransactionGraphQLAPI.class);
     private static final BroadcastProcessor<Transaction> processor = BroadcastProcessor.create(); 
 
     @Inject
@@ -39,17 +34,6 @@ public class TransactionGraphQLAPI {
             return transactionService.getTransactionByHash(hash);
         } catch (Exception e) {
             var exception = transactionService.parseElasticError(e);
-            LOG.info("==================");
-            LOG.error(e.getMessage());
-
-            Matcher m = Pattern.compile("status line \\[HTTP/[0-9.]+ ([0-9]+)").matcher(e.getMessage());
-            int code = m.find() ? Integer.valueOf(m.group(1)) : 404;
-            m = Pattern.compile("status line \\[HTTP/[0-9.]+ [0-9]+ ([A-Za-z ]+)").matcher(e.getMessage());
-            String msg = m.find() ? m.group(1) : "";
-
-            LOG.error(code);
-            LOG.error(msg);
-            LOG.error(exception.getMessage());
             throw transactionService.parseElasticError(e);
         }
     }
