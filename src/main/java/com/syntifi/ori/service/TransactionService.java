@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.util.EntityUtils;
 import org.eclipse.microprofile.config.ConfigProvider;
@@ -19,6 +21,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.syntifi.ori.model.Transaction;
+import com.syntifi.ori.exception.ORIException;
 
 import org.jboss.logging.Logger;
 
@@ -201,5 +204,13 @@ public class TransactionService {
             results.add(transaction);
         }
         return results;
+    }
+
+    public ORIException parseElasticError(Exception e){
+            Matcher m = Pattern.compile("status line [HTTP/[0-9.]+ ([0-9]+) [A-Za-z ]+]").matcher(e.getMessage());
+            int code = m.matches() ? Integer.valueOf(m.group(1)) : 404;
+            m = Pattern.compile("status line [HTTP/[0-9.]+ ([0-9]+) [A-Za-z ]+]").matcher(e.getMessage());
+            String msg = m.matches() ? m.group(1) : "";
+            return new ORIException(msg, code);
     }
 }
