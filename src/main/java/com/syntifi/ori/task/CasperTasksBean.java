@@ -40,7 +40,7 @@ public class CasperTasksBean {
                                SimpleScheduleBuilder.simpleSchedule()
                                   .withIntervalInSeconds(ConfigProvider
                                         .getConfig()
-                                        .getValue("casper.transaction.update.freq", 
+                                        .getValue("casper.transaction.update-freq", 
                                                     int.class))
                                   .repeatForever())
                             .build();
@@ -57,7 +57,7 @@ public class CasperTasksBean {
                                SimpleScheduleBuilder.simpleSchedule()
                                   .withIntervalInSeconds(ConfigProvider
                                         .getConfig()
-                                        .getValue("casper.transaction.crawl.freq", 
+                                        .getValue("casper.transaction.crawl-freq", 
                                                     int.class))
                                   .repeatForever())
                             .build();

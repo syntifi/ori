@@ -2,6 +2,7 @@
 package com.syntifi.ori.rest;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.net.URI;
 
@@ -38,15 +39,17 @@ public class TransactionRestAPI {
     @GET
     public List<Transaction> getAllTransactions(@QueryParam("fromAccount") String from,
             @QueryParam("toAccount") String to) throws IOException {
+        List<Transaction> out = new ArrayList<>();
         if ((from != null) && (to == null)) {
-            return transactionService.getOutgoingTransactions(from);
+            out = transactionService.getOutgoingTransactions(from);
         } else if ((from == null) && (to != null)) {
-            return transactionService.getIncomingTransactions(to);
+            out = transactionService.getIncomingTransactions(to);
         } else if ((from != null) && (to != null)) {
-            return transactionService.getTransactionsFromAccountToAccount(from, to);
+            out = transactionService.getTransactionsFromAccountToAccount(from, to);
         } else {
-            return transactionService.getAllTransactions();
+            out = transactionService.getAllTransactions();
         }
+        return out.subList(0, Math.min(100, out.size()));
     }
 
     @DELETE
@@ -69,6 +72,6 @@ public class TransactionRestAPI {
     @GET
     @Path("/account/{account}")
     public List<Transaction> getTransactionsByAccount(@PathParam("account") String account) throws IOException {
-        return transactionService.getAllTransactionsByAccount(account);
+        return transactionService.getAllTransactionsByAccount(account).subList(0,100);
     }
 }

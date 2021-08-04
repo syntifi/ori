@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.http.util.EntityUtils;
+import org.eclipse.microprofile.config.ConfigProvider;
 import org.elasticsearch.client.Request;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
@@ -24,6 +25,7 @@ import org.jboss.logging.Logger;
 @ApplicationScoped
 public class TransactionService {
     private static final Logger LOG = Logger.getLogger(TransactionService.class);
+    private int maxGraphLength = ConfigProvider.getConfig().getValue("ori.aml.max-trace-coin-length", int.class);
 
     @Inject
     RestClient restClient;
@@ -72,8 +74,16 @@ public class TransactionService {
         return search("from", from);
     }
 
+    public List<Transaction> getOutgoingTransactions(String from, LocalDateTime fromDate, LocalDateTime toDate) throws IOException {
+        return search("from", from, fromDate, toDate);
+    }
+
     public List<Transaction> getIncomingTransactions(String to) throws IOException {
         return search("to", to);
+    }
+
+    public List<Transaction> getIncomingTransactions(String to, LocalDateTime fromDate, LocalDateTime toDate) throws IOException {
+        return search("to", to, fromDate, toDate);
     }
 
     public List<Transaction> getAllTransactionsByAccount(String account) throws IOException {
@@ -106,7 +116,7 @@ public class TransactionService {
         nodes.add(account);
         List<Transaction> graph = new ArrayList<>();
         for (Transaction transaction: transactions){
-            if (graph.size() >= 100) {
+            if (graph.size() >= maxGraphLength) {
                 break;
             }
             if (direction.equals("desc") && nodes.contains(transaction.to)) {
@@ -137,16 +147,40 @@ public class TransactionService {
         return queryTransaction(queryJson, "desc");
     }
 
+
     private List<Transaction> search(String term, String match) throws IOException {
+        return search(term, match, null, null);
+    }
+
+    private List<Transaction> search(String term, String match, LocalDateTime fromDate, LocalDateTime toDate) throws IOException {
         // construct a JSON query like {"query": {"match": {"<term>": "<match>"}}}
+        JsonObject queryJson = new JsonObject();
         JsonObject termJson = new JsonObject().put(term, match);
         JsonObject matchJson = new JsonObject().put("match_phrase", termJson);
-        JsonObject queryJson = new JsonObject().put("query", matchJson);
-        return queryTransaction(queryJson, "desc");
+        if ((fromDate != null) || (toDate != null)) {
+            JsonObject dateRangeJson = new JsonObject();
+            if (fromDate != null) {
+                dateRangeJson.put("gte", fromDate);
+            }
+            if (toDate != null) {
+                dateRangeJson.put("lte", toDate);
+            }
+            JsonObject timeStampJson = new JsonObject().put("timeStamp", dateRangeJson);
+            JsonObject rangeJson = new JsonObject().put("range", timeStampJson);
+            JsonArray mustArray = new JsonArray();
+            mustArray.add(matchJson);
+            mustArray.add(rangeJson);
+            JsonObject mustJson = new JsonObject().put("must", mustArray);
+            queryJson.put("query", new JsonObject().put("bool", mustJson));
+        } else {
+            queryJson.put("query", matchJson);
+        }
+        LOG.info(queryJson.toString());
+        return queryTransaction(queryJson, "desc", 10000);
     }
 
     private List<Transaction> queryTransaction(JsonObject queryJson, String timeSort) throws IOException {
-        return queryTransaction(queryJson, timeSort, 10);
+        return queryTransaction(queryJson, timeSort, 1000);
     }
 
     private List<Transaction> queryTransaction(JsonObject queryJson, String timeSort, int size) throws IOException {
