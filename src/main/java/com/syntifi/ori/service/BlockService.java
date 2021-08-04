@@ -89,10 +89,10 @@ public class BlockService {
     }
 
     public ORIException parseElasticError(Exception e){
-            Matcher m = Pattern.compile("status line [HTTP/[0-9.]+ ([0-9]+) [A-Za-z ]+]").matcher(e.getMessage());
-            int code = m.matches() ? Integer.valueOf(m.group(1)) : 404;
-            m = Pattern.compile("status line [HTTP/[0-9.]+ ([0-9]+) [A-Za-z ]+]").matcher(e.getMessage());
-            String msg = m.matches() ? m.group(1) : "";
-            return new ORIException(msg, code);
+        Matcher m = Pattern.compile("status line \\[HTTP/[0-9.]+ ([0-9]+)").matcher(e.getMessage());
+        int code = m.find() ? Integer.valueOf(m.group(1)) : 404;
+        m = Pattern.compile("status line \\[HTTP/[0-9.]+ [0-9]+ ([A-Za-z ]+)").matcher(e.getMessage());
+        String msg = m.find() ? m.group(1) : "";
+        return new ORIException(msg, code);
     }
 }

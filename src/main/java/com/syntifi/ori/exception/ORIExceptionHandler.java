@@ -10,6 +10,7 @@ public class ORIExceptionHandler implements ExceptionMapper<ORIException> {
     @Override
     public Response toResponse(ORIException exception) 
     {
-        return Response.status(exception.getStatus()).entity(exception.getMessage()).build();  
+        return Response.status(exception.getStatus()).entity(
+            "{ \"error\": \"" + exception.getMessage() + "\"}").build();  
     }
 }
