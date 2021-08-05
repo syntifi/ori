@@ -51,7 +51,7 @@ public class TransactionMonitorAPI {
     }
 
     @GET
-    @Path("graphWalk/back/{account}")
+    @Path("traceCoin/back/{account}")
     public List<Transaction> reverseGraphWalk(@PathParam("account") String account, 
             @QueryParam("fromDate") String fromDate, @QueryParam("toDate") String toDate) throws ORIException, WebApplicationException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
@@ -70,7 +70,7 @@ public class TransactionMonitorAPI {
     }
 
     @GET
-    @Path("graphWalk/forward/{account}")
+    @Path("traceCoin/forward/{account}")
     public List<Transaction> forwardGraphWalk(@PathParam("account") String account, 
             @QueryParam("fromDate") String fromDate, @QueryParam("toDate") String toDate) throws ORIException, WebApplicationException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");

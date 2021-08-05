@@ -33,7 +33,6 @@ public class TransactionGraphQLAPI {
         try {
             return transactionService.getTransactionByHash(hash);
         } catch (Exception e) {
-            var exception = transactionService.parseElasticError(e);
             throw transactionService.parseElasticError(e);
         }
     }

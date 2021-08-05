@@ -10,6 +10,7 @@ import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Request;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
+import org.jboss.logging.Logger;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -23,6 +24,8 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class BlockService {
 
+    private static final Logger LOG = Logger.getLogger(BlockService.class);
+    
     @Inject
     RestClient restClient;
 
@@ -41,7 +44,7 @@ public class BlockService {
     }
 
     public Response delete(String hash) throws IOException {
-        Request request = new Request("DELETE", "/block/" + hash);
+        Request request = new Request("DELETE", "/block/_doc/" + hash);
         return restClient.performRequest(request);
     }
 
@@ -72,7 +75,7 @@ public class BlockService {
             sortTerm.add(new JsonObject().put("timeStamp", "desc"));
             queryJson.put("sort", sortTerm);
         }
-        Request request = new Request("GET", "/block/_search?scroll=1m&size=100");
+        Request request = new Request("GET", "/block/_search?scroll=1m&size=10");
         request.setJsonEntity(queryJson.encode());
         Response response = restClient.performRequest(request);
         String responseBody = EntityUtils.toString(response.getEntity());

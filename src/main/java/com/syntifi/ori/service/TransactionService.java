@@ -48,13 +48,9 @@ public class TransactionService {
     }
 
     public Response delete(String hash) throws IOException {
-        JsonObject matchJson = new JsonObject().put("match", new JsonObject().put("hash", hash));
-        JsonObject queryJson = new JsonObject().put("query", matchJson);
-        Request request = new Request("POST", "/transaction/_delete_by_query?conflicts=proceed");
-        request.setJsonEntity(queryJson.encode());
+        LOG.info(hash);
+        Request request = new Request("DELETE", "/transaction/_doc/" + hash);
         return restClient.performRequest(request);
-        // Request request = new Request("DELETE", "/transaction/" + hash);
-        // return restClient.performRequest(request);
     }
 
     public Transaction getTransactionByHash(String hash) throws IOException {

@@ -11,6 +11,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.PathParam;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import io.vertx.core.json.JsonObject;
+
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Block;
 import com.syntifi.ori.service.BlockService;
@@ -33,7 +35,7 @@ public class BlockRestAPI {
         } catch (Exception e) {
             throw blockService.parseElasticError(e);
         }
-        return Response.created(URI.create("/block/" + block.hash)).build();
+        return Response.ok(new JsonObject().put("created", URI.create("/block/" + block.hash))).build();
     }
 
     @GET
@@ -58,7 +60,7 @@ public class BlockRestAPI {
     @DELETE
     public Response clear() throws ORIException {
         try {
-            return Response.ok(blockService.clear().toString()).build();
+            return Response.ok(blockService.clear().getRequestLine()).build();
         } catch (Exception e) {
             throw blockService.parseElasticError(e);
         }
@@ -66,9 +68,13 @@ public class BlockRestAPI {
 
     @DELETE
     @Path("/{hash}")
-    public Response delete(String hash) throws ORIException {
+    public Response delete(@PathParam("hash") String hash) throws ORIException {
         try {
-            return Response.ok(blockService.delete(hash).toString()).build();
+            blockService.delete(hash);
+            return Response.ok(new JsonObject()
+                                        .put("method", "DELETE")
+                                        .put("uri", "/block/" + hash))
+                            .build();
         } catch (Exception e) {
             throw blockService.parseElasticError(e);
         }

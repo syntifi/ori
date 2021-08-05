@@ -13,6 +13,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.jboss.logging.Logger;
+
+import io.vertx.core.json.JsonObject;
 
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Transaction;
@@ -23,6 +26,9 @@ import javax.inject.Inject;
 @Path("/transaction")
 @Tag(name = "Transaction", description = "Transaction resources")
 public class TransactionRestAPI {
+    
+    private static final Logger LOG = Logger.getLogger(TransactionRestAPI.class);
+
     @Inject
     TransactionService transactionService;
 
@@ -33,9 +39,10 @@ public class TransactionRestAPI {
         } try {
             transactionService.index(transaction);
         } catch (Exception e) {
+            LOG.error(e);
             throw transactionService.parseElasticError(e);
         }
-        return Response.created(URI.create("/transaction/" + transaction.hash)).build();
+        return Response.ok(new JsonObject().put("created", URI.create("/transaction/" + transaction.hash))).build();
     }
 
     @GET
@@ -81,7 +88,7 @@ public class TransactionRestAPI {
     @DELETE
     public Response clear() throws ORIException {
         try {
-            return Response.ok(transactionService.clear().toString()).build();
+            return Response.ok(transactionService.clear().getRequestLine()).build();
         } catch (Exception e){
             throw transactionService.parseElasticError(e);
         }
@@ -89,9 +96,9 @@ public class TransactionRestAPI {
 
     @DELETE
     @Path("/{hash}")
-    public Response delete(String hash) throws ORIException {
+    public Response delete(@PathParam("hash") String hash) throws ORIException {
         try {
-            return Response.ok(transactionService.delete(hash).toString()).build();
+            return Response.ok(transactionService.delete(hash).getRequestLine()).build();
         } catch (Exception e){
             throw transactionService.parseElasticError(e);
         }
