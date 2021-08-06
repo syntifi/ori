@@ -23,11 +23,8 @@ import javax.inject.Inject;
 import com.syntifi.ori.model.Transaction;
 import com.syntifi.ori.exception.ORIException;
 
-import org.jboss.logging.Logger;
-
 @ApplicationScoped
 public class TransactionService {
-    private static final Logger LOG = Logger.getLogger(TransactionService.class);
     private int maxGraphLength = ConfigProvider.getConfig().getValue("ori.aml.max-trace-coin-length", int.class);
 
     @Inject
@@ -48,7 +45,6 @@ public class TransactionService {
     }
 
     public Response delete(String hash) throws IOException {
-        LOG.info(hash);
         Request request = new Request("DELETE", "/transaction/_doc/" + hash);
         return restClient.performRequest(request);
     }
@@ -174,7 +170,6 @@ public class TransactionService {
         } else {
             queryJson.put("query", matchJson);
         }
-        LOG.info(queryJson.toString());
         return queryTransaction(queryJson, "desc", 10000);
     }
 

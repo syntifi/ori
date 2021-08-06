@@ -49,17 +49,17 @@ public class TransactionRestAPI {
     public List<Transaction> getAllTransactions(@QueryParam("fromAccount") String from,
             @QueryParam("toAccount") String to) throws ORIException {
         try {
-            List<Transaction> out = new ArrayList<>();
+            List<Transaction> transactions = new ArrayList<>();
             if ((from != null) && (to == null)) {
-                out = transactionService.getOutgoingTransactions(from);
+                transactions = transactionService.getOutgoingTransactions(from);
             } else if ((from == null) && (to != null)) {
-                out = transactionService.getIncomingTransactions(to);
+                transactions = transactionService.getIncomingTransactions(to);
             } else if ((from != null) && (to != null)) {
-                out = transactionService.getTransactionsFromAccountToAccount(from, to);
+                transactions = transactionService.getTransactionsFromAccountToAccount(from, to);
             } else {
-                out = transactionService.getAllTransactions();
+                transactions = transactionService.getAllTransactions();
             }
-            return out.subList(0, Math.min(100, out.size()));
+            return transactions.subList(0, Math.min(100, transactions.size()));
         } catch (Exception e) {
             throw transactionService.parseElasticError(e);
         }
@@ -79,8 +79,10 @@ public class TransactionRestAPI {
     @Path("/account/{account}")
     public List<Transaction> getTransactionsByAccount(@PathParam("account") String account) throws ORIException {
         try {
-            return transactionService.getAllTransactionsByAccount(account).subList(0,100);
+            var transactions = transactionService.getAllTransactionsByAccount(account);
+            return transactions.subList(0, Math.min(100, transactions.size()));
         } catch (Exception e){
+            LOG.error(e);
             throw transactionService.parseElasticError(e);
         }
     }
@@ -98,7 +100,11 @@ public class TransactionRestAPI {
     @Path("/{hash}")
     public Response delete(@PathParam("hash") String hash) throws ORIException {
         try {
-            return Response.ok(transactionService.delete(hash).getRequestLine()).build();
+            transactionService.delete(hash);
+            return Response.ok(new JsonObject()
+                                        .put("method", "DELETE")
+                                        .put("uri", "/transaction/" + hash))
+                            .build();
         } catch (Exception e){
             throw transactionService.parseElasticError(e);
         }

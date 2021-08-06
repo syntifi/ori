@@ -3,32 +3,27 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.JsonObject;
 
 import org.junit.jupiter.api.Test;
-import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import static org.hamcrest.Matchers.containsString;
 
-import java.util.concurrent.TimeUnit;
+import static org.hamcrest.Matchers.containsString;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
-import javax.inject.Inject;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.HttpHeaders;
-
-import com.syntifi.ori.service.BlockService;
 
 @QuarkusTest
 @TestMethodOrder(OrderAnnotation.class)
 public class TestBlockResouces {
-    @Inject
-    BlockService blockService;
+
+    private static Object LOCK = new Object();
 
     @Test
     @Order(1)
-    public void testPostBlock() {
+    public void testPostBlock() throws Exception {
         var block = new JsonObject();
         block.put("era", 0);
         block.put("hash", "mockBlock");
@@ -46,6 +41,9 @@ public class TestBlockResouces {
           .then()
              .statusCode(200)
              .body("created", equalTo("/block/mockBlock"));
+        synchronized (LOCK) {
+            LOCK.wait(5000);
+        }
     }
 
     @Test
@@ -69,18 +67,18 @@ public class TestBlockResouces {
     @Order(3)
     public void testGetBlocks() {
         given()
-          .when()
-          .get("/block")
-          .then()
-             .statusCode(200)
-             .body("[0].era", equalTo(0))
-             .body("[0].hash", equalTo("mockBlock"))
-             .body("[0].height", equalTo(0))
-             .body("[0].parent", equalTo("parent"))
-             .body("[0].root", equalTo("root"))
-             .body("[0].timeStamp", equalTo("2099-08-05T00:00:00.000+0000"))
-             .body("[0].validator", equalTo("validator"));
-        Awaitility.await().atLeast(2, TimeUnit.SECONDS);
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+            .when()
+            .get("/block")
+            .then()
+                .statusCode(200)
+                .body("[0].era", equalTo(0))
+                .body("[0].hash", equalTo("mockBlock"))
+                .body("[0].height", equalTo(0))
+                .body("[0].parent", equalTo("parent"))
+                .body("[0].root", equalTo("root"))
+                .body("[0].timeStamp", equalTo("2099-08-05T00:00:00.000+0000"))
+                .body("[0].validator", equalTo("validator"));
     }
 
     @Test
@@ -139,14 +137,14 @@ public class TestBlockResouces {
 
     @Test
     @Order(7)
-    public void testDeleteBlock() {
+    public void testDeleteBlock() throws InterruptedException {
         given()
-          .when()
-          .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
-          .delete("/block/mockBlock")
-          .then()
-             .statusCode(200)
-             .body("method", equalTo("DELETE"))
-             .body("uri", equalTo("/block/mockBlock"));
+            .when()
+            .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
+            .delete("/block/mockBlock")
+            .then()
+                .statusCode(200)
+                .body("method", equalTo("DELETE"))
+                .body("uri", equalTo("/block/mockBlock"));
     }
 }
