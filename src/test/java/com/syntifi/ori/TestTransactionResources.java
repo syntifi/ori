@@ -113,6 +113,42 @@ public class TestTransactionResources {
 
     @Test
     @Order(6)
+    public void testGetTransactionFilteredByFromAccount() {
+        given()
+          .param("fromAccount", "mockFrom")
+            .when()
+            .get("/transaction")
+            .then()
+               .statusCode(200)
+               .body("size()", equalTo(1))
+               .body("[0].amount", equalTo(0F))
+               .body("[0].hash", equalTo("mockTransaction"))
+               .body("[0].blockHash", equalTo("mockBlockTransaction"))
+               .body("[0].from", equalTo("mockFrom"))
+               .body("[0].to", equalTo("mockTo"))
+               .body("[0].timeStamp", equalTo("2099-08-05T00:00:00.000+0000"));
+    }
+
+    @Test
+    @Order(7)
+    public void testGetTransactionFilteredByToAccount() {
+        given()
+          .param("toAccount", "mockTo")
+            .when()
+            .get("/transaction")
+            .then()
+               .statusCode(200)
+               .body("size()", equalTo(1))
+               .body("[0].amount", equalTo(0F))
+               .body("[0].hash", equalTo("mockTransaction"))
+               .body("[0].blockHash", equalTo("mockBlockTransaction"))
+               .body("[0].from", equalTo("mockFrom"))
+               .body("[0].to", equalTo("mockTo"))
+               .body("[0].timeStamp", equalTo("2099-08-05T00:00:00.000+0000"));
+    }
+
+    @Test
+    @Order(8)
     public void testGetNonExistingTransaction() {
         given()
           .when()
@@ -123,7 +159,7 @@ public class TestTransactionResources {
     }
 
     @Test
-    @Order(7)
+    @Order(9)
     public void testPostTransactionWrongDateType() {
         var transaction = new JsonObject();
         transaction.put("amount", 0F);
@@ -144,7 +180,7 @@ public class TestTransactionResources {
     }
 
     @Test
-    @Order(8)
+    @Order(10)
     public void testPostTransactionWithoutHash() {
         var transaction = new JsonObject();
         transaction.put("amount", 0F);
@@ -164,7 +200,7 @@ public class TestTransactionResources {
     }
 
     @Test
-    @Order(9)
+    @Order(11)
     public void testDeleteTransaction() {
         given()
             .when()
