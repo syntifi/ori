@@ -57,12 +57,12 @@ If you want to learn more about building native executables, please consult http
 
 ### REST
 
-Swagger-ui: http://localhost:8080/q/swagger-ui/
+Swagger-ui: http://localhost:8080/q/swagger-ui/  
 Swagger file: http://localhost:8080/swagger
 
 ### GraphQL
 
-GraphQL-ui: http://localhost:8080/q/graphql-ui/
+GraphQL-ui: http://localhost:8080/q/graphql-ui/  
 Schema: http://localhost:8080/graphql/schema.graphql
 
 ### Basic features 
