@@ -1,4 +1,4 @@
-# ori Project
+# ORI (Onchain Risk Intelligence) 
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
