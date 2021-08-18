@@ -53,18 +53,16 @@ If you want to learn more about building native executables, please consult http
 
 [Crawlers](src/main/java/com/syntifi/ori/task/README.md)
 
-## Provided Code
-
-### REST
+## REST API
 
 Swagger-ui: http://localhost:8080/q/swagger-ui/  
 Swagger file: http://localhost:8080/swagger
 
-### GraphQL
+## GraphQL API
 
 GraphQL-ui: http://localhost:8080/q/graphql-ui/  
 Schema: http://localhost:8080/graphql/schema.graphql
 
-### Basic features 
+## Risk metrics 
 
-[Trace the coin and Risk scores](src/main/java/com/syntifi/ori/service/README.md)
+[Trace the coin and Risk metrics](src/main/java/com/syntifi/ori/service/README.md)
