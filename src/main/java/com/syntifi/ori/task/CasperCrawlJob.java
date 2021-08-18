@@ -1,7 +1,6 @@
 package com.syntifi.ori.task;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,11 +21,9 @@ import com.syntifi.ori.model.Transaction;
 import com.syntifi.ori.service.BlockService;
 import com.syntifi.ori.service.TransactionService;
 
-import org.jboss.logging.Logger;
 
 @ApplicationScoped 
 public class CasperCrawlJob implements Job {
-    private static final Logger LOG = Logger.getLogger(CasperCrawlJob.class);
     int threads = ConfigProvider.getConfig().getValue("casper.threads", int.class);
     Casper casperService = new Casper(
         Arrays.asList(ConfigProvider.getConfig().getValue("casper.nodes", String.class).split(",")),
@@ -41,7 +38,6 @@ public class CasperCrawlJob implements Job {
     TransactionService transactionService;
 
     public void execute(JobExecutionContext context) {
-        LOG.info("========= Crawl job called ==========");
         long lastBlockHeight;
         long i;
 
@@ -63,13 +59,8 @@ public class CasperCrawlJob implements Job {
                 for (long k=0; k<threads; k++) {
                     heights.add(i+k);
                 }
-                LOG.info(threads);
-                LOG.info("========= Querying blocks with heights : " + 
-                            heights.stream().map(Object::toString).collect(Collectors.joining(",")));
                 List<CasperBlock> blocks = casperService.getBlocksByBlockHeights(heights);
                 List<CasperTransferData> transferss = casperService.getTransfersByBlockHeights(heights);
-                LOG.info(blocks.size());
-                LOG.info(transferss.size());
                 for (CasperBlock block: blocks){
                     CasperTransferData transfers = transferss.stream()
                                 .filter(x -> block.hash.equals(x.blockHash))
@@ -90,7 +81,6 @@ public class CasperCrawlJob implements Job {
                                                                 transfer.amount,
                                                                 block.hash))
                                         .collect(Collectors.toList());
-                    LOG.info("========= Transactions: " + transactions.size()); 
                     for (Transaction transaction : transactions) {
                         transactionService.index(transaction);
                     }
@@ -98,8 +88,6 @@ public class CasperCrawlJob implements Job {
                 }
 
             } catch (Exception e) {
-                LOG.info("========= Exception in CrawlJob ==========");
-                LOG.info(e.getMessage());
             }
         }
     }

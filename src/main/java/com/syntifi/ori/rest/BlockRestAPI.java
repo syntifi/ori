@@ -24,6 +24,7 @@ import javax.inject.Inject;
 public class BlockRestAPI {
     @Inject
     BlockService blockService;
+    
 
     @POST
     public Response index(Block block) throws ORIException {
@@ -60,7 +61,11 @@ public class BlockRestAPI {
     @DELETE
     public Response clear() throws ORIException {
         try {
-            return Response.ok(blockService.clear().getRequestLine()).build();
+            blockService.clear();
+            return Response.ok(new JsonObject()
+                                        .put("method", "DELETE")
+                                        .put("uri", "/block"))
+                            .build();
         } catch (Exception e) {
             throw blockService.parseElasticError(e);
         }

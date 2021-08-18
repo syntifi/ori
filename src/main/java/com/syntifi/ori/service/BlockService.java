@@ -10,7 +10,6 @@ import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Request;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
-import org.jboss.logging.Logger;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -24,8 +23,6 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class BlockService {
 
-    private static final Logger LOG = Logger.getLogger(BlockService.class);
-    
     @Inject
     RestClient restClient;
 

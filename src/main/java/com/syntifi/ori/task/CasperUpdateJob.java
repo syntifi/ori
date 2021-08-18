@@ -17,11 +17,9 @@ import com.syntifi.ori.model.Transaction;
 import com.syntifi.ori.service.BlockService;
 import com.syntifi.ori.service.TransactionService;
 
-import org.jboss.logging.Logger;
-
 @ApplicationScoped 
 public class CasperUpdateJob implements Job {
-    private static final Logger LOG = Logger.getLogger(CasperUpdateJob.class);
+
     Casper casperService = new Casper(
         ConfigProvider.getConfig().getValue("casper.node", String.class),
         ConfigProvider.getConfig().getValue("casper.port", int.class),
@@ -37,7 +35,6 @@ public class CasperUpdateJob implements Job {
 
     public void execute(JobExecutionContext context) {
 
-        LOG.info("========= Scheduled job called ==========");
         long lastLocalBlockHeight;
 
         try {
@@ -71,8 +68,6 @@ public class CasperUpdateJob implements Job {
                 }
             }
         } catch (Exception e){
-            LOG.info("========= Exception in UpdateJob ==========");
-            LOG.info(e.getMessage());
         }
     }
 }

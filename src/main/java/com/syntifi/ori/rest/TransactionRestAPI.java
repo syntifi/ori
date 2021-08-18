@@ -13,7 +13,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import org.jboss.logging.Logger;
 
 import io.vertx.core.json.JsonObject;
 
@@ -27,8 +26,6 @@ import javax.inject.Inject;
 @Tag(name = "Transaction", description = "Transaction resources")
 public class TransactionRestAPI {
     
-    private static final Logger LOG = Logger.getLogger(TransactionRestAPI.class);
-
     @Inject
     TransactionService transactionService;
 
@@ -39,7 +36,6 @@ public class TransactionRestAPI {
         } try {
             transactionService.index(transaction);
         } catch (Exception e) {
-            LOG.error(e);
             throw transactionService.parseElasticError(e);
         }
         return Response.ok(new JsonObject().put("created", URI.create("/transaction/" + transaction.hash))).build();
@@ -82,7 +78,6 @@ public class TransactionRestAPI {
             var transactions = transactionService.getAllTransactionsByAccount(account);
             return transactions.subList(0, Math.min(100, transactions.size()));
         } catch (Exception e){
-            LOG.error(e);
             throw transactionService.parseElasticError(e);
         }
     }
@@ -90,7 +85,11 @@ public class TransactionRestAPI {
     @DELETE
     public Response clear() throws ORIException {
         try {
-            return Response.ok(transactionService.clear().getRequestLine()).build();
+            transactionService.clear();
+            return Response.ok(new JsonObject()
+                                        .put("method", "DELETE")
+                                        .put("uri", "/transaction"))
+                            .build();
         } catch (Exception e){
             throw transactionService.parseElasticError(e);
         }
