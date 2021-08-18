@@ -49,7 +49,7 @@ If you want to learn more about building native executables, please consult http
 
 [Docker](src/main/docker/README.md)
 
-## Crawling the chain
+## Crawling the chains
 
 [Crawlers](src/main/java/com/syntifi/ori/task/README.md)
 
