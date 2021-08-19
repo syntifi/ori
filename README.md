@@ -4,6 +4,17 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
+## Running unit-test
+
+> **_NOTE:_**  Please make sure to run a docker instance of elastic search. The unit tests do cover that the interface to the elasticsearch cluster is working properly. This choice was made since we are using the low level elastic search API. All tests will fail if there is no instance of elastisearch running.
+> ```shell script
+>  docker run -d --name elasticsearch \ 
+>                --net elastic -p 9200:9200 \
+>                -e "discovery.type=single-node" \
+>                -e "ES_JAVA_OPTS=-Xms512m -Xmx512m" \
+>                elasticsearch:7.13.2
+>  ```
+
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
