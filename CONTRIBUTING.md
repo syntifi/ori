@@ -1,4 +1,4 @@
-# Contributing to Deeplearning4j
+# Contributing to ORI
 
 Thanks for your interest in ORI. Our goal is to provide open source Onchain Risk Intelligence tools to the community.
 
