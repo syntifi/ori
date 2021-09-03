@@ -5,8 +5,8 @@ To check the origin of the money, it is is possible to trace back the coins to a
 
 It is also possible to forward trace the coin. The forward trade returns the graph with all accounts that are either directly or indirectly linked to the given account through transactions that happened after the given date.
 
-## AML scores
-All scores are normalized: they are double numbers taking value between 0 and 1. The higher the worst.
+## AML scoresswagger-ui 
+All scores are normalized: they are double numbers taking value between 0 and 1. The score is directly proportional to the AML risk, that is, the higher the score, the higher the AML risk.
 
 ### Structuring over time
 This score calculates the proportion of transactions falling in the interval between 90% and the reporting threshold ```ORI_AML_REPORTING_THRESHOLD``` during the period between ```ORI_AML_LONG_WINDOW_DAYS``` days before the date specified in the request and the specified date.
