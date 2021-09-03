@@ -1,30 +1,52 @@
 # ORI (Onchain Risk Intelligence) 
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This project uses Quarkus, the Supersonic Subatomic Java Framework. If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+## Dependencies
+- Java 11 
+- Maven 3.8.1 (or above)
+- Docker
 
-## Running unit-test
+## Before build instructions 
 
-> **_NOTE:_**  Please make sure to run a docker instance of elastic search. The unit tests do cover that the interface to the elasticsearch cluster is working properly. This choice was made since we are using the low level elastic search API. All tests will fail if there is no instance of elastisearch running.
+### Local jar dependencies
+
+**This is just a temporary solution. A casper-java-sdk will be integrated as soon as it is available - [casper-sdk issue](https://github.com/syntifi/ori/issues/2)**
+
+> **_NOTE:_**  Due to the lack of a casper-java-sdk at this point in time, the team implemented just the necessary features (one cannot call it an sdk as many features are missing) in an another project. This is available at [casper-sdk-0.1.2.jar](src/main/resources).
+> **Please install the jar file locally by running the following command before running the application in dev mode or packaging the application**
 > ```shell script
->  docker run -d --name elasticsearch \ 
->                --net elastic -p 9200:9200 \
->                -e "discovery.type=single-node" \
->                -e "ES_JAVA_OPTS=-Xms512m -Xmx512m" \
->                elasticsearch:7.13.2
+>  mvn install:install-file \
+>      -Dfile="./src/main/resources/casper-sdk-0.1.2.jar" \
+>      -DgroupId=com.syntifi.casper \
+>      -DartifactId=casper-sdk \
+>      -Dversion=0.1.2\
+>      -Dpackaging=jar \
+>      -DgeneratePom=true
 >  ```
 
-## Running the application in dev mode
+### Running unit-test
+
+> **_NOTE:_**  Please make sure to run a docker instance of elastic search and to create a docker network named *elastic*. The unit tests do cover that the interface to the elasticsearch cluster is working properly. This choice was made since we are using the low level elastic search API. All tests will fail if there is no instance of elastisearch running.
+> ```shell script
+> docker network create elastic
+> ```
+> ```shell script
+> docker run -d --name elasticsearch --net elastic -p 9200:9200 -e "discovery.type=single-node" -e "ES_JAVA_OPTS=-Xms512m -Xmx512m"  elasticsearch:7.13.2
+>  ```
+
+## Build instructions
+
+### Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
 ```shell script
 ./mvnw compile quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+> **_NOTE:_**  At this point, the database is empty. Please follow the steps listed on [After build instructions](#after-build-instructions).
 
-## Packaging and running the application
+### Packaging and running the application
 
 The application can be packaged using:
 ```shell script
@@ -40,7 +62,7 @@ If you want to build an _über-jar_, execute the following command:
 
 The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
 
-## Creating a native executable
+### Creating a native executable
 
 You can create a native executable using: 
 ```shell script
@@ -56,24 +78,27 @@ You can then execute your native executable with: `./target/ori-1.0.0-SNAPSHOT-r
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.html.
 
-## Building and running Docker images
+### Building and running Docker images
 
-[Docker](src/main/docker/README.md)
+Instructions to build and run docker images are available at [Docker](src/main/docker/README.md).
 
-## Crawling the chains
+## After build instructions
 
-[Crawlers](src/main/java/com/syntifi/ori/task/README.md)
+### Crawling the chains
 
-## REST API
+The GraphQL API provides resources to crawl the block chain. Find out more about it at [Crawlers](src/main/java/com/syntifi/ori/task/README.md).
+
+## Functionalities
+### REST API
 
 Swagger-ui: http://localhost:8080/q/swagger-ui/  
 Swagger file: http://localhost:8080/swagger
 
-## GraphQL API
+### GraphQL API
 
 GraphQL-ui: http://localhost:8080/q/graphql-ui/  
 Schema: http://localhost:8080/graphql/schema.graphql
 
-## Risk metrics 
+### Risk metrics 
 
 [Trace the coin and Risk metrics](src/main/java/com/syntifi/ori/service/README.md)
