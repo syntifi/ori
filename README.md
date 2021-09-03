@@ -49,14 +49,14 @@ A couple of steps should be performed before building the application. These ste
 ## Build instructions
 After following the steps in the [Before build instrucions](#before-build-instructions) the user is now ready to proceed with the build and by running the application.
 
+> **_NOTE:_**  At this point, the database is empty. Please follow the steps listed on [After build instructions](#after-build-instructions).
+
 ### Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
 ```shell script
 ./mvnw compile quarkus:dev
 ```
-
-> **_NOTE:_**  At this point, the database is empty. Please follow the steps listed on [After build instructions](#after-build-instructions).
 
 ### Packaging and running the application
 
