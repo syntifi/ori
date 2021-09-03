@@ -101,16 +101,7 @@ Instructions to build and run docker images are available at [Docker](src/main/d
 The GraphQL API provides resources to crawl the block chain. Find out more about it at [Crawlers](src/main/java/com/syntifi/ori/task/README.md).
 
 ## Features
-### REST API
 
-Swagger-ui: http://localhost:8080/q/swagger-ui/  
-Swagger file: http://localhost:8080/swagger
-
-### GraphQL API
-
-GraphQL-ui: http://localhost:8080/q/graphql-ui/  
-Schema: http://localhost:8080/graphql/schema.graphql
-
-### Risk metrics 
-
-[Trace the coin and Risk metrics](src/main/java/com/syntifi/ori/service/README.md)
+- [REST API](src/main/java/com/syntifi/ori/rest/README.md)
+- [GraphQL API](src/main/java/com/syntifi/ori/graphqlb/README.md)
+- [Risk metrics](src/main/java/com/syntifi/ori/service/README.md)
