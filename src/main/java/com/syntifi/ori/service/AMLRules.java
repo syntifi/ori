@@ -8,10 +8,17 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Transaction;
 
 import org.eclipse.microprofile.config.ConfigProvider;
 
+/**
+ * AML rules calculator
+ * 
+ * @author Andre Bertolace 
+ * @since 0.0.1
+ */
 public class AMLRules {
 
     @JsonAlias("StructuringOverTimeScore")
@@ -37,11 +44,19 @@ public class AMLRules {
         this.out = out;
     }
 
-    public void calculateScores() {
+    public void calculateScores() throws ORIException {
+        sanityCheck();
         this.structuringOverTimeScore = this.calculateStructuringOverTimeScore();
         this.unusualOutgoingVolumeScore = this.calculateUnusualOutgoingVolumeScore();
         this.unusualBehaviorScore = this.calculateUnusualBehaviourScore();
         this.flowThroughScore = this.calculateFlowThroughScore();
+    }
+
+    private void sanityCheck() throws ORIException {
+        int N = in.size() + out.size();
+        if (N == 0) {
+            throw new ORIException("Unable to calculate scores because the given account does not contain any transaction", 404);
+        }
     }
 
     /***

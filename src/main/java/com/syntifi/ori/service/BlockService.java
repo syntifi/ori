@@ -20,18 +20,36 @@ import com.syntifi.ori.model.Block;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+/**
+ * All block related services for querying ES using the low level API 
+ * 
+ * @author Andre Bertolace 
+ * @since 0.0.1
+ */
 @ApplicationScoped
 public class BlockService {
 
     @Inject
     RestClient restClient;
 
+    /**
+     * Indexes a new block document on Elastic Search 
+     * 
+     * @param block
+     * @throws IOException
+     */
     public void index(Block block) throws IOException {
         Request request = new Request("PUT", "/block/_doc/" + block.hash);
         request.setJsonEntity(JsonObject.mapFrom(block).toString());
         restClient.performRequest(request);
     }
 
+    /**
+     * Removes all block documents indexed in ES
+     * 
+     * @return ES Response
+     * @throws IOException
+     */
     public Response clear() throws IOException {
         JsonObject matchJson = new JsonObject().put("match_all", new JsonObject());
         JsonObject queryJson = new JsonObject().put("query", matchJson);
@@ -40,11 +58,25 @@ public class BlockService {
         return restClient.performRequest(request);
     }
 
+    /**
+     * Deletes a block given its hash
+     * 
+     * @param hash
+     * @return ES Response
+     * @throws IOException
+     */
     public Response delete(String hash) throws IOException {
         Request request = new Request("DELETE", "/block/_doc/" + hash);
         return restClient.performRequest(request);
     }
 
+    /**
+     * Retrieves a block given its hash
+     * 
+     * @param hash
+     * @return Block
+     * @throws IOException
+     */
     public Block getBlockByHash(String hash) throws IOException {
         Request request = new Request("GET", "/block/_doc/" + hash);
         Response response = restClient.performRequest(request);
@@ -53,12 +85,25 @@ public class BlockService {
         return json.getJsonObject("_source").mapTo(Block.class);
     }
 
+    /**
+     * Retrieves all blocks indexed in the database sorted by date in descending order
+     * 
+     * @return List<Block>
+     * @throws IOException
+     */
+
     public List<Block> getAllBlocks() throws IOException {
         JsonObject matchJson = new JsonObject().put("match_all", new JsonObject());
         JsonObject queryJson = new JsonObject().put("query", matchJson);
         return queryBlock(queryJson, true);
     }
 
+    /**
+     * Returns the last block in the database 
+     * 
+     * @return Block
+     * @throws IOException
+     */
     public Block getLastBlock() throws IOException {
         JsonObject matchJson = new JsonObject().put("match_all", new JsonObject());
         JsonObject queryJson = new JsonObject().put("query", matchJson);
@@ -66,6 +111,15 @@ public class BlockService {
         return queryBlock(queryJson, true).get(0);
     }
 
+    /**
+     * The most fundamental methods in this class. It ensures that the results are sorted 
+     * descending order 
+     * 
+     * @param queryJson
+     * @param sortByDate
+     * @return List<Block>
+     * @throws IOException
+     */
     private List<Block> queryBlock(JsonObject queryJson, boolean sortByDate) throws IOException {
         if (sortByDate) {
             JsonArray sortTerm = new JsonArray();
@@ -88,6 +142,12 @@ public class BlockService {
         return results;
     }
 
+    /**
+     * Parses the ES error and raises an ORIException
+     * 
+     * @param e
+     * @return ORIException
+     */
     public ORIException parseElasticError(Exception e){
         Matcher m = Pattern.compile("status line \\[HTTP/[0-9.]+ ([0-9]+)").matcher(e.getMessage());
         int code = m.find() ? Integer.valueOf(m.group(1)) : 404;
