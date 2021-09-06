@@ -1,6 +1,8 @@
 package com.syntifi.ori.exception;
 
 import java.io.Serializable;
+
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 
 /**
@@ -10,7 +12,7 @@ import javax.ws.rs.core.Response.Status;
  * @author Andre Bertolace 
  * @since 0.0.1
  */
-public class ORIException extends Exception implements Serializable {
+public class ORIException extends WebApplicationException implements Serializable {
     
     private static final long serialVersionUID = 1L;
     private Status status = Status.BAD_REQUEST;
