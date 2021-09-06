@@ -22,6 +22,14 @@ import com.syntifi.ori.service.BlockService;
 import com.syntifi.ori.service.TransactionService;
 
 
+/**
+ * Quartz job to crawl the Casper network. It uses the casper-sdk with the parameters 
+ * in the application.propertios or environmental variables that specify the Casper 
+ * nodes to query, the ammount of threads, the timeout and the RPC node port
+ * 
+ * @author Andre Bertolace 
+ * @since 0.0.1
+ */
 @ApplicationScoped 
 public class CasperCrawlJob implements Job {
     int threads = ConfigProvider.getConfig().getValue("casper.threads", int.class);
@@ -37,6 +45,12 @@ public class CasperCrawlJob implements Job {
     @Inject
     TransactionService transactionService;
 
+    /**
+     * Reads the last block available in the database and sends a query to retrieve the next 
+     * couple of blocks (the number being the same as the threads size) in the casper network.
+     * This methods uses the casper-sdk to communicate with the casper network and get a java object
+     * as response. The needed fields are then indexed in the ES database.
+     */
     public void execute(JobExecutionContext context) {
         long lastBlockHeight;
         long i;

@@ -3,6 +3,13 @@ package com.syntifi.ori.exception;
 import java.io.Serializable;
 import javax.ws.rs.core.Response.Status;
 
+/**
+ * ORI exception, containing the status code and message to be parsed in a Json object that will 
+ * finally be returned to the user in a readeable form
+ * 
+ * @author Andre Bertolace 
+ * @since 0.0.1
+ */
 public class ORIException extends Exception implements Serializable {
     
     private static final long serialVersionUID = 1L;

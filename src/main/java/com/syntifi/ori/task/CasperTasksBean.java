@@ -15,6 +15,13 @@ import org.eclipse.microprofile.config.ConfigProvider;
 import javax.enterprise.event.Observes;
 import io.quarkus.runtime.StartupEvent;
 
+/**
+ * Base Quartz scheduler controller providing methods to pause/triger/stop/resume
+ * both update and crawl jobs
+ * 
+ * @author Andre Bertolace 
+ * @since 0.0.1
+ */
 @ApplicationScoped
 public class CasperTasksBean {
 
@@ -24,7 +31,9 @@ public class CasperTasksBean {
     private static final JobKey updateJobKey = new JobKey("updateJob", "Casper");
     private static final JobKey crawlJobKey = new JobKey("crawlJob", "Casper");
 
-    //Schedule the job at startup, it will stay dorment, unless triggered
+    /**
+     * Schedule the jobs at startup, they will stay dorment, unless triggered
+     */
     void scheduleJobs(@Observes StartupEvent event) throws SchedulerException {
         if (quartz.isStarted()) {
             quartz.standby();

@@ -17,6 +17,16 @@ import com.syntifi.ori.model.Transaction;
 import com.syntifi.ori.service.BlockService;
 import com.syntifi.ori.service.TransactionService;
 
+/**
+ * Quartz job to update the blocks from the Casper network. It uses the casper-sdk 
+ * with the parameters in the application.propertios or environmental variables that 
+ * specify the Casper nodes to query, the ammount of threads, the timeout and the RPC node port
+ * NOTE: This is meant to be used once the Casper network has been crawled and there are just
+ * a couple of new blocks to be indexed
+ *  
+ * @author Andre Bertolace 
+ * @since 0.0.1
+ */
 @ApplicationScoped 
 public class CasperUpdateJob implements Job {
 
@@ -32,7 +42,11 @@ public class CasperUpdateJob implements Job {
     @Inject
     TransactionService transactionService;    
    
-
+    /**
+     * Reads the last block available in the database and the last one in the casper network. 
+     * It keeps requesting the casper nodes for the next block until the last block in the database
+     * and in the network match.
+     */
     public void execute(JobExecutionContext context) {
 
         long lastLocalBlockHeight;

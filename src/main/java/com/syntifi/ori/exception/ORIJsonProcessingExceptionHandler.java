@@ -7,6 +7,13 @@ import javax.ws.rs.ext.Provider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.vertx.core.json.JsonObject;
 
+/**
+ * Json Handler used when finding issues in parsing Json parameters sent by the user 
+ * in the body of a request 
+ * 
+ * @author Andre Bertolace 
+ * @since 0.0.1
+ */
 @Provider
 public class ORIJsonProcessingExceptionHandler implements ExceptionMapper<JsonProcessingException> {
     

@@ -5,7 +5,13 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import io.vertx.core.json.JsonObject;
- 
+
+/**
+ * Handler that maps the ORIExcept to a jsonObject 
+ * 
+ * @author Andre Bertolace 
+ * @since 0.0.1
+ */
 @Provider
 public class ORIExceptionHandler implements ExceptionMapper<ORIException> {
 

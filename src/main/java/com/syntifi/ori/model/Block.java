@@ -5,6 +5,12 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+/**
+ * Block model, only a couple of the fields available in the chain are needed 
+ * 
+ * @author Andre Bertolace 
+ * @since 0.0.1
+ */
 public class Block {
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ")
