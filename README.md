@@ -104,5 +104,5 @@ The GraphQL API provides resources to crawl the block chain. Find out more about
 ## Features
 
 - [REST API](src/main/java/com/syntifi/ori/rest/README.md)
-- [GraphQL API](src/main/java/com/syntifi/ori/graphqlb/README.md)
+- [GraphQL API](src/main/java/com/syntifi/ori/graphql/README.md)
 - [Risk metrics](src/main/java/com/syntifi/ori/service/README.md)
