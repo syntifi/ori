@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response.Status;
  * finally be returned to the user in a readeable form
  * 
  * @author Andre Bertolace 
- * @since 0.0.1
+ * @since 0.1.0
  */
 public class ORIException extends WebApplicationException implements Serializable {
     

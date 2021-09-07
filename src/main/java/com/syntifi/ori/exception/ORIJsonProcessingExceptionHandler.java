@@ -12,7 +12,7 @@ import io.vertx.core.json.JsonObject;
  * in the body of a request 
  * 
  * @author Andre Bertolace 
- * @since 0.0.1
+ * @since 0.1.0
  */
 @Provider
 public class ORIJsonProcessingExceptionHandler implements ExceptionMapper<JsonProcessingException> {

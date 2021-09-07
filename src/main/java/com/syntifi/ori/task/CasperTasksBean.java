@@ -20,7 +20,7 @@ import io.quarkus.runtime.StartupEvent;
  * both update and crawl jobs
  * 
  * @author Andre Bertolace 
- * @since 0.0.1
+ * @since 0.1.0
  */
 @ApplicationScoped
 public class CasperTasksBean {

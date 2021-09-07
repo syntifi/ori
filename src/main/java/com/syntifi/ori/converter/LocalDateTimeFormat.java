@@ -11,7 +11,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * The actual LocalDateTimeFormat decorator. By detault the format is "yyyy-MM-dd'T'HH:mm:ss.SSS"
  * 
  * @author Andre Bertolace 
- * @since 0.0.1
+ * @since 0.1.0
  */
 @Retention(RUNTIME)
 @Target({ FIELD, PARAMETER })

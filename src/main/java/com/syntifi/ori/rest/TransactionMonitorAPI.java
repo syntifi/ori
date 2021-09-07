@@ -21,7 +21,12 @@ import com.syntifi.ori.converter.LocalDateTimeFormat;
 
 import javax.inject.Inject;
 
-
+/**
+ * REST API transaction monitor endpoints 
+ * 
+ * @author Andre Bertolace 
+ * @since 0.1.0
+ */
 @Path("/")
 @Tag(name = "Transaction monitor", description = "Monitor accounts, trace transactions and calculate risk scores")
 public class TransactionMonitorAPI {
@@ -31,6 +36,14 @@ public class TransactionMonitorAPI {
     @Inject
     TransactionService transactionService;
 
+    /**
+     * GET method to return the different AML scores in [0,1] 
+     * 
+     * @param account
+     * @param date
+     * @return {@link AMLRules}
+     * @throws ORIException
+     */
     @GET
     @Path("score/{account}")
     public AMLRules scoreAccount(@PathParam("account") String account, 
@@ -49,6 +62,15 @@ public class TransactionMonitorAPI {
         }
     }
 
+    /**
+     * GET method to retrieve the graph of all past-transactions linked to the given account 
+     * 
+     * @param account
+     * @param from 
+     * @param to
+     * @return List<Transaction>
+     * @throws ORIException
+     */
     @GET
     @Path("traceCoin/back/{account}")
     @Description("Traces")
@@ -64,6 +86,15 @@ public class TransactionMonitorAPI {
         }
     }
 
+    /**
+     * GET method to retrieve the graph of all forward-transactions linked to the given account 
+     * 
+     * @param account
+     * @param from 
+     * @param to
+     * @return List<Transaction>
+     * @throws ORIException
+     */
     @GET
     @Path("traceCoin/forward/{account}")
     public List<Transaction> forwardGraphWalk(@PathParam("account") String account, 

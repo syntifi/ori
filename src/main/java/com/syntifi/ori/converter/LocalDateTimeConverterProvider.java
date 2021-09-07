@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * decorator makes sure to forward the parameter to the actual converter.
  * 
  * @author Andre Bertolace 
- * @since 0.0.1
+ * @since 0.1.0
  */
 @Provider
 public class LocalDateTimeConverterProvider implements ParamConverterProvider {

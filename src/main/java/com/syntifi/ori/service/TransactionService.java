@@ -27,7 +27,7 @@ import com.syntifi.ori.exception.ORIException;
  * All transaction related services for querying ES using the low level API 
  * 
  * @author Andre Bertolace 
- * @since 0.0.1
+ * @since 0.1.0
  */
 @ApplicationScoped
 public class TransactionService {

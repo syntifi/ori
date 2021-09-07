@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * Transaction model, only a couple of the fields available in the chain are needed 
  * 
  * @author Andre Bertolace 
- * @since 0.0.1
+ * @since 0.1.0
  */
 public class Transaction {
     @NotNull

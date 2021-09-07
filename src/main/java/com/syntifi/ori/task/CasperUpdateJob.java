@@ -25,7 +25,7 @@ import com.syntifi.ori.service.TransactionService;
  * a couple of new blocks to be indexed
  *  
  * @author Andre Bertolace 
- * @since 0.0.1
+ * @since 0.1.0
  */
 @ApplicationScoped 
 public class CasperUpdateJob implements Job {

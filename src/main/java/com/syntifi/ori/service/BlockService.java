@@ -24,7 +24,7 @@ import javax.inject.Inject;
  * All block related services for querying ES using the low level API 
  * 
  * @author Andre Bertolace 
- * @since 0.0.1
+ * @since 0.1.0
  */
 @ApplicationScoped
 public class BlockService {

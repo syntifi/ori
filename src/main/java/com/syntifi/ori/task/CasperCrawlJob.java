@@ -28,7 +28,7 @@ import com.syntifi.ori.service.TransactionService;
  * nodes to query, the ammount of threads, the timeout and the RPC node port
  * 
  * @author Andre Bertolace 
- * @since 0.0.1
+ * @since 0.1.0
  */
 @ApplicationScoped 
 public class CasperCrawlJob implements Job {

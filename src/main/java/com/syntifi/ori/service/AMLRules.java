@@ -17,7 +17,7 @@ import org.eclipse.microprofile.config.ConfigProvider;
  * AML rules calculator
  * 
  * @author Andre Bertolace 
- * @since 0.0.1
+ * @since 0.1.0
  */
 public class AMLRules {
 

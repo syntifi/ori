@@ -15,7 +15,7 @@ import java.time.ZoneId;
  * is the one handling the conversion from/to LocalDatetime/String
  * 
  * @author Andre Bertolace 
- * @since 0.0.1
+ * @since 0.1.0
  */
 public class LocalDateTimeConverter implements ParamConverter<LocalDateTime> {
   
