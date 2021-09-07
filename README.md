@@ -95,7 +95,7 @@ If you want to learn more about building native executables, please consult http
 Instructions to build and run docker images are available at [Docker](src/main/docker/README.md).
 
 ## After build instructions
-At this point the system is build and running. The ES database is empty though. One must crawl the blockchain to properly populate the database.b
+At this point the system is build and running. The ES database is empty though. One must crawl the blockchain to properly populate the database.
 
 ### Crawling the chains
 
