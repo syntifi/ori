@@ -19,6 +19,12 @@ import com.syntifi.ori.service.TransactionService;
 
 import javax.inject.Inject;
 
+/**
+ * Graph API queries to retrieve transactions
+ * 
+ * @author Andre Bertolace 
+ * @since 0.1.0
+ */
 @GraphQLApi
 public class TransactionGraphQLAPI {
 
@@ -27,6 +33,13 @@ public class TransactionGraphQLAPI {
     @Inject
     TransactionService transactionService;
 
+    /**
+     * Query a transaction given a hash 
+     *  
+     * @param hash
+     * @return Transaction
+     * @throws ORIException
+     */
     @Query
     @Description("Get a transaction given its hash")
     public Transaction getTransaction(String hash) throws ORIException{
@@ -37,6 +50,16 @@ public class TransactionGraphQLAPI {
         }
     }
 
+    /**
+     * Query to retrieve the transaction (optional) from, (optional) to an account 
+     * in reverse chronological order. Returns all transactions if neither from nor to 
+     * is specified.
+     * 
+     * @param from
+     * @param to
+     * @return List<Transaction>
+     * @throws ORIException
+     */
     @Query
     @Description("Return the transaction (optional) from, (optional) to an account. Return all transactions if neither from nor to is specified.")
     public List<Transaction> getTransactions(@QueryParam("from") String from, @QueryParam("to") String to)
@@ -56,6 +79,13 @@ public class TransactionGraphQLAPI {
         }
     }
 
+    /**
+     * Query to retrieve all transactions (incoming or outgoing) in reverse chronological order.
+     *  
+     * @param account
+     * @return List<Transaction>
+     * @throws ORIException
+     */
     @Query
     @Description("Return all transactions for a given account")
     public List<Transaction> getAccount(String account) throws ORIException {
@@ -66,6 +96,13 @@ public class TransactionGraphQLAPI {
         }
     }
 
+    /**
+     *  Mutation type query to add and index a new transaction in ES
+     * 
+     * @param transaction
+     * @return Transaction
+     * @throws ORIException
+     */
     @Mutation
     @Description("Add a new transaction")
     public Transaction addTransaction(Transaction transaction) throws ORIException {
@@ -77,11 +114,24 @@ public class TransactionGraphQLAPI {
         }
     }
 
+    /**
+     * Subscription type query that issues an event everytime a new transaction is created
+     * (STILL EXPERIMENTAL)
+     * 
+     * @return
+     */
     @Subscription
     public Multi<Transaction> transactionCreated(){
         return processor; 
     }
 
+    /**
+     * Mutation type query to remove a transaction from ES given a hash
+     *  
+     * @param hash
+     * @return
+     * @throws ORIException
+     */
     @Mutation
     @Description("Remove a transaction")
     public Transaction deleteTransaction(String hash) throws ORIException {
