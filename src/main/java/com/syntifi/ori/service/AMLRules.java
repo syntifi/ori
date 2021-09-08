@@ -53,7 +53,7 @@ public class AMLRules {
     }
 
     private void sanityCheck() throws ORIException {
-        int N = in.size() + out.size();
+        int N = (in==null ? 0 : in.size()) + (out==null ? 0 : out.size());
         if (N == 0) {
             throw new ORIException("Unable to calculate scores because the given account does not contain any transaction", 404);
         }

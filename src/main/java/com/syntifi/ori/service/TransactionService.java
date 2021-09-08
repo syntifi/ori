@@ -330,7 +330,7 @@ public class TransactionService {
 
     /**
      * Most fundamental methods in this class. It ensures that the results are sorted either in 
-     * ascending or descending order and limits the results size
+     * ascending or descending (default) order and limits the results size
      * 
      * @param queryJson
      * @param timeSort
