@@ -10,7 +10,7 @@ a better experience when interacting with the REST API.
 
 | Endpoint | Http method | Description | Path Parameters | Path parameters description | Query Parameters | Query parameters description |
 | --- | --- | --- | --- | --- | --- | --- |
-| /block | GET | Get all blocks in descending time | - | - | - | - |
+| /block | GET | Get all blocks in descending chronological order | - | - | - | - |
 | /block | POST | Add and index a new block in the database | - | - | - | -| 
 | /block | DELETE | Remove all blocks stored in the database | - | - | - | - |
 | /block/{hash} | GET | Get a block given the hash | *hash*: String | Block hash in Hex | - | - | 
@@ -20,7 +20,7 @@ a better experience when interacting with the REST API.
 
 | Endpoint | Http method | Description | Path Parameters | Path parameters description | Query Parameters | Query parameters description |
 | --- | --- | --- | --- | --- | --- | --- |
-| /transaction | GET | Get all transactions in descending time | - | - | *fromAccount*: String / *toAccount*: String | Optional parameters to filter transactions outgoing *fromAccount* or incomig *toAccount*  |
+| /transaction | GET | Get all transactions in descending chronological order | - | - | *fromAccount*: String / *toAccount*: String | Optional parameters to filter transactions outgoing *fromAccount* or incomig *toAccount*  |
 | /transaction | POST | Add and index a new transaction in the database | - | - | - | -| 
 | /transaction | DELETE | Remove all transactions stored in the database | - | - | - | - |
 | /transaction/{hash} | GET | Get a transaction given the hash | *hash*: String | Transaction hash in Hex | - | - | 
