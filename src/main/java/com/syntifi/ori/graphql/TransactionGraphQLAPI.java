@@ -18,6 +18,7 @@ import com.syntifi.ori.model.Transaction;
 import com.syntifi.ori.service.TransactionService;
 
 import javax.inject.Inject;
+import javax.json.stream.JsonParsingException;
 
 /**
  * Graph API queries to retrieve transactions
@@ -44,6 +45,9 @@ public class TransactionGraphQLAPI {
     @Description("Get a transaction given its hash")
     public Transaction getTransaction(String hash) throws ORIException{
         try {
+            if (hash == null) {
+                throw new ORIException("Transaction hash missing", 404);
+            }
             return transactionService.getTransactionByHash(hash);
         } catch (Exception e) {
             throw transactionService.parseElasticError(e);
@@ -90,6 +94,9 @@ public class TransactionGraphQLAPI {
     @Description("Return all transactions for a given account")
     public List<Transaction> getAccount(String account) throws ORIException {
         try {
+            if (account == null) {
+                throw new ORIException("Account missing", 404);
+            }
             return transactionService.getAllTransactionsByAccount(account);
         } catch (Exception e) {
             throw transactionService.parseElasticError(e);
