@@ -37,7 +37,7 @@ public class TestBlockResouces {
           .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
           .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
           .when()
-          .post("/block")
+          .post("/api/v1/block")
           .then()
              .statusCode(200)
              .body("created", equalTo("/block/mockBlock"));
@@ -51,7 +51,7 @@ public class TestBlockResouces {
     public void testGetBlock() {
         given()
           .when()
-          .get("/block/mockBlock")
+          .get("/api/v1/block/mockBlock")
           .then()
              .statusCode(200)
              .body("era", equalTo(0))
@@ -69,7 +69,7 @@ public class TestBlockResouces {
         given()
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
             .when()
-            .get("/block")
+            .get("/api/v1/block")
             .then()
                 .statusCode(200)
                 .body("[0].era", equalTo(0))
@@ -86,7 +86,7 @@ public class TestBlockResouces {
     public void testGetNonExistingBlock() {
         given()
           .when()
-          .get("/block/testBlock")
+          .get("/api/v1/block/testBlock")
           .then()
              .statusCode(404)
              .body("error", equalTo("Not Found"));
@@ -108,7 +108,7 @@ public class TestBlockResouces {
           .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
           .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
           .when()
-          .post("/block")
+          .post("/api/v1/block")
           .then()
              .statusCode(400)
              .body("error", containsString("Date"));
@@ -129,7 +129,7 @@ public class TestBlockResouces {
           .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
           .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
           .when()
-          .post("/block")
+          .post("/api/v1/block")
           .then()
              .statusCode(404)
              .body("error", equalTo("Block hash missing"));
@@ -141,7 +141,7 @@ public class TestBlockResouces {
         given()
             .when()
             .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
-            .delete("/block/mockBlock")
+            .delete("/api/v1/block/mockBlock")
             .then()
                 .statusCode(200)
                 .body("method", equalTo("DELETE"))

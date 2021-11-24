@@ -36,7 +36,7 @@ public class TestTransactionResources {
           .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
           .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
           .when()
-          .post("/transaction")
+          .post("/api/v1/transaction")
           .then()
              .statusCode(200)
              .body("created", equalTo("/transaction/mockTransaction"));
@@ -50,7 +50,7 @@ public class TestTransactionResources {
     public void testGetTransaction() {
         given()
           .when()
-          .get("/transaction/mockTransaction")
+          .get("/api/v1/transaction/mockTransaction")
           .then()
              .statusCode(200)
              .body("amount", equalTo(0F))
@@ -66,7 +66,7 @@ public class TestTransactionResources {
     public void testGetTransactionByAccountUsingFromAccount() {
         given()
           .when()
-          .get("/transaction/account/mockFrom")
+          .get("/api/v1/transaction/account/mockFrom")
           .then()
              .statusCode(200)
              .body("size()", equalTo(1))
@@ -83,7 +83,7 @@ public class TestTransactionResources {
     public void testGetTransactionByAccountUsingToAccount() {
         given()
           .when()
-          .get("/transaction/account/mockTo")
+          .get("/api/v1/transaction/account/mockTo")
           .then()
              .statusCode(200)
              .body("size()", equalTo(1))
@@ -100,7 +100,7 @@ public class TestTransactionResources {
     public void testGetTransactions() {
         given()
           .when()
-          .get("/transaction")
+          .get("/api/v1/transaction")
           .then()
              .statusCode(200)
              .body("[0].amount", equalTo(0F))
@@ -117,7 +117,7 @@ public class TestTransactionResources {
         given()
           .param("fromAccount", "mockFrom")
             .when()
-            .get("/transaction")
+            .get("/api/v1/transaction")
             .then()
                .statusCode(200)
                .body("size()", equalTo(1))
@@ -135,7 +135,7 @@ public class TestTransactionResources {
         given()
           .param("toAccount", "mockTo")
             .when()
-            .get("/transaction")
+            .get("/api/v1/transaction")
             .then()
                .statusCode(200)
                .body("size()", equalTo(1))
@@ -152,7 +152,7 @@ public class TestTransactionResources {
     public void testGetNonExistingTransaction() {
         given()
           .when()
-          .get("/transaction/testTransaction")
+          .get("/api/v1/transaction/testTransaction")
           .then()
              .statusCode(404)
              .body("error", equalTo("Not Found"));
@@ -173,7 +173,7 @@ public class TestTransactionResources {
           .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
           .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
           .when()
-          .post("/transaction")
+          .post("/api/v1/transaction")
           .then()
              .statusCode(400)
              .body("error", containsString("Date"));
@@ -193,7 +193,7 @@ public class TestTransactionResources {
           .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
           .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
           .when()
-          .post("/transaction")
+          .post("/api/v1/transaction")
           .then()
              .statusCode(404)
              .body("error", equalTo("Transaction hash missing"));
@@ -205,7 +205,7 @@ public class TestTransactionResources {
         given()
             .when()
             .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
-            .delete("/transaction/mockTransaction")
+            .delete("/api/v1/transaction/mockTransaction")
             .then()
                 .statusCode(200)
                 .body("method", equalTo("DELETE"))

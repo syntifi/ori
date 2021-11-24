@@ -18,6 +18,7 @@ import com.syntifi.ori.model.Block;
 import com.syntifi.ori.service.BlockService;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * REST API block endpoints 
@@ -25,7 +26,7 @@ import javax.inject.Inject;
  * @author Andre Bertolace 
  * @since 0.1.0
  */
-@Path("/block")
+@Singleton
 @Tag(name = "Block", description = "Block resources")
 public class BlockRestAPI {
     @Inject

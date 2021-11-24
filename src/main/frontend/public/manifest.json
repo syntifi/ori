@@ -1,0 +1,8 @@
+{
+  "short_name": "ORI frontend",
+  "name": "Onchain Risk Intelligence tool",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#e53e3e", 
+  "background_color": "#ffffff"
+}

@@ -20,6 +20,7 @@ import com.syntifi.ori.service.AMLRules;
 import com.syntifi.ori.converter.LocalDateTimeFormat;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * REST API transaction monitor endpoints 
@@ -27,7 +28,7 @@ import javax.inject.Inject;
  * @author Andre Bertolace 
  * @since 0.1.0
  */
-@Path("/")
+@Singleton
 @Tag(name = "Transaction monitor", description = "Monitor accounts, trace transactions and calculate risk scores")
 public class TransactionMonitorAPI {
 

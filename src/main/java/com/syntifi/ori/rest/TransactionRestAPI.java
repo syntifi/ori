@@ -21,6 +21,7 @@ import com.syntifi.ori.model.Transaction;
 import com.syntifi.ori.service.TransactionService;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * REST API transaction endpoints 
@@ -28,7 +29,7 @@ import javax.inject.Inject;
  * @author Andre Bertolace 
  * @since 0.1.0
  */
-@Path("/transaction")
+@Singleton
 @Tag(name = "Transaction", description = "Transaction resources")
 public class TransactionRestAPI {
     
