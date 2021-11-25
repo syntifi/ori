@@ -4,6 +4,7 @@
 
 Before building the container image run:
 ```shell script
+./mvnw -Pbuild-frontend clean package
 ./mvnw package
 ```
 
@@ -28,6 +29,7 @@ It is possible to to build a container that runs the application in native (no J
 Before building the container image run:
 
 ```shell script
+./mvnw -Pbuild-frontend clean package
 ./mvnw package -Pnative
 ```
 
