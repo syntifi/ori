@@ -11,8 +11,11 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework. If you want 
 
 ## Dependencies
 - Java 11 
-- Maven 3.8.1 (or above)
-- Docker
+- [Maven](https://maven.apache.org/) (3.8.1 or above)
+- [Quarkus](https://quarkus.io/)
+- [Docker](https://www.docker.com/)
+- [Node.js](https://nodejs.org/)
+- [React](https://reactjs.org/)
 
 ## Before build instructions 
 A couple of steps should be performed before building the application. These steps are described below. The user can **either** follow these steps and run the commands as specified **or** run the shell script below if you are in Linux:
@@ -53,6 +56,13 @@ After following the steps in the [Before build instrucions](#before-build-instru
 
 ### Running the application in dev mode
 
+This projects uses the Java Quarkus Application as a both back-end as well as a static page server. That being said, it is crucial to first compile the react frontend. All the instructions have been wrapped up in a maven script. A lot of the concepts used in the [YAKC](https://github.com/manusa/yakc/tree/master/quickstarts/quarkus-dashboard) project were used here. (A good tutorial is also available [here](https://blog.marcnuri.com/react-quarkus-integration-using-maven))
+
+Please run the following:
+```shell script
+./mvnw -Pbuild-frontend clean package
+```
+
 You can run your application in dev mode that enables live coding using:
 ```shell script
 ./mvnw compile quarkus:dev
@@ -62,6 +72,7 @@ You can run your application in dev mode that enables live coding using:
 
 The application can be packaged using:
 ```shell script
+./mvnw -Pbuild-frontend clean package
 ./mvnw package
 ```
 It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
@@ -69,6 +80,7 @@ Be aware that it’s not an _über-jar_ as the dependencies are copied into the 
 
 If you want to build an _über-jar_, execute the following command:
 ```shell script
+./mvnw -Pbuild-frontend clean package
 ./mvnw package -Dquarkus.package.type=uber-jar
 ```
 
@@ -78,11 +90,13 @@ The application is now runnable using `java -jar target/quarkus-app/quarkus-run.
 
 You can create a native executable using: 
 ```shell script
+./mvnw -Pbuild-frontend clean package
 ./mvnw package -Pnative
 ```
 
 Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
 ```shell script
+./mvnw -Pbuild-frontend clean package
 ./mvnw package -Pnative -Dquarkus.native.container-build=true
 ```
 
