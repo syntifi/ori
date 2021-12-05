@@ -7,7 +7,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>ori-api</module>
-    <module>ori-chain</module>
+    <module>ori-chains</module>
     <module>ori-frontend</module>
   </modules>
   <properties>
