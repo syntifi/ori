@@ -34,15 +34,6 @@
     </dependencies>
   </dependencyManagement>
   <build>
-    <resources>
-      <resource>
-        <directory>ori-api/src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>ori-frontend/build</directory>
-        <targetPath>frontend</targetPath>
-      </resource>
-    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
