@@ -16,4 +16,13 @@
     <version>0.2.0</version>
     <relativePath>../</relativePath>
   </parent>
+  <dependencies>
+    <dependency>
+      <groupId>com.syntifi.ori</groupId>
+      <artifactId>ori-api</artifactId>
+      <version>0.2.0</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
   </project>

@@ -1,18 +1,22 @@
-package com.syntifi.ori.task;
+package com.syntifi.ori.chains.cspr.task;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
+
+import com.syntifi.ori.chains.cspr.jobs.CsprCrawlJob;
+import com.syntifi.ori.chains.cspr.jobs.CsprUpdateJob;
+
+import org.eclipse.microprofile.config.ConfigProvider;
+import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
-import org.quartz.JobBuilder;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
-import org.quartz.SimpleScheduleBuilder;
-import org.eclipse.microprofile.config.ConfigProvider;
 
-import javax.enterprise.event.Observes;
 import io.quarkus.runtime.StartupEvent;
 
 /**
@@ -23,7 +27,7 @@ import io.quarkus.runtime.StartupEvent;
  * @since 0.1.0
  */
 @ApplicationScoped
-public class CasperTasksBean {
+public class CsprTasksBean {
 
     @Inject
     Scheduler quartz; 
@@ -39,7 +43,7 @@ public class CasperTasksBean {
             quartz.standby();
         } 
 
-        JobDetail updateJob = JobBuilder.newJob(CasperUpdateJob.class)
+        JobDetail updateJob = JobBuilder.newJob(CsprUpdateJob.class)
                                 .withIdentity(updateJobKey) 
                                 .build();
         Trigger updateTrigger = TriggerBuilder.newTrigger()
@@ -56,7 +60,7 @@ public class CasperTasksBean {
         quartz.scheduleJob(updateJob, updateTrigger); 
         quartz.pauseJob(updateJobKey);
         
-        JobDetail crawlJob = JobBuilder.newJob(CasperCrawlJob.class)
+        JobDetail crawlJob = JobBuilder.newJob(CsprCrawlJob.class)
                                 .withIdentity(crawlJobKey) 
                                 .build();
         Trigger crawlTrigger = TriggerBuilder.newTrigger()

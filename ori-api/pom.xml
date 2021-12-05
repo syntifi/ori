@@ -50,28 +50,18 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-graphql</artifactId>
     </dependency>
-    <!-- INSTALLING FROM A FILE
-  mvn install:install-file \
-      -Dfile="../casper-sdk/lib/build/libs/casper-sdk-0.1.2.jar" \
-      -DgroupId=com.syntifi.casper \
-      -DartifactId=casper-sdk \
-      -Dversion=0.1.2\
-      -Dpackaging=jar \
-      -DgeneratePom=true
-  -->
-    <dependency>
-      <groupId>com.syntifi.casper</groupId>
-      <artifactId>casper-sdk</artifactId>
-      <version>0.1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-quartz</artifactId>
-    </dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>2.11.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.syntifi.casper</groupId>
+      <artifactId>casper-sdk</artifactId>
+      <version>0.1.2</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/../ori-chains/ori-cspr/src/main/resources/casper-sdk-0.1.2.jar</systemPath>
+      <type>jar</type>
     </dependency>
   </dependencies>
   <build>

@@ -1,19 +1,18 @@
 package com.syntifi.ori;
-import io.quarkus.test.junit.QuarkusTest;
-import io.vertx.core.json.JsonObject;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-
-import static org.hamcrest.Matchers.containsString;
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.containsString;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+
+import io.quarkus.test.junit.QuarkusTest;
+import io.vertx.core.json.JsonObject;
 
 @QuarkusTest
 @TestMethodOrder(OrderAnnotation.class)

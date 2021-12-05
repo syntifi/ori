@@ -1,19 +1,19 @@
-package com.syntifi.ori.graphql;
+package com.syntifi.ori.chains.cspr.graphql;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.eclipse.microprofile.graphql.GraphQLApi;
-import org.eclipse.microprofile.graphql.Query;
-import org.eclipse.microprofile.config.ConfigProvider;
-import org.eclipse.microprofile.graphql.Description;
-
 import javax.ws.rs.QueryParam;
 
-import com.syntifi.casper.model.info.get.peers.CasperNode;
+import com.syntifi.casper.Casper;
 import com.syntifi.casper.model.chain.get.block.CasperBlock;
 import com.syntifi.casper.model.chain.get.block.transfer.CasperTransfer;
-import com.syntifi.casper.Casper;
+import com.syntifi.casper.model.info.get.peers.CasperNode;
+
+import org.eclipse.microprofile.config.ConfigProvider;
+import org.eclipse.microprofile.graphql.Description;
+import org.eclipse.microprofile.graphql.GraphQLApi;
+import org.eclipse.microprofile.graphql.Query;
 
 /**
  * GraphQL Casper queries to interact with the Casper Network. This is a "fake" GraphQL, 
@@ -25,7 +25,7 @@ import com.syntifi.casper.Casper;
  * @since 0.1.0
  */
 @GraphQLApi
-public class CasperGraphQLAPI {
+public class CsprGraphQLAPI {
 
     Casper casperService = new Casper(
         ConfigProvider.getConfig().getValue("casper.node", String.class),

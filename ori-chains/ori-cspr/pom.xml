@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.syntifi.ori</groupId>
+  <groupId>com.syntifi.ori.chains</groupId>
   <artifactId>ori-cspr</artifactId>
   <version>0.1.0</version>
   <parent>
@@ -11,4 +10,31 @@
     <version>0.1.0</version>
     <relativePath>../</relativePath>
   </parent>
-  </project>
+  <dependencies>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-graphql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-quartz</artifactId>
+    </dependency>
+    <!-- INSTALLING FROM A FILE
+  mvn install:install-file \
+      -Dfile="ori-chains/ori-cspr/src/main/resources/casper-sdk-0.1.2.jar" \
+      -DgroupId=com.syntifi.casper \
+      -DartifactId=casper-sdk \
+      -Dversion=0.1.2\
+      -Dpackaging=jar \
+      -DgeneratePom=true
+  -->
+    <dependency>
+      <groupId>com.syntifi.casper</groupId>
+      <artifactId>casper-sdk</artifactId>
+      <version>0.1.2</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/src/main/resources/casper-sdk-0.1.2.jar</systemPath>
+      <type>jar</type>
+    </dependency>
+  </dependencies>
+</project>

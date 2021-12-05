@@ -1,4 +1,4 @@
-package com.syntifi.ori.task;
+package com.syntifi.ori.chains.cspr.jobs;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +28,7 @@ import com.syntifi.ori.service.TransactionService;
  * @since 0.1.0
  */
 @ApplicationScoped 
-public class CasperUpdateJob implements Job {
+public class CsprUpdateJob implements Job {
 
     Casper casperService = new Casper(
         ConfigProvider.getConfig().getValue("casper.node", String.class),

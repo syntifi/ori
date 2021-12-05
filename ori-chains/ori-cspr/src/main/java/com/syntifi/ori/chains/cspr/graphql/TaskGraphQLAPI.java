@@ -1,4 +1,4 @@
-package com.syntifi.ori.graphql;
+package com.syntifi.ori.chains.cspr.graphql;
 
 import org.quartz.JobKey;
 import org.eclipse.microprofile.graphql.GraphQLApi;
@@ -7,7 +7,7 @@ import org.eclipse.microprofile.graphql.Description;
 
 import javax.inject.Inject;
 
-import com.syntifi.ori.task.CasperTasksBean;
+import com.syntifi.ori.chains.cspr.task.CsprTasksBean;
 
 /**
  * GraphQL API queries to start, stop and pause the Casper Crawlers
@@ -18,7 +18,7 @@ import com.syntifi.ori.task.CasperTasksBean;
 @GraphQLApi
 public class TaskGraphQLAPI {
     @Inject 
-    CasperTasksBean casperTasksBean;
+    CsprTasksBean casperTasksBean;
 
     /**
      * Query to start the {@link CasperUpdateJob} Quatz job 

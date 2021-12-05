@@ -1,4 +1,4 @@
-package com.syntifi.ori.task;
+package com.syntifi.ori.chains.cspr.jobs;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -31,7 +31,7 @@ import com.syntifi.ori.service.TransactionService;
  * @since 0.1.0
  */
 @ApplicationScoped 
-public class CasperCrawlJob implements Job {
+public class CsprCrawlJob implements Job {
     int threads = ConfigProvider.getConfig().getValue("casper.threads", int.class);
     Casper casperService = new Casper(
         Arrays.asList(ConfigProvider.getConfig().getValue("casper.nodes", String.class).split(",")),
