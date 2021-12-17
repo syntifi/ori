@@ -1,44 +1,65 @@
 package com.syntifi.ori.model;
 
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
- * Transaction model, only a couple of the fields available in the chain are needed 
+ * Transaction model, only a couple of the fields available in the chain are
+ * needed
  * 
- * @author Andre Bertolace 
+ * @author Andre Bertolace
  * @since 0.1.0
  */
-public class Transaction {
+@Entity
+@Indexed
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Transaction extends PanacheEntity {
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ")
+    @Column(name = "time_stamp")
     public Date timeStamp;
 
     @NotNull
+    @FullTextField(analyzer = "standard")
     public String hash;
 
-    @NotNull
-    public String from;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "from_account_id", nullable = false)
+    public Account from;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_account_id", nullable = false)
+    public Account to;
 
     @NotNull
-    public String to;
-
-    @NotNull
+    @GenericField
+    @Min(0)
     public Double amount;
 
-    @NotNull
-    public String blockHash;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "block_id", nullable = false)
+    public Block block;
 
-    public Transaction() {};
-
-    public Transaction(Date timeStamp, String hash, String from, String to, 
-                    Double amount, String blockHash) {
-        this.timeStamp = timeStamp;
-        this.hash = hash;
-        this.from = from;
-        this.to = to;
-        this.amount = amount;
-        this.blockHash = blockHash;
-    }
 }

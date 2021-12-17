@@ -33,7 +33,7 @@
       <artifactId>casper-sdk</artifactId>
       <version>0.1.2</version>
       <scope>system</scope>
-      <systemPath>${basedir}/src/main/resources/casper-sdk-0.1.2.jar</systemPath>
+      <systemPath>${project.basedir}/src/main/resources/casper-sdk-0.1.2.jar</systemPath>
       <type>jar</type>
     </dependency>
   </dependencies>

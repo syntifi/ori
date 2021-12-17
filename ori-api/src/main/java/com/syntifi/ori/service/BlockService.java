@@ -6,6 +6,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import com.syntifi.ori.exception.ORIException;
+import com.syntifi.ori.model.Block;
+
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Request;
 import org.elasticsearch.client.Response;
@@ -13,12 +19,6 @@ import org.elasticsearch.client.RestClient;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-
-import com.syntifi.ori.exception.ORIException;
-import com.syntifi.ori.model.Block;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 /**
  * All block related services for querying ES using the low level API 
@@ -39,7 +39,7 @@ public class BlockService {
      * @throws IOException
      */
     public void index(Block block) throws IOException {
-        Request request = new Request("PUT", "/block/_doc/" + block.hash);
+        Request request = new Request("PUT", "/block/_doc/" + block.getHash());
         request.setJsonEntity(JsonObject.mapFrom(block).toString());
         restClient.performRequest(request);
     }

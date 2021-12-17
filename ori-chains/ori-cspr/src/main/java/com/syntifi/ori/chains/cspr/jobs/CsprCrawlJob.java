@@ -3,23 +3,17 @@ package com.syntifi.ori.chains.cspr.jobs;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
-
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-
-import org.eclipse.microprofile.config.ConfigProvider;
 import javax.inject.Inject;
 
 import com.syntifi.casper.Casper;
-import com.syntifi.casper.model.chain.get.block.CasperBlock;
-import com.syntifi.casper.model.chain.get.block.transfer.CasperTransferData;
-import com.syntifi.ori.model.Block;
-import com.syntifi.ori.model.Transaction;
 import com.syntifi.ori.service.BlockService;
 import com.syntifi.ori.service.TransactionService;
+
+import org.eclipse.microprofile.config.ConfigProvider;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
 
 
 /**
@@ -62,13 +56,13 @@ public class CsprCrawlJob implements Job {
         }
 
         try {
-            i = blockService.getLastBlock().height + 1 ;
+            i = blockService.getLastBlock().getHeight() + 1 ;
         } catch (Exception e){
             i = 0;
         }
         
         List<Long> heights = new LinkedList<>();
-        if (i < lastBlockHeight){
+/*         if (i < lastBlockHeight){
             try {
                 for (long k=0; k<threads; k++) {
                     heights.add(i+k);
@@ -103,6 +97,6 @@ public class CsprCrawlJob implements Job {
 
             } catch (Exception e) {
             }
-        }
+        } */
     }
 }

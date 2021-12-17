@@ -1,11 +1,5 @@
 package com.syntifi.ori;
 
-import io.quarkus.test.junit.QuarkusTest;
-import io.vertx.core.json.JsonObject;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
-
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -13,6 +7,12 @@ import javax.inject.Inject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syntifi.ori.model.Block;
 import com.syntifi.ori.service.BlockService;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import io.quarkus.test.junit.QuarkusTest;
+import io.vertx.core.json.JsonObject;
 
 @QuarkusTest
 public class TestBlockService {

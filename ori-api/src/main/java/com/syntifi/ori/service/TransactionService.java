@@ -9,6 +9,12 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import com.syntifi.ori.exception.ORIException;
+import com.syntifi.ori.model.Transaction;
+
 import org.apache.http.util.EntityUtils;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.elasticsearch.client.Request;
@@ -17,11 +23,6 @@ import org.elasticsearch.client.RestClient;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import com.syntifi.ori.model.Transaction;
-import com.syntifi.ori.exception.ORIException;
 
 /**
  * All transaction related services for querying ES using the low level API 
@@ -231,11 +232,11 @@ public class TransactionService {
                 break;
             }
             if (direction.equals("desc") && nodes.contains(transaction.to)) {
-                nodes.add(transaction.from);
+                nodes.add(transaction.from.getHash());
                 graph.add(transaction);
             }
             if (direction.equals("asc") && nodes.contains(transaction.from)) {
-                nodes.add(transaction.to);
+                nodes.add(transaction.to.getHash());
                 graph.add(transaction);
             }
         }

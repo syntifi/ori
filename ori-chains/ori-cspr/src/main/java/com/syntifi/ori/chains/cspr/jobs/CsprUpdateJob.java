@@ -1,21 +1,15 @@
 package com.syntifi.ori.chains.cspr.jobs;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.enterprise.context.ApplicationScoped;
-
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-
-import org.eclipse.microprofile.config.ConfigProvider;
 import javax.inject.Inject;
 
 import com.syntifi.casper.Casper;
-import com.syntifi.ori.model.Block;
-import com.syntifi.ori.model.Transaction;
 import com.syntifi.ori.service.BlockService;
 import com.syntifi.ori.service.TransactionService;
+
+import org.eclipse.microprofile.config.ConfigProvider;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
 
 /**
  * Quartz job to update the blocks from the Casper network. It uses the casper-sdk 
@@ -52,11 +46,11 @@ public class CsprUpdateJob implements Job {
         long lastLocalBlockHeight;
 
         try {
-            lastLocalBlockHeight = blockService.getLastBlock().height ;
+            lastLocalBlockHeight = blockService.getLastBlock().getHeight();
         } catch (Exception e){
             lastLocalBlockHeight = Long.MAX_VALUE;
         }
-
+/* 
         try {
             var lastBlock = casperService.getLastBlock();
             for (long i=lastLocalBlockHeight; i<=lastBlock.header.height; i++) {
@@ -82,6 +76,6 @@ public class CsprUpdateJob implements Job {
                 }
             }
         } catch (Exception e){
-        }
+        } */
     }
 }
