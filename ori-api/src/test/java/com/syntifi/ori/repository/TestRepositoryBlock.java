@@ -1,4 +1,4 @@
-package com.syntifi.ori;
+package com.syntifi.ori.repository;
 
 import java.util.Date;
 
@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Block;
-import com.syntifi.ori.repository.BlockRepository;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,9 +19,7 @@ public class TestRepositoryBlock {
 
     @Test
     public void testGetNonExistingBlock() {
-        var e = Assertions.assertThrowsExactly(ORIException.class, () -> blockRepository.findByHash("testBlock"));
-        Assertions.assertEquals("Block hash testBlock not found!", e.getMessage());
-        Assertions.assertEquals(404, e.getStatus().getStatusCode());
+        Assertions.assertEquals(null, blockRepository.findByHash("testBlock"));
     }
 
     @Test
@@ -33,6 +30,7 @@ public class TestRepositoryBlock {
         block.setHeight(0L);
         block.setParent(null);
         block.setRoot("root");
+        block.setValidator("validator");
         block.setTimeStamp(new Date());
         var e = Assertions.assertThrowsExactly(ORIException.class, () -> blockRepository.check(block));
         Assertions.assertEquals("token must not be null", e.getMessage());

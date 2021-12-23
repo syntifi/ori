@@ -2,14 +2,16 @@ package com.syntifi.ori.model;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,22 +22,23 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Token extends PanacheEntity{
+public class Token extends PanacheEntityBase {
+    @Id
     @NotNull
     @Column(unique = true)
-    private String symbol; 
+    private String symbol;
 
     @NotNull
-    private String name; 
+    private String name;
 
     @NotNull
-    private String protocol; 
+    private String protocol;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "token")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "token")
     private Set<Block> blocks;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "token")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "token")
     private Set<Account> accounts;
 }

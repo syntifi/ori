@@ -39,11 +39,12 @@ public class BlockRestAPI {
     @Inject
     TokenRepository tokenRepository;
 
-    private void checkTokenSymbol(String symbol) {
+    private Token getToken(String symbol) {
         Token token = tokenRepository.findBySymbol(symbol);
         if (token == null) {
             throw new ORIException("Token not found", 404);
         }
+        return token;
     }
 
     /**
@@ -55,24 +56,28 @@ public class BlockRestAPI {
      */
     @POST
     @Transactional
-    @Path("/{tokenSymbol}/{parent}")
+    @Path("/{tokenSymbol}/parent/{parent}")
     public Response addBlock(Block child, @PathParam("tokenSymbol") String symbol, @PathParam("parent") String parent)
             throws ORIException {
-        checkTokenSymbol(symbol);
-        if (child.getHash() == null) {
-            throw new ORIException("Block hash missing", 400);
+        boolean exists = blockRepository.existsAlready(child);
+        if (exists) {
+            throw new ORIException(child.getHash() + " exists already", 400);
         }
-        Block parentBlock = blockRepository.findByHash(parent);
-        if (parentBlock == null) {
-            throw new ORIException("Parent block not found", 404);
+        var token = symbol == null ? null : getToken(symbol);
+        child.setToken(token);
+        boolean isFirstBlock = blockRepository.count() == 0;
+        Block parentBlock = null;
+        if (!isFirstBlock) {
+            parentBlock = blockRepository.findByHash(parent);
+            if (parentBlock == null) {
+                throw new ORIException("Parent block not found", 404);
+            }
         }
-        try {
-            child.setParent(parentBlock);
-            blockRepository.persist(child);
-        } catch (Exception e) {
-            new ORIException(e.getMessage());
-        }
-        return Response.ok(new JsonObject().put("created", URI.create("/block/" + child.getHash()))).build();
+        child.setParent(parentBlock);
+        blockRepository.check(child);
+        blockRepository.persist(child);
+        return Response.ok(new JsonObject().put("created", URI.create("/block/" + symbol + "/hash/" + child.getHash())))
+                .build();
     }
 
     /**
@@ -85,7 +90,7 @@ public class BlockRestAPI {
     @GET
     @Path("/{tokenSymbol}")
     public List<Block> getAllBlocks(@PathParam("tokenSymbol") String symbol) throws ORIException {
-        checkTokenSymbol(symbol);
+        getToken(symbol);
         return blockRepository.listAll(Sort.descending("timeStamp"));
     }
 
@@ -97,33 +102,15 @@ public class BlockRestAPI {
      * @throws ORIException
      */
     @GET
-    @Path("/{tokenSymbol}/{hash}")
+    @Path("/{tokenSymbol}/hash/{hash}")
     public Block getBlockByHash(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
             throws ORIException {
-        checkTokenSymbol(symbol);
-        return blockRepository.findByHash(hash);
-    }
-
-    /**
-     * DELETE method to remove all blocks and clean the database
-     * 
-     * @return Response
-     * @throws ORIException
-     */
-    @DELETE
-    @Path("/{tokenSymbol}")
-    public Response clear(@PathParam("tokenSymbol") String symbol) throws ORIException {
-        checkTokenSymbol(symbol);
-        try {
-            long N = blockRepository.deleteAll();
-            return Response.ok(new JsonObject()
-                    .put("method", "DELETE")
-                    .put("uri", "/block/" + symbol)
-                    .put("N", N))
-                    .build();
-        } catch (Exception e) {
-            throw new ORIException(e.getMessage());
+        getToken(symbol);
+        Block result = blockRepository.findByHash(hash);
+        if (result == null) {
+            throw new ORIException(hash + " not found", 404);
         }
+        return result;
     }
 
     /**
@@ -135,19 +122,23 @@ public class BlockRestAPI {
      * @throws ORIException
      */
     @DELETE
-    @Path("/{tokenSymbol}/{hash}")
-    public Response delete(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
+    @Transactional
+    @Path("/{tokenSymbol}/hash/{hash}")
+    public Response deleteBlock(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
             throws ORIException {
-        checkTokenSymbol(symbol);
-        try {
-            blockRepository.delete(blockRepository.findByHash(hash));
-            return Response.ok(new JsonObject()
-                    .put("method", "DELETE")
-                    .put("uri", "/block/" + hash))
-                    .build();
-        } catch (Exception e) {
-            throw new ORIException(e.getMessage());
+        Block block = blockRepository.findByHash(hash);
+        if (block == null) {
+            throw new ORIException(hash + " not found", 404);
         }
+        if (block.getToken().getSymbol().equals(symbol)) {
+            blockRepository.delete(block);
+        } else {
+            throw new ORIException("Forbidden", 403);
+        }
+        return Response.ok(new JsonObject()
+                .put("method", "DELETE")
+                .put("uri", "/block/" + symbol + "/hash/" + hash))
+                .build();
     }
 
 }

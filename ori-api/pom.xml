@@ -84,12 +84,10 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-validator</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.glassfish</groupId>
       <artifactId>javax.el</artifactId>
-      <scope>test</scope>
       <version>3.0.0</version>
     </dependency>
   </dependencies>

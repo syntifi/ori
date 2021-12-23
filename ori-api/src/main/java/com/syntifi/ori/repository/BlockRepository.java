@@ -1,20 +1,21 @@
 package com.syntifi.ori.repository;
 
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Block;
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
-
 @ApplicationScoped
-public class BlockRepository implements PanacheRepository<Block>, Repository<Block> {
+public class BlockRepository implements Repository<Block> {
 
     public Block findByHash(String hash) throws ORIException {
-        Block result = find("hash", hash).firstResult();
-        if (result == null) {
-            throw new ORIException("Block hash " + hash + " not found!", 404);
-        }
-        return result;
+        List<Block> result = list("hash", hash);
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    public boolean existsAlready(Block block) {
+        return findByHash(block.getHash()) != null;
     }
 }

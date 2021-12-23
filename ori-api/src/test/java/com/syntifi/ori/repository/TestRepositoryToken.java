@@ -1,10 +1,9 @@
-package com.syntifi.ori;
+package com.syntifi.ori.repository;
 
 import javax.inject.Inject;
 
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Token;
-import com.syntifi.ori.repository.TokenRepository;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,9 +17,7 @@ public class TestRepositoryToken {
     
     @Test
     public void testGetNonExistingToken() {
-        var e = Assertions.assertThrowsExactly(ORIException.class, () -> tokenRepository.findBySymbol("testToken"));
-        Assertions.assertEquals("Token symbol testToken not found!", e.getMessage());
-        Assertions.assertEquals(404, e.getStatus().getStatusCode());
+        Assertions.assertEquals(null, tokenRepository.findBySymbol("testToken"));
     }
 
     @Test

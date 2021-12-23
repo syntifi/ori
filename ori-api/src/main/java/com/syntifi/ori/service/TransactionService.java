@@ -231,12 +231,12 @@ public class TransactionService {
             if (graph.size() >= maxGraphLength) {
                 break;
             }
-            if (direction.equals("desc") && nodes.contains(transaction.to)) {
-                nodes.add(transaction.from.getHash());
+            if (direction.equals("desc") && nodes.contains(transaction.toAccount)) {
+                nodes.add(transaction.fromAccount.getHash());
                 graph.add(transaction);
             }
-            if (direction.equals("asc") && nodes.contains(transaction.from)) {
-                nodes.add(transaction.to.getHash());
+            if (direction.equals("asc") && nodes.contains(transaction.fromAccount)) {
+                nodes.add(transaction.toAccount.getHash());
                 graph.add(transaction);
             }
         }

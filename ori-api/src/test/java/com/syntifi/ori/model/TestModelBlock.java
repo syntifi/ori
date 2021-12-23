@@ -1,4 +1,4 @@
-package com.syntifi.ori;
+package com.syntifi.ori.model;
 
 import java.util.Date;
 import java.util.Set;
@@ -10,8 +10,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.syntifi.ori.model.Block;
-import com.syntifi.ori.model.Token;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

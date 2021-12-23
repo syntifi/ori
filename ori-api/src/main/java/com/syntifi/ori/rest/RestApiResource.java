@@ -1,25 +1,27 @@
-package com.syntifi.ori;
+package com.syntifi.ori.rest;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.Path;
 
-import com.syntifi.ori.rest.BlockRestAPI;
-import com.syntifi.ori.rest.TransactionMonitorAPI;
-import com.syntifi.ori.rest.TransactionRestAPI;
-
 @Singleton
 public class RestApiResource {
     private final BlockRestAPI blockAPI;
     private final TransactionRestAPI transactionAPI;
+    private final AccountRestAPI accountAPI;
+    private final TokenRestAPI tokenAPI;
     private final TransactionMonitorAPI monitorAPI;
 
     @Inject
     public RestApiResource( BlockRestAPI blockRestAPI,  
                 TransactionRestAPI transactionRestAPI, 
+                AccountRestAPI accountRestAPI,
+                TokenRestAPI tokenRestAPI,
                 TransactionMonitorAPI transactionMonitorAPI) {
         this.blockAPI = blockRestAPI;
         this.transactionAPI = transactionRestAPI;
+        this.accountAPI = accountRestAPI;
+        this.tokenAPI = tokenRestAPI;
         this.monitorAPI = transactionMonitorAPI;
     }
 
@@ -31,6 +33,16 @@ public class RestApiResource {
     @Path("/transaction")
     public TransactionRestAPI getTransactionResource() {
         return transactionAPI;
+    }
+
+    @Path("/account")
+    public AccountRestAPI getAccountResource() {
+        return accountAPI;
+    }
+
+    @Path("/token")
+    public TokenRestAPI getTokenResource() {
+        return tokenAPI;
     }
 
     @Path("/")

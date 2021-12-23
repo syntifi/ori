@@ -1,7 +1,6 @@
-package com.syntifi.ori;
+package com.syntifi.ori.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.syntifi.ori.model.Token;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

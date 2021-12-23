@@ -1,4 +1,4 @@
-package com.syntifi.ori;
+package com.syntifi.ori.model;
 
 import java.util.Date;
 import java.util.Set;
@@ -9,10 +9,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.syntifi.ori.model.Account;
-import com.syntifi.ori.model.Block;
-import com.syntifi.ori.model.Token;
-import com.syntifi.ori.model.Transaction;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -92,8 +88,8 @@ public class TestModelTransaction {
         block.setParent(null);
         transaction.setTimeStamp(new Date());
         transaction.setHash("mockTransaction");
-        transaction.setFrom(from);
-        transaction.setTo(to);
+        transaction.setFromAccount(from);
+        transaction.setToAccount(to);
         transaction.setAmount(1234.);
         transaction.setBlock(block);
         Set<ConstraintViolation<Transaction>> constraintViolations = validator.validate(transaction);
