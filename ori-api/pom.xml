@@ -52,10 +52,6 @@
       <artifactId>quarkus-elasticsearch-rest-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-graphql</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>2.11.0</version>
@@ -67,13 +63,6 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-search-orm-elasticsearch</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.syntifi.casper</groupId>
-      <artifactId>casper-sdk</artifactId>
-      <version>0.1.2</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/../ori-chains/ori-cspr/src/main/resources/casper-sdk-0.1.2.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>javax.validation</groupId>
