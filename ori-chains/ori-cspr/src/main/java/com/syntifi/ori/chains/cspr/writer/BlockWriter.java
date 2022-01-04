@@ -4,8 +4,7 @@ import java.util.List;
 
 import javax.ws.rs.core.HttpHeaders;
 
-import com.syntifi.ori.model.Block;
-import com.syntifi.ori.model.Token;
+import com.google.gson.JsonObject;
 
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.context.annotation.Bean;
@@ -14,12 +13,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import reactor.core.publisher.Mono;
 
-public class BlockWriter implements ItemWriter<Block> {
+public class BlockWriter implements ItemWriter<JsonObject> {
 
-    private final Token token;
+    private final String token;
     private final String restHttp;
 
-    public BlockWriter(Token token, String restHttp) {
+    public BlockWriter(String token, String restHttp) {
         this.token = token;
         this.restHttp = restHttp;
     }
@@ -30,15 +29,17 @@ public class BlockWriter implements ItemWriter<Block> {
     }
 
     @Override
-    public void write(List<? extends Block> blocks) {
+    public void write(List<? extends JsonObject> blocks) {
         WebClient webclient = localApiClient();
-        for (Block block : blocks) {
+        for (JsonObject block : blocks) {
+            String parentBlock = block.get("parent").toString();
+            block.remove("parent");
             webclient.post()
-            .uri("/block/" + token.getSymbol() + "/parent/" + block.getParent())
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .body(Mono.just(block), Block.class)
-            .retrieve()
-            .bodyToMono(Block.class);
+                    .uri("/api/v2/block/" + token + "/parent/" + parentBlock)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    .body(Mono.just(block), JsonObject.class)
+                    .retrieve()
+                    .bodyToMono(JsonObject.class);
         }
 
     }

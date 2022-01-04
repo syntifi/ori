@@ -6,7 +6,7 @@ import org.springframework.batch.core.ItemReadListener;
 
 public class StepItemReadListener implements ItemReadListener<String> {
 
-    Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Override
     public void beforeRead() {

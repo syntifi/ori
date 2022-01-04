@@ -8,7 +8,7 @@ import org.springframework.batch.core.StepExecutionListener;
 
 public class StepResultListener implements StepExecutionListener {
 
-    Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Override
     public void beforeStep(StepExecution stepExecution) {

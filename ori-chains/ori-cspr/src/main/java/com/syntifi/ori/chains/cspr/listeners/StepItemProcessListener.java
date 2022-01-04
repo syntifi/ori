@@ -6,7 +6,7 @@ import org.springframework.batch.core.ItemProcessListener;
 
 public class StepItemProcessListener implements ItemProcessListener<String, Number> {
 
-    Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Override
     public void beforeProcess(String item) {

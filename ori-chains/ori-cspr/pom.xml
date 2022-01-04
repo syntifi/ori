@@ -11,15 +11,16 @@
     <relativePath>../</relativePath>
   </parent>
   <dependencies>
-    <!-- INSTALLING FROM A FILE
-  mvn install:install-file \
-      -Dfile="ori-chains/ori-cspr/src/main/resources/casper-sdk-0.1.2.jar" \
-      -DgroupId=com.syntifi.casper \
-      -DartifactId=casper-sdk \
-      -Dversion=0.1.2\
-      -Dpackaging=jar \
-      -DgeneratePom=true
-  -->
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.8.9</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-batch</artifactId>
@@ -31,12 +32,14 @@
       <version>2.6.2</version>
     </dependency>
     <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <dependency>
       <groupId>com.syntifi.casper</groupId>
       <artifactId>casper-sdk</artifactId>
-      <version>0.1.2</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/src/main/resources/casper-sdk-0.1.2.jar</systemPath>
-      <type>jar</type>
+      <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <build>

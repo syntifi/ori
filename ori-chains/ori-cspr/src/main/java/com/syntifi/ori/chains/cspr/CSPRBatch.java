@@ -1,8 +1,7 @@
 package com.syntifi.ori.chains.cspr;
 
-import javax.inject.Inject;
-
-import com.syntifi.casper.model.chain.get.block.CasperBlock;
+import com.google.gson.JsonObject;
+import com.syntifi.casper.sdk.model.block.JsonBlockData;
 import com.syntifi.ori.chains.cspr.listeners.CustomChunkListener;
 import com.syntifi.ori.chains.cspr.listeners.JobResultListener;
 import com.syntifi.ori.chains.cspr.listeners.StepItemProcessListener;
@@ -12,11 +11,7 @@ import com.syntifi.ori.chains.cspr.listeners.StepResultListener;
 import com.syntifi.ori.chains.cspr.processor.BlockProcessor;
 import com.syntifi.ori.chains.cspr.reader.BlockReader;
 import com.syntifi.ori.chains.cspr.writer.BlockWriter;
-import com.syntifi.ori.model.Block;
-import com.syntifi.ori.model.Token;
-import com.syntifi.ori.repository.TokenRepository;
 
-import org.eclipse.microprofile.config.ConfigProvider;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -24,16 +19,18 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@SpringBootApplication
+@Configuration
 @EnableBatchProcessing
 public class CSPRBatch {
 
-    @Inject
-    private TokenRepository tokenRepository;
+    private static final String token = "CSPR";
+
+    @Value( "${ori.rest.api}" )
+    private String restHttp;
 
     @Autowired
     public JobBuilderFactory jobBuilderFactory;
@@ -41,17 +38,12 @@ public class CSPRBatch {
     @Autowired
     public StepBuilderFactory stepBuilderFactory;
 
-    public static void main(String[] args) {
-		System.exit(SpringApplication.exit(
-			SpringApplication.run(CSPRBatch.class, args)));
-	}
-
     @Bean
-    public Step step1ReadBlock(Token token, String restHttp) {
+    public Step step1ReadBlock(String restHttp) {
         return stepBuilderFactory.get("step1ReadBlock")
-                .<CasperBlock, Block>chunk(1)
-                .reader(new BlockReader(token))
-                .processor(new BlockProcessor(token))
+                .<JsonBlockData, JsonObject>chunk(1)
+                .reader(new BlockReader(token, restHttp))
+                .processor(new BlockProcessor())
                 .writer(new BlockWriter(token, restHttp))
                 .listener(new StepResultListener())
                 .listener(new CustomChunkListener())
@@ -63,12 +55,10 @@ public class CSPRBatch {
 
     @Bean
     public Job getBlockTransactionAndWrite() {
-        Token token =  tokenRepository.findBySymbol("CSPR");
-        String restHttp = ConfigProvider.getConfig().getValue("ori.rest.api", String.class);
         return jobBuilderFactory.get("getBlockTransactionAndWrite")
                 .incrementer(new RunIdIncrementer())
                 .listener(new JobResultListener())
-                .start(step1ReadBlock(token, restHttp))
+                .start(step1ReadBlock(restHttp))
                 // .next(stepTwo())
                 .build();
     }

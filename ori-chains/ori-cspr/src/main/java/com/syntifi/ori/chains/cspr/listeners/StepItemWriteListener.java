@@ -7,7 +7,7 @@ import org.springframework.batch.core.ItemWriteListener;
 
 public class StepItemWriteListener implements ItemWriteListener<Number> {
 
-    Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Override
     public void beforeWrite(List<? extends Number> items) {
