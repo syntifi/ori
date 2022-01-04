@@ -2,14 +2,14 @@ package com.syntifi.ori.chains.cspr.processor;
 
 import javax.inject.Inject;
 
-import com.syntifi.casper.model.chain.get.block.CasperBlock;
+import com.syntifi.casper.sdk.model.block.JsonBlock;
 import com.syntifi.ori.model.Block;
 import com.syntifi.ori.model.Token;
 import com.syntifi.ori.repository.BlockRepository;
 
 import org.springframework.batch.item.ItemProcessor;
 
-public class BlockProcessor implements ItemProcessor<CasperBlock, Block> {
+public class BlockProcessor implements ItemProcessor<JsonBlock, Block> {
 
     private final Token token;
 
@@ -22,14 +22,14 @@ public class BlockProcessor implements ItemProcessor<CasperBlock, Block> {
     }
 
     @Override
-    public Block process(CasperBlock casperBlock) throws Exception {
+    public Block process(JsonBlock casperBlock) throws Exception {
         final Block block = new Block();
-        block.setEra(casperBlock.header.eraId);
-        block.setHash(casperBlock.hash);
-        block.setHeight(casperBlock.header.height);
-        block.setParent(blockRepository.findByHash(casperBlock.header.parentHash));
-        block.setRoot(casperBlock.header.stateRootHash);
-        block.setTimeStamp(casperBlock.header.timeStamp);
+        block.setEra(casperBlock.getHeader().getEraId());
+        block.setHash(casperBlock.getHash());
+        block.setHeight(casperBlock.getHeader().getHeight());
+        block.setParent(blockRepository.findByHash(casperBlock.getHeader().getParentHash()));
+        block.setRoot(casperBlock.getHeader().getStateRootHash());
+        block.setTimeStamp(casperBlock.getHeader().getTimeStamp());
         block.setToken(token);
         return block;
     }

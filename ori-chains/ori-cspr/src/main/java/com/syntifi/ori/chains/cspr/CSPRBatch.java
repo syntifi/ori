@@ -2,7 +2,7 @@ package com.syntifi.ori.chains.cspr;
 
 import javax.inject.Inject;
 
-import com.syntifi.casper.model.chain.get.block.CasperBlock;
+import com.syntifi.casper.sdk.model.block.JsonBlock;
 import com.syntifi.ori.chains.cspr.listeners.CustomChunkListener;
 import com.syntifi.ori.chains.cspr.listeners.JobResultListener;
 import com.syntifi.ori.chains.cspr.listeners.StepItemProcessListener;
@@ -49,7 +49,7 @@ public class CSPRBatch {
     @Bean
     public Step step1ReadBlock(Token token, String restHttp) {
         return stepBuilderFactory.get("step1ReadBlock")
-                .<CasperBlock, Block>chunk(1)
+                .<JsonBlock, Block>chunk(1)
                 .reader(new BlockReader(token))
                 .processor(new BlockProcessor(token))
                 .writer(new BlockWriter(token, restHttp))

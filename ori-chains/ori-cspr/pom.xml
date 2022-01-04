@@ -11,15 +11,6 @@
     <relativePath>../</relativePath>
   </parent>
   <dependencies>
-    <!-- INSTALLING FROM A FILE
-  mvn install:install-file \
-      -Dfile="ori-chains/ori-cspr/src/main/resources/casper-sdk-0.1.2.jar" \
-      -DgroupId=com.syntifi.casper \
-      -DartifactId=casper-sdk \
-      -Dversion=0.1.2\
-      -Dpackaging=jar \
-      -DgeneratePom=true
-  -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-batch</artifactId>
@@ -33,10 +24,7 @@
     <dependency>
       <groupId>com.syntifi.casper</groupId>
       <artifactId>casper-sdk</artifactId>
-      <version>0.1.2</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/src/main/resources/casper-sdk-0.1.2.jar</systemPath>
-      <type>jar</type>
+      <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <build>
