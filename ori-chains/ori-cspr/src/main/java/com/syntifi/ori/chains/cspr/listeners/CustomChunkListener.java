@@ -1,22 +1,26 @@
 package com.syntifi.ori.chains.cspr.listeners;
 
+import java.util.logging.Logger;
+
 import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.scope.context.ChunkContext;
 
 public class CustomChunkListener implements ChunkListener {
 
+	Logger logger = Logger.getLogger(this.getClass().getName());
+	
 	@Override
 	public void afterChunk(ChunkContext context) {
-		System.out.println("Called afterChunk().");
+		logger.info("Called afterChunk().");
 	}
 
 	@Override
 	public void beforeChunk(ChunkContext context) {
-		System.out.println("Called beforeChunk().");
+		logger.info("Called beforeChunk().");
 	}
 
        @Override
 	public void afterChunkError(ChunkContext context) {
-		System.out.println("Called afterChunkError().");
+		logger.info("Called afterChunkError().");
 	}
 }

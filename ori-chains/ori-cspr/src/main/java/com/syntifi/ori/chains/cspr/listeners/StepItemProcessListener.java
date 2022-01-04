@@ -1,21 +1,25 @@
 package com.syntifi.ori.chains.cspr.listeners;
 
+import java.util.logging.Logger;
+
 import org.springframework.batch.core.ItemProcessListener;
 
 public class StepItemProcessListener implements ItemProcessListener<String, Number> {
 
-	@Override
-	public void beforeProcess(String item) {
-		System.out.println("ItemProcessListener - beforeProcess");
-	}
+    Logger logger = Logger.getLogger(this.getClass().getName());
 
-	@Override
-	public void afterProcess(String item, Number result) {
-		System.out.println("ItemProcessListener - afterProcess");
-	}
+    @Override
+    public void beforeProcess(String item) {
+        logger.info("ItemProcessListener - beforeProcess");
+    }
 
-	@Override
-	public void onProcessError(String item, Exception e) {
-		System.out.println("ItemProcessListener - onProcessError");
-	}
+    @Override
+    public void afterProcess(String item, Number result) {
+        logger.info("ItemProcessListener - afterProcess");
+    }
+
+    @Override
+    public void onProcessError(String item, Exception e) {
+        logger.info("ItemProcessListener - onProcessError");
+    }
 }

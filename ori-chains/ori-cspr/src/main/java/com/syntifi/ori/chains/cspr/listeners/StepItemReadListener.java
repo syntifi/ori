@@ -1,21 +1,25 @@
 package com.syntifi.ori.chains.cspr.listeners;
 
+import java.util.logging.Logger;
+
 import org.springframework.batch.core.ItemReadListener;
 
 public class StepItemReadListener implements ItemReadListener<String> {
 
-	@Override
-	public void beforeRead() {
-		System.out.println("ItemReadListener - beforeRead");
-	}
+    Logger logger = Logger.getLogger(this.getClass().getName());
 
-	@Override
-	public void afterRead(String item) {
-		System.out.println("ItemReadListener - afterRead");
-	}
+    @Override
+    public void beforeRead() {
+        logger.info("ItemReadListener - beforeRead");
+    }
 
-	@Override
-	public void onReadError(Exception ex) {
-		System.out.println("ItemReadListener - onReadError");
-	}
+    @Override
+    public void afterRead(String item) {
+        logger.info("ItemReadListener - afterRead");
+    }
+
+    @Override
+    public void onReadError(Exception ex) {
+        logger.info("ItemReadListener - onReadError");
+    }
 }
