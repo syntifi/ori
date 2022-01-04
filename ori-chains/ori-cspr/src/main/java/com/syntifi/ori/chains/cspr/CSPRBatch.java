@@ -39,7 +39,7 @@ public class CSPRBatch {
     public StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public Step step1ReadBlock(String restHttp) {
+    public Step step1ReadBlock() {
         return stepBuilderFactory.get("step1ReadBlock")
                 .<JsonBlockData, JsonObject>chunk(1)
                 .reader(new BlockReader(token, restHttp))
@@ -58,7 +58,7 @@ public class CSPRBatch {
         return jobBuilderFactory.get("getBlockTransactionAndWrite")
                 .incrementer(new RunIdIncrementer())
                 .listener(new JobResultListener())
-                .start(step1ReadBlock(restHttp))
+                .start(step1ReadBlock())
                 // .next(stepTwo())
                 .build();
     }
