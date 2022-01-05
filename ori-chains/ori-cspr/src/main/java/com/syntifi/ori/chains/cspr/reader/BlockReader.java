@@ -5,36 +5,25 @@ import java.net.MalformedURLException;
 import java.util.logging.Logger;
 
 import com.syntifi.casper.sdk.identifier.block.HeightBlockIdentifier;
+import com.syntifi.casper.sdk.model.block.JsonBlock;
 import com.syntifi.casper.sdk.model.block.JsonBlockData;
 import com.syntifi.casper.sdk.service.CasperService;
 
 import org.springframework.batch.item.ItemReader;
-import org.springframework.beans.factory.annotation.Value;
 
-public class BlockReader implements ItemReader<JsonBlockData> {
-
-    private final String token;
-    private final String restHttp;
-
-    @Value( "${cspr.node}" )
-    private String csprNode;
-
-    @Value( "${cspr.port}" )
-    private int csprPort;
+public class BlockReader implements ItemReader<JsonBlock> {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private long nextBlockHeight;
     private CasperService casper;
 
-
-    public BlockReader(String token, String restHttp) {
-        this.token = token;
-        this.restHttp = restHttp;
+    public BlockReader(String token, String restHttp, String csprNode, int csprPort) {
         try {
             casper = CasperService.usingPeer(csprNode, csprPort);
         } catch (MalformedURLException e) {
             logger.severe("*********** Malformed URL Exception thrown while executing BlockReader ***********");
         }
+        //TODO: QUERY THE LATEST BLOCK IN THE DB?
         /*try {
             WebClient webclient = WebClient.create(restHttp);
             nextBlockHeight = webclient
@@ -47,8 +36,9 @@ public class BlockReader implements ItemReader<JsonBlockData> {
     }
 
     @Override
-    public JsonBlockData read() throws IOException, InterruptedException {
-        return casper.getBlock(new HeightBlockIdentifier(nextBlockHeight));
+    public JsonBlock read() throws IOException, InterruptedException {
+        JsonBlockData blockData = casper.getBlock(new HeightBlockIdentifier(nextBlockHeight));
+        return blockData.getBlock();
     }
 
 }

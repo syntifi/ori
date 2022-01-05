@@ -2,15 +2,13 @@ package com.syntifi.ori.chains.cspr.processor;
 
 import com.google.gson.JsonObject;
 import com.syntifi.casper.sdk.model.block.JsonBlock;
-import com.syntifi.casper.sdk.model.block.JsonBlockData;
 
 import org.springframework.batch.item.ItemProcessor;
 
-public class BlockProcessor implements ItemProcessor<JsonBlockData, JsonObject> {
+public class BlockProcessor implements ItemProcessor<JsonBlock, JsonObject> {
 
     @Override
-    public JsonObject process(JsonBlockData casperBlockData) throws Exception {
-        JsonBlock casperBlock = casperBlockData.getBlock();
+    public JsonObject process(JsonBlock casperBlock) throws Exception {
         JsonObject block = new JsonObject();
         block.addProperty("era", casperBlock.getHeader().getEraId());
         block.addProperty("hash", casperBlock.getHash());

@@ -7,20 +7,20 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 
 public class CustomChunkListener implements ChunkListener {
 
-	private Logger logger = Logger.getLogger(this.getClass().getName());
-	
-	@Override
-	public void afterChunk(ChunkContext context) {
-		logger.info("Called afterChunk().");
-	}
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-	@Override
-	public void beforeChunk(ChunkContext context) {
-		logger.info("Called beforeChunk().");
-	}
+    @Override
+    public void afterChunk(ChunkContext context) {
+        logger.info("Called afterChunk().");
+    }
 
-       @Override
-	public void afterChunkError(ChunkContext context) {
-		logger.info("Called afterChunkError().");
-	}
+    @Override
+    public void beforeChunk(ChunkContext context) {
+        logger.info("Called beforeChunk().");
+    }
+
+    @Override
+    public void afterChunkError(ChunkContext context) {
+        logger.info("Called afterChunkError().");
+    }
 }

@@ -1,7 +1,7 @@
 package com.syntifi.ori.chains.cspr;
 
 import com.google.gson.JsonObject;
-import com.syntifi.casper.sdk.model.block.JsonBlockData;
+import com.syntifi.casper.sdk.model.block.JsonBlock;
 import com.syntifi.ori.chains.cspr.listeners.CustomChunkListener;
 import com.syntifi.ori.chains.cspr.listeners.JobResultListener;
 import com.syntifi.ori.chains.cspr.listeners.StepItemProcessListener;
@@ -21,16 +21,25 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
 @EnableBatchProcessing
+@ComponentScan
 public class CSPRBatch {
 
-    private static final String token = "CSPR";
+    private static final String TOKEN = "CSPR";
 
-    @Value( "${ori.rest.api}" )
+    @Value("${ori.rest.api}")
     private String restHttp;
+
+    @Value( "${cspr.node}" )
+    private String csprNode;
+
+    @Value( "${cspr.port}" )
+    private int csprPort;
 
     @Autowired
     public JobBuilderFactory jobBuilderFactory;
@@ -39,12 +48,17 @@ public class CSPRBatch {
     public StepBuilderFactory stepBuilderFactory;
 
     @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    @Bean
     public Step step1ReadBlock() {
         return stepBuilderFactory.get("step1ReadBlock")
-                .<JsonBlockData, JsonObject>chunk(1)
-                .reader(new BlockReader(token, restHttp))
+                .<JsonBlock, JsonObject>chunk(1)
+                .reader(new BlockReader(TOKEN, restHttp, csprNode, csprPort))
                 .processor(new BlockProcessor())
-                .writer(new BlockWriter(token, restHttp))
+                .writer(new BlockWriter(TOKEN, restHttp))
                 .listener(new StepResultListener())
                 .listener(new CustomChunkListener())
                 .listener(new StepItemReadListener())
