@@ -1,46 +1,43 @@
 package com.syntifi.ori.chains.cspr.writer;
 
+import java.text.MessageFormat;
 import java.util.List;
-
-import javax.ws.rs.core.HttpHeaders;
+import java.util.logging.Logger;
 
 import com.google.gson.JsonObject;
 
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import reactor.core.publisher.Mono;
-
 public class BlockWriter implements ItemWriter<JsonObject> {
 
-    private final String token;
-    private final String restHttp;
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public BlockWriter(String token, String restHttp) {
-        this.token = token;
-        this.restHttp = restHttp;
-    }
+    private WebClient oriRestClient;
+    private String tokenName;
+    private String oriRestBlockParent;
 
-    @Bean
-    public WebClient localApiClient() {
-        return WebClient.create(restHttp);
+    public BlockWriter(WebClient client, String token, String restMethod) {
+        oriRestClient = client;
+        tokenName = token;
+        oriRestBlockParent = restMethod;
     }
 
     @Override
     public void write(List<? extends JsonObject> blocks) {
-        WebClient webclient = localApiClient();
         for (JsonObject block : blocks) {
-            String parentBlock = block.get("parent").toString();
+            String parentBlock = block.get("parent").getAsString();
             block.remove("parent");
-            webclient.post()
-                    .uri("/api/v2/block/" + token + "/parent/" + parentBlock)
+            JsonObject response = oriRestClient.post()
+                    .uri(MessageFormat.format(oriRestBlockParent, tokenName, parentBlock))
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                    .body(Mono.just(block), JsonObject.class)
+                    .bodyValue(block.toString())
                     .retrieve()
-                    .bodyToMono(JsonObject.class);
+                    .bodyToMono(JsonObject.class)
+                    .block();
+            logger.info(response.toString());
         }
-
     }
 }
