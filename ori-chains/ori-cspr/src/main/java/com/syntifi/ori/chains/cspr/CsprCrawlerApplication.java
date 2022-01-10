@@ -1,7 +1,5 @@
 package com.syntifi.ori.chains.cspr;
 
-import java.text.MessageFormat;
-
 import com.google.gson.JsonObject;
 import com.syntifi.casper.sdk.model.block.JsonBlock;
 import com.syntifi.ori.chains.cspr.listeners.CustomChunkListener;
@@ -13,6 +11,7 @@ import com.syntifi.ori.chains.cspr.listeners.StepResultListener;
 import com.syntifi.ori.chains.cspr.processor.BlockProcessor;
 import com.syntifi.ori.chains.cspr.reader.BlockReader;
 import com.syntifi.ori.chains.cspr.writer.BlockWriter;
+import com.syntifi.ori.client.OriRestClient;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -29,7 +28,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
@@ -38,20 +36,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 @ComponentScan
 public class CsprCrawlerApplication {
 
-    @Value("${ori.rest.token}")
-    private String oriRestToken;
-
-    @Value("${ori.rest.token.symbol}")
-    private String oriRestTokenSymbol;
-
-    @Value("${ori.rest.block.hash}")
-    private String oriRestBlockHash;
-
-    @Value("${ori.rest.block.parent}")
-    private String oriRestBlockParent;
-
     @Value("${cspr.token}")
-    private String token;
+    private String tokenSymbol;
 
     @Value("${cspr.token.name}")
     private String tokenName;
@@ -75,38 +61,25 @@ public class CsprCrawlerApplication {
     private StepBuilderFactory stepBuilderFactory;
 
     @Autowired
-    private WebClient oriRestClient;
+    private OriRestClient oriRestClient;
 
-    private void createTokenIfNeeded(WebClient client) {
+    private void createTokenIfNeeded() {
         try {
-            client.get()
-                    .uri(MessageFormat.format(oriRestTokenSymbol, token))
-                    .retrieve()
-                    .bodyToMono(JsonObject.class)
-                    .block();
+            oriRestClient.getToken(tokenSymbol);
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
                 JsonObject tokenJson = new JsonObject();
-                tokenJson.addProperty("symbol", token);
+                tokenJson.addProperty("symbol", tokenSymbol);
                 tokenJson.addProperty("name", tokenName);
                 tokenJson.addProperty("protocol", tokenProtocol);
-                oriRestClient.post()
-                        .uri(oriRestToken)
-                        .bodyValue(tokenJson.toString())
-                        .retrieve()
-                        .bodyToMono(JsonObject.class)
-                        .block();
+                oriRestClient.postToken(tokenJson);
             }
         }
     }
 
-    private void addBlockZeroIfNeeded(WebClient client) {
+    private void addBlockZeroIfNeeded() {
         try {
-            client.get()
-                    .uri(MessageFormat.format(oriRestBlockHash, token, blockZero))
-                    .retrieve()
-                    .bodyToMono(JsonObject.class)
-                    .block();
+            oriRestClient.getBlock(tokenSymbol, blockZero);
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
                 JsonObject blockJson = new JsonObject();
@@ -116,12 +89,7 @@ public class CsprCrawlerApplication {
                 blockJson.addProperty("era", 0);
                 blockJson.addProperty("root", blockZero);
                 blockJson.addProperty("validator", blockZero);
-                client.post()
-                        .uri(MessageFormat.format(oriRestBlockParent, token, "null"))
-                        .bodyValue(blockJson.toString())
-                        .retrieve()
-                        .bodyToMono(JsonObject.class)
-                        .block();
+                oriRestClient.postBlock(tokenSymbol, "null", blockJson);
             }
         }
     }
@@ -137,7 +105,8 @@ public class CsprCrawlerApplication {
                 .<JsonBlock, JsonObject>chunk(1)
                 .reader(new BlockReader(csprNode, csprPort))
                 .processor(new BlockProcessor())
-                .writer(new BlockWriter(oriRestClient, token, oriRestBlockParent))
+                .writer(new BlockWriter(oriRestClient, tokenSymbol))
+                //.writer(new TransactionWriter(token))
                 .listener(new StepResultListener())
                 .listener(new CustomChunkListener())
                 .listener(new StepItemReadListener())
@@ -148,8 +117,8 @@ public class CsprCrawlerApplication {
 
     @Bean
     public Job getBlockTransactionAndWrite() {
-        createTokenIfNeeded(oriRestClient);
-        addBlockZeroIfNeeded(oriRestClient);
+        createTokenIfNeeded();
+        addBlockZeroIfNeeded();
         return jobBuilderFactory.get("getBlockTransactionAndWrite")
                 .incrementer(new RunIdIncrementer())
                 .listener(new JobResultListener())
