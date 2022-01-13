@@ -1,0 +1,50 @@
+package com.syntifi.ori.chains.cspr.reader;
+
+import java.io.IOException;
+
+import com.syntifi.casper.sdk.identifier.block.HeightBlockIdentifier;
+import com.syntifi.casper.sdk.model.block.JsonBlockData;
+import com.syntifi.casper.sdk.model.transfer.TransferData;
+import com.syntifi.casper.sdk.service.CasperService;
+import com.syntifi.ori.chains.cspr.model.CsprBlockAndTransfers;
+import com.syntifi.ori.client.OriRestClient;
+
+import org.springframework.batch.item.ItemReader;
+
+public class BlockAndTransfersReader implements ItemReader<CsprBlockAndTransfers> {
+
+    private Long blockHeight;
+    private String tokenSymbol;
+    private CasperService casper;
+    private OriRestClient oriRestClient;
+
+    public BlockAndTransfersReader(CasperService casperService,
+            OriRestClient oriRestClient,
+            String tokenSymbol) {
+        this.casper = casperService;
+        this.oriRestClient = oriRestClient;
+        this.tokenSymbol = tokenSymbol;
+        initialize();
+    }
+
+    private void initialize() {
+        blockHeight = oriRestClient.getLastBlock(tokenSymbol).getHeight();
+    }
+
+    private boolean nextItem() {
+        blockHeight += 1;
+        return true;
+    }
+
+    // READ should return null if next item is not found
+    @Override
+    public CsprBlockAndTransfers read() throws IOException, InterruptedException {
+        if (blockHeight == null)
+            return null;
+        JsonBlockData blockData = casper.getBlock(new HeightBlockIdentifier(blockHeight));
+        TransferData transferData = casper.getBlockTransfers(new HeightBlockIdentifier(blockHeight));
+        nextItem();
+        return new CsprBlockAndTransfers(blockData.getBlock(), transferData.getTransfers());
+    }
+
+}

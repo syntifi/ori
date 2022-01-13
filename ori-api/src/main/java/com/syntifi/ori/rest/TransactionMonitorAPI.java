@@ -3,24 +3,23 @@ package com.syntifi.ori.rest;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
+import com.syntifi.ori.converter.LocalDateTimeFormat;
+import com.syntifi.ori.exception.ORIException;
+import com.syntifi.ori.model.Transaction;
+import com.syntifi.ori.service.AMLRules;
+import com.syntifi.ori.service.TransactionService;
+
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import io.vertx.core.cli.annotations.Description;
-
-import com.syntifi.ori.service.TransactionService;
-import com.syntifi.ori.exception.ORIException;
-import com.syntifi.ori.model.Transaction;
-import com.syntifi.ori.service.AMLRules;
-import com.syntifi.ori.converter.LocalDateTimeFormat;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * REST API transaction monitor endpoints 

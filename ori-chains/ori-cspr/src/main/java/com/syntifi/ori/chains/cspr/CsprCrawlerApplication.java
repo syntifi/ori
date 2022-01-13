@@ -1,17 +1,20 @@
 package com.syntifi.ori.chains.cspr;
 
-import com.google.gson.JsonObject;
-import com.syntifi.casper.sdk.model.block.JsonBlock;
+import com.syntifi.casper.sdk.service.CasperService;
 import com.syntifi.ori.chains.cspr.listeners.CustomChunkListener;
 import com.syntifi.ori.chains.cspr.listeners.JobResultListener;
 import com.syntifi.ori.chains.cspr.listeners.StepItemProcessListener;
 import com.syntifi.ori.chains.cspr.listeners.StepItemReadListener;
 import com.syntifi.ori.chains.cspr.listeners.StepItemWriteListener;
 import com.syntifi.ori.chains.cspr.listeners.StepResultListener;
-import com.syntifi.ori.chains.cspr.processor.BlockProcessor;
-import com.syntifi.ori.chains.cspr.reader.BlockReader;
-import com.syntifi.ori.chains.cspr.writer.BlockWriter;
+import com.syntifi.ori.chains.cspr.model.CsprBlockAndTransfers;
+import com.syntifi.ori.chains.cspr.model.OriBlockAndTransfers;
+import com.syntifi.ori.chains.cspr.processor.BlockAndTransfersProcessor;
+import com.syntifi.ori.chains.cspr.reader.BlockAndTransfersReader;
+import com.syntifi.ori.chains.cspr.writer.BlockAndTransfersWriter;
 import com.syntifi.ori.client.OriRestClient;
+import com.syntifi.ori.model.OriBlockPost;
+import com.syntifi.ori.model.OriToken;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -30,7 +33,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-@SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
+@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 @EnableBatchProcessing
 @Configuration
 @ComponentScan
@@ -45,12 +48,6 @@ public class CsprCrawlerApplication {
     @Value("${cspr.token.protocol}")
     private String tokenProtocol;
 
-    @Value("${cspr.node}")
-    private String csprNode;
-
-    @Value("${cspr.port}")
-    private int csprPort;
-
     @Value("${cspr.block.zero}")
     private String blockZero;
 
@@ -63,16 +60,19 @@ public class CsprCrawlerApplication {
     @Autowired
     private OriRestClient oriRestClient;
 
+    @Autowired
+    private CasperService casperService;
+
     private void createTokenIfNeeded() {
         try {
             oriRestClient.getToken(tokenSymbol);
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
-                JsonObject tokenJson = new JsonObject();
-                tokenJson.addProperty("symbol", tokenSymbol);
-                tokenJson.addProperty("name", tokenName);
-                tokenJson.addProperty("protocol", tokenProtocol);
-                oriRestClient.postToken(tokenJson);
+                OriToken token = new OriToken();
+                token.setSymbol(tokenSymbol);
+                token.setName(tokenName);
+                token.setProtocol(tokenProtocol);
+                oriRestClient.postToken(token);
             }
         }
     }
@@ -82,14 +82,14 @@ public class CsprCrawlerApplication {
             oriRestClient.getBlock(tokenSymbol, blockZero);
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
-                JsonObject blockJson = new JsonObject();
-                blockJson.addProperty("timeStamp", "2000-01-01T00:00:00.000+0000");
-                blockJson.addProperty("hash", blockZero);
-                blockJson.addProperty("height", 0);
-                blockJson.addProperty("era", 0);
-                blockJson.addProperty("root", blockZero);
-                blockJson.addProperty("validator", blockZero);
-                oriRestClient.postBlock(tokenSymbol, "null", blockJson);
+                OriBlockPost block = new OriBlockPost();
+                block.setTimeStamp("2000-01-01T00:00:00.000+0000");
+                block.setHash(blockZero);
+                block.setHeight(0L);
+                block.setEra(0L);
+                block.setRoot(blockZero);
+                block.setValidator(blockZero);
+                oriRestClient.postBlock(tokenSymbol, "null", block);
             }
         }
     }
@@ -100,13 +100,15 @@ public class CsprCrawlerApplication {
     }
 
     @Bean
-    public Step step1ReadBlock() {
-        return stepBuilderFactory.get("step1ReadBlock")
-                .<JsonBlock, JsonObject>chunk(1)
-                .reader(new BlockReader(csprNode, csprPort))
-                .processor(new BlockProcessor())
-                .writer(new BlockWriter(oriRestClient, tokenSymbol))
-                //.writer(new TransactionWriter(token))
+    public Step step1() {
+        return stepBuilderFactory.get("step1")
+                .<CsprBlockAndTransfers, OriBlockAndTransfers>chunk(1)
+                .reader(new BlockAndTransfersReader(casperService,
+                        oriRestClient,
+                        tokenSymbol))
+                .processor(new BlockAndTransfersProcessor())
+                .writer(new BlockAndTransfersWriter(oriRestClient,
+                        tokenSymbol))
                 .listener(new StepResultListener())
                 .listener(new CustomChunkListener())
                 .listener(new StepItemReadListener())
@@ -116,16 +118,17 @@ public class CsprCrawlerApplication {
     }
 
     @Bean
-    public Job getBlockTransactionAndWrite() {
+    public Job getBlockAndTransfersAndWrite() {
         createTokenIfNeeded();
         addBlockZeroIfNeeded();
-        return jobBuilderFactory.get("getBlockTransactionAndWrite")
+        return jobBuilderFactory.get("getBlockAndTransfersAndWrite")
                 .incrementer(new RunIdIncrementer())
                 .listener(new JobResultListener())
-                .start(step1ReadBlock())
+                .start(step1())
                 // .next(stepTwo())
                 .build();
     }
+
     public static void main(String[] args) {
         SpringApplication.run(CsprCrawlerApplication.class, args);
     }

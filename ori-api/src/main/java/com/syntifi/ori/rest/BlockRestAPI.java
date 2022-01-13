@@ -94,6 +94,13 @@ public class BlockRestAPI {
         return blockRepository.listAll(Sort.descending("timeStamp"));
     }
 
+    @GET
+    @Path("/{tokenSymbol}/last")
+    public Block getLastBlock(@PathParam("tokenSymbol") String symbol) throws ORIException {
+        Token token = getToken(symbol);
+        return blockRepository.getLastBlock(token);
+    }
+
     /**
      * GET method to retrieve a block by it's hash. Hash is given as a hex string.
      * 
