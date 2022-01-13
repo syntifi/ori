@@ -10,6 +10,7 @@ import com.syntifi.ori.chains.cspr.model.CsprBlockAndTransfers;
 import com.syntifi.ori.client.OriRestClient;
 
 import org.springframework.batch.item.ItemReader;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 public class BlockAndTransfersReader implements ItemReader<CsprBlockAndTransfers> {
 
@@ -28,7 +29,13 @@ public class BlockAndTransfersReader implements ItemReader<CsprBlockAndTransfers
     }
 
     private void initialize() {
-        blockHeight = oriRestClient.getLastBlock(tokenSymbol).getHeight();
+        try {
+            blockHeight = oriRestClient.getLastBlock(tokenSymbol).getHeight();
+        } catch (WebClientResponseException e) {
+            if (e.getRawStatusCode() == 404) {
+                blockHeight = 0L;
+            }
+        }
     }
 
     private boolean nextItem() {
