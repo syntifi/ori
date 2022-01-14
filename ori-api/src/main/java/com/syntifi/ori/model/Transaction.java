@@ -39,35 +39,26 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Transaction extends PanacheEntityBase {
-    @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ")
-    @Column(name = "time_stamp")
-    public Date timeStamp;
 
     @Id
     @NotNull
     @FullTextField(analyzer = "standard")
     public String hash;
 
+    @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ")
+    @Column(name = "time_stamp")
+    public Date timeStamp;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_account_id", nullable = false)
     public Account fromAccount;
 
-    @JsonGetter("from")
-    public String getJsonFrom() {
-        return fromAccount.getHash();
-    }
-
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "to_account_id", nullable = false)
     public Account toAccount;
-
-    @JsonGetter("to")
-    public String getJsonTo() {
-        return toAccount.getHash();
-    }
 
     @NotNull
     @GenericField
@@ -78,6 +69,16 @@ public class Transaction extends PanacheEntityBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "block_id", nullable = false)
     public Block block;
+
+    @JsonGetter("from")
+    public String getJsonFrom() {
+        return fromAccount.getHash();
+    }
+
+    @JsonGetter("to")
+    public String getJsonTo() {
+        return toAccount.getHash();
+    }
 
     @JsonGetter("block")
     public String getJsonBlock() {

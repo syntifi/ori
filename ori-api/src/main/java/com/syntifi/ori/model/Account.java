@@ -31,22 +31,17 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account extends PanacheEntityBase {
-    @JsonIgnore
-    @NotNull
-    @ManyToOne()
-    @JoinColumn(name = "token_id", nullable = false)
-    private Token token;
-
-    @JsonGetter("token")
-    public String getJsonToken() {
-        return token.getSymbol();
-    }
-
     @Id
     @NotNull
     @Column(nullable = false)
     @FullTextField(analyzer = "standard")
     private String hash;
+
+    @JsonIgnore
+    @NotNull
+    @ManyToOne()
+    @JoinColumn(name = "token_id", nullable = false)
+    private Token token;
 
     @Column(name = "public_key")
     @FullTextField(analyzer = "standard")
@@ -65,4 +60,9 @@ public class Account extends PanacheEntityBase {
     @IndexedEmbedded
     private Set<Transaction> in;
     
+
+    @JsonGetter("token")
+    public String getJsonToken() {
+        return token.getSymbol();
+    }
 }

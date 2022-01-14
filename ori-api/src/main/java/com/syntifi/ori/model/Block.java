@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -36,26 +37,22 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Block extends PanacheEntityBase {
+
+    @Id
+    @NotNull
+    @Column(unique = true)
+    private String hash;
+
     @JsonIgnore
     @NotNull
     @ManyToOne
     @JoinColumn(name = "token_id", nullable = false)
     private Token token;
 
-    @JsonGetter("token")
-    public String getJsonToken() {
-        return token.getSymbol();
-    }
-
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ")
     @Column(name = "time_stamp")
     private Date timeStamp;
-
-    @Id
-    @NotNull
-    @Column(unique = true)
-    private String hash;
 
     @NotNull
     @Min(0)
@@ -66,23 +63,13 @@ public class Block extends PanacheEntityBase {
     private Long era;
 
     @JsonIgnore
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_block_id", nullable = true)
     private Block parent;
 
-    @JsonGetter("parent")
-    public String getJsonParent() {
-        return parent == null ? null : parent.getHash();
-    }
-
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "parent")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "parent")
     private Block child;
-
-    @JsonGetter("child")
-    public String getJsonChild() {
-        return child == null ? null : child.getHash();
-    }
 
     @NotNull
     private String root;
@@ -94,4 +81,13 @@ public class Block extends PanacheEntityBase {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "block")
     private Set<Transaction> transactions;
 
+    @JsonGetter("parent")
+    public String getJsonParent() {
+        return parent == null ? null : parent.getHash();
+    }
+
+    @JsonGetter("token")
+    public String getJsonToken() {
+        return token.getSymbol();
+    }
 }
