@@ -55,11 +55,11 @@ public class Block extends PanacheEntityBase {
     private Date timeStamp;
 
     @NotNull
-    @Min(0)
+    @Min(-1)
     private Long height;
 
     @NotNull
-    @Min(0)
+    @Min(-1)
     private Long era;
 
     @JsonIgnore

@@ -85,8 +85,8 @@ public class CsprCrawlerApplication {
                 OriBlockPost block = new OriBlockPost();
                 block.setTimeStamp("2000-01-01T00:00:00.000+0000");
                 block.setHash(blockZero);
-                block.setHeight(0L);
-                block.setEra(0L);
+                block.setHeight(-1L);
+                block.setEra(-1L);
                 block.setRoot(blockZero);
                 block.setValidator(blockZero);
                 oriRestClient.postBlock(tokenSymbol, "null", block);
