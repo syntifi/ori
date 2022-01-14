@@ -103,6 +103,25 @@ public class TestResoucesBlock {
 
     @Test
     @Order(5)
+    public void testGetLastBlock() {
+        given()
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                .when()
+                .get("/api/v2/block/ABC/last")
+                .then()
+                .statusCode(200)
+                .body("token", equalTo("ABC"))
+                .body("era", equalTo(0))
+                .body("hash", equalTo("mockBlock"))
+                .body("height", equalTo(0))
+                .body("parent", equalTo(null))
+                .body("root", equalTo("root"))
+                .body("timeStamp", equalTo("2099-08-05T00:00:00.000+0000"))
+                .body("validator", equalTo("validator"));
+    }
+
+    @Test
+    @Order(6)
     public void testGetNonExistingBlock() {
         given()
                 .when()
@@ -113,7 +132,7 @@ public class TestResoucesBlock {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     public void testPostAnotherBlock() throws Exception {
         var block = new JsonObject();
         block.put("era", 0);
@@ -136,7 +155,7 @@ public class TestResoucesBlock {
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     public void testDeleteBlock() throws InterruptedException {
         given()
                 .when()
@@ -149,7 +168,7 @@ public class TestResoucesBlock {
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     public void testDeleteBlock2() throws InterruptedException {
         given()
                 .when()
@@ -162,7 +181,7 @@ public class TestResoucesBlock {
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     public void testDeleteToken() throws InterruptedException {
         given()
                 .when()

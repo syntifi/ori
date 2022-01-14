@@ -30,7 +30,7 @@ public class BlockAndTransfersReader implements ItemReader<CsprBlockAndTransfers
 
     private void initialize() {
         try {
-            blockHeight = oriRestClient.getLastBlock(tokenSymbol).getHeight();
+            blockHeight = oriRestClient.getLastBlock(tokenSymbol).getHeight()+1;
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
                 blockHeight = 0L;

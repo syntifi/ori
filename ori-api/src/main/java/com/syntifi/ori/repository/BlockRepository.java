@@ -7,7 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import com.syntifi.ori.model.Block;
 import com.syntifi.ori.model.Token;
 
-import org.hibernate.criterion.Order;
+import io.quarkus.panache.common.Sort;
 
 @ApplicationScoped
 public class BlockRepository implements Repository<Block> {
@@ -18,7 +18,7 @@ public class BlockRepository implements Repository<Block> {
     }
 
     public Block getLastBlock(Token token) {
-        List<Block> result = list("token", Order.desc("timeStamp"), token);
+        List<Block> result = list("token", Sort.descending("timeStamp"), token);
         return result.isEmpty() ? null : result.get(0);
     }
 

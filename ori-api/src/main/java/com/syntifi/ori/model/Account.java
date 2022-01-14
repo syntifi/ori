@@ -5,7 +5,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -34,7 +33,7 @@ import lombok.Setter;
 public class Account extends PanacheEntityBase {
     @JsonIgnore
     @NotNull
-    @ManyToOne(optional=false, fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "token_id", nullable = false)
     private Token token;
 
