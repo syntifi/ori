@@ -11,9 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
@@ -37,7 +34,6 @@ public class Account extends PanacheEntityBase {
     @FullTextField(analyzer = "standard")
     private String hash;
 
-    @JsonIgnore
     @NotNull
     @ManyToOne()
     @JoinColumn(name = "token_id", nullable = false)
@@ -50,19 +46,11 @@ public class Account extends PanacheEntityBase {
     @FullTextField(analyzer = "standard")
     private String label;
 
-    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "fromAccount")
     @IndexedEmbedded
     private Set<Transaction> out;
 
-    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "toAccount")
     @IndexedEmbedded
     private Set<Transaction> in;
-    
-
-    @JsonGetter("token")
-    public String getJsonToken() {
-        return token.getSymbol();
-    }
 }

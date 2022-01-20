@@ -15,10 +15,6 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,20 +33,17 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Block extends PanacheEntityBase {
-
     @Id
     @NotNull
     @Column(unique = true)
     private String hash;
 
-    @JsonIgnore
     @NotNull
     @ManyToOne
     @JoinColumn(name = "token_id", nullable = false)
     private Token token;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ")
     @Column(name = "time_stamp")
     private Date timeStamp;
 
@@ -62,12 +55,10 @@ public class Block extends PanacheEntityBase {
     @Min(-1)
     private Long era;
 
-    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_block_id", nullable = true)
     private Block parent;
 
-    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "parent")
     private Block child;
 
@@ -77,17 +68,6 @@ public class Block extends PanacheEntityBase {
     @NotNull
     private String validator;
 
-    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "block")
     private Set<Transaction> transactions;
-
-    @JsonGetter("parent")
-    public String getJsonParent() {
-        return parent == null ? null : parent.getHash();
-    }
-
-    @JsonGetter("token")
-    public String getJsonToken() {
-        return token.getSymbol();
-    }
 }

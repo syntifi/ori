@@ -2,6 +2,7 @@ package com.syntifi.ori.rest;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -13,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
+import com.syntifi.ori.dto.AccountDTO;
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Account;
 import com.syntifi.ori.model.Token;
@@ -80,9 +82,10 @@ public class AccountRestAPI {
     */
    @GET
    @Path("/{tokenSymbol}")
-   public List<Account> getAllAccounts(@PathParam("tokenSymbol") String symbol) throws ORIException {
+   public List<AccountDTO> getAllAccounts(@PathParam("tokenSymbol") String symbol) throws ORIException {
       getToken(symbol);
-      return accountRepository.listAll(Sort.descending("hash"));
+      return accountRepository.listAll(Sort.descending("hash")).stream().map(AccountDTO::fromModel)
+            .collect(Collectors.toList());
    }
 
    /**
@@ -94,14 +97,14 @@ public class AccountRestAPI {
     */
    @GET
    @Path("/{tokenSymbol}/hash/{hash}")
-   public Account getAccountByHash(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
+   public AccountDTO getAccountByHash(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
          throws ORIException {
       getToken(symbol);
       Account result = accountRepository.findByHash(hash);
       if (result == null) {
          throw new ORIException(hash + " not found", 404);
       }
-      return result;
+      return AccountDTO.fromModel(result);
    }
 
    /**

@@ -2,6 +2,7 @@ package com.syntifi.ori.rest;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -13,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
+import com.syntifi.ori.dto.TokenDTO;
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Token;
 import com.syntifi.ori.repository.TokenRepository;
@@ -49,18 +51,19 @@ public class TokenRestAPI {
     }
 
     @GET
-    public List<Token> getAllTokens() {
-        return tokenRepository.listAll(Sort.ascending("symbol"));
+    public List<TokenDTO> getAllTokens() {
+        return tokenRepository.listAll(Sort.ascending("symbol")).stream().map(TokenDTO::fromModel)
+                .collect(Collectors.toList());
     }
 
     @GET
     @Path("/{tokenSymbol}")
-    public Token getTokenBySymbol(@PathParam("tokenSymbol") String symbol) {
+    public TokenDTO getTokenBySymbol(@PathParam("tokenSymbol") String symbol) {
         Token result = tokenRepository.findBySymbol(symbol);
         if (result == null) {
             throw new ORIException(symbol + " not found", 404);
         }
-        return result;
+        return TokenDTO.fromModel(result);
     }
 
     @DELETE

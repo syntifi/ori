@@ -17,6 +17,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import com.syntifi.ori.dto.TransactionDTO;
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Account;
 import com.syntifi.ori.model.Token;
@@ -119,12 +120,12 @@ public class TransactionRestAPI {
      */
     @GET
     @Path("/{tokenSymbol}")
-    public List<Transaction> getAllTransactions(@PathParam("tokenSymbol") String symbol,
+    public List<TransactionDTO> getAllTransactions(@PathParam("tokenSymbol") String symbol,
             @QueryParam("fromAccount") String fromHash, @QueryParam("toAccount") String toHash,
             @QueryParam("blockHash") String block) throws ORIException {
         List<Transaction> transactions = new ArrayList<>();
-        Account from = fromHash==null ? null : getAccount(fromHash);
-        Account to = toHash==null ? null : getAccount(toHash);
+        Account from = fromHash == null ? null : getAccount(fromHash);
+        Account to = toHash == null ? null : getAccount(toHash);
         if ((from != null) && (to == null)) {
             transactions = transactionRepository.getOutgoingTransactions(from);
         } else if ((from == null) && (to != null)) {
@@ -138,6 +139,7 @@ public class TransactionRestAPI {
         return transactions
                 .stream()
                 .filter(t -> t.getBlock().getToken().getSymbol().equals(symbol))
+                .map(TransactionDTO::fromModel)
                 .collect(Collectors.toList())
                 .subList(0, Math.min(100, transactions.size()));
     }
@@ -152,13 +154,13 @@ public class TransactionRestAPI {
      */
     @GET
     @Path("/{tokenSymbol}/hash/{transactionHash}")
-    public Transaction getTransactionByHash(@PathParam("tokenSymbol") String symbol,
+    public TransactionDTO getTransactionByHash(@PathParam("tokenSymbol") String symbol,
             @PathParam("transactionHash") String hash) throws ORIException {
         Transaction out = transactionRepository.findByHash(hash);
         if (out == null || !out.getBlock().getToken().getSymbol().equals(symbol)) {
             throw new ORIException(hash + " not found", 404);
         }
-        return out;
+        return TransactionDTO.fromModel(out);
     }
 
     /**
@@ -172,39 +174,42 @@ public class TransactionRestAPI {
      */
     @GET
     @Path("{tokenSymbol}/account/{account}")
-    public List<Transaction> getTransactionsByAccount(@PathParam("tokenSymbol") String symbol,
+    public List<TransactionDTO> getTransactionsByAccount(@PathParam("tokenSymbol") String symbol,
             @PathParam("account") String hash) throws ORIException {
         Account account = getAccount(hash);
         List<Transaction> transactions = transactionRepository.getTransactionsByAccount(account);
         return transactions
                 .stream()
                 .filter(t -> t.getBlock().getToken().getSymbol().equals(symbol))
+                .map(TransactionDTO::fromModel)
                 .collect(Collectors.toList())
                 .subList(0, Math.min(100, transactions.size()));
     }
 
     @GET
     @Path("{tokenSymbol}/incoming/account/{account}")
-    public List<Transaction> getIncomingTransactionsToAccount(@PathParam("tokenSymbol") String symbol,
+    public List<TransactionDTO> getIncomingTransactionsToAccount(@PathParam("tokenSymbol") String symbol,
             @PathParam("account") String hash) throws ORIException {
         Account account = getAccount(hash);
         List<Transaction> transactions = transactionRepository.getIncomingTransactions(account);
         return transactions
                 .stream()
                 .filter(t -> t.getBlock().getToken().getSymbol().equals(symbol))
+                .map(TransactionDTO::fromModel)
                 .collect(Collectors.toList())
                 .subList(0, Math.min(100, transactions.size()));
     }
 
     @GET
     @Path("{tokenSymbol}/outgoing/account/{account}")
-    public List<Transaction> getOutgoingTransactionsFromAccount(@PathParam("tokenSymbol") String symbol,
+    public List<TransactionDTO> getOutgoingTransactionsFromAccount(@PathParam("tokenSymbol") String symbol,
             @PathParam("account") String hash) throws ORIException {
         Account account = getAccount(hash);
         var transactions = transactionRepository.getOutgoingTransactions(account);
         return transactions
                 .stream()
                 .filter(t -> t.getBlock().getToken().getSymbol().equals(symbol))
+                .map(TransactionDTO::fromModel)
                 .collect(Collectors.toList())
                 .subList(0, Math.min(100, transactions.size()));
     }

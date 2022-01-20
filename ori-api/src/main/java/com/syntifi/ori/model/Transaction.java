@@ -11,10 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
@@ -39,23 +35,19 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Transaction extends PanacheEntityBase {
-
     @Id
     @NotNull
     @FullTextField(analyzer = "standard")
     public String hash;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ")
     @Column(name = "time_stamp")
     public Date timeStamp;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_account_id", nullable = false)
     public Account fromAccount;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "to_account_id", nullable = false)
     public Account toAccount;
@@ -65,24 +57,7 @@ public class Transaction extends PanacheEntityBase {
     @Min(0)
     public Double amount;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "block_id", nullable = false)
     public Block block;
-
-    @JsonGetter("from")
-    public String getJsonFrom() {
-        return fromAccount.getHash();
-    }
-
-    @JsonGetter("to")
-    public String getJsonTo() {
-        return toAccount.getHash();
-    }
-
-    @JsonGetter("block")
-    public String getJsonBlock() {
-        return block.getHash();
-    }
-
 }

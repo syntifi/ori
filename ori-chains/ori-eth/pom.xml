@@ -8,7 +8,6 @@
     <groupId>com.syntifi.ori</groupId>
     <artifactId>ori-chains</artifactId>
     <version>0.1.0</version>
-    <relativePath>../</relativePath>
   </parent>
   <dependencies>
     <dependency>

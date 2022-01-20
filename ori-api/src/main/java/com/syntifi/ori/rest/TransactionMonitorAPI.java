@@ -2,6 +2,7 @@ package com.syntifi.ori.rest;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -11,6 +12,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
 import com.syntifi.ori.converter.LocalDateTimeFormat;
+import com.syntifi.ori.dto.TransactionDTO;
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Transaction;
 import com.syntifi.ori.service.AMLRules;
@@ -22,9 +24,9 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import io.vertx.core.cli.annotations.Description;
 
 /**
- * REST API transaction monitor endpoints 
+ * REST API transaction monitor endpoints
  * 
- * @author Andre Bertolace 
+ * @author Andre Bertolace
  * @since 0.1.0
  */
 @Singleton
@@ -37,7 +39,7 @@ public class TransactionMonitorAPI {
     TransactionService transactionService;
 
     /**
-     * GET method to return the different AML scores in [0,1] 
+     * GET method to return the different AML scores in [0,1]
      * 
      * @param account
      * @param date
@@ -46,10 +48,10 @@ public class TransactionMonitorAPI {
      */
     @GET
     @Path("score/{account}")
-    public AMLRules scoreAccount(@PathParam("account") String account, 
-                        @QueryParam("date") @LocalDateTimeFormat(DATE_FORMAT) LocalDateTime dateTime) throws ORIException {
+    public AMLRules scoreAccount(@PathParam("account") String account,
+            @QueryParam("date") @LocalDateTimeFormat(DATE_FORMAT) LocalDateTime dateTime) throws ORIException {
         try {
-            LocalDateTime date = dateTime==null ? LocalDateTime.now() : dateTime;
+            LocalDateTime date = dateTime == null ? LocalDateTime.now() : dateTime;
             LocalDateTime from = date.minusDays(ConfigProvider.getConfig().getValue("ori.aml.long-window", int.class));
             List<Transaction> in = transactionService.getIncomingTransactions(account, from, date);
             List<Transaction> out = transactionService.getOutgoingTransactions(account, from, date);
@@ -64,10 +66,11 @@ public class TransactionMonitorAPI {
     }
 
     /**
-     * GET method to retrieve the graph of all past-transactions linked to the given account 
+     * GET method to retrieve the graph of all past-transactions linked to the given
+     * account
      * 
      * @param account
-     * @param from 
+     * @param from
      * @param to
      * @return List<Transaction>
      * @throws ORIException
@@ -75,15 +78,16 @@ public class TransactionMonitorAPI {
     @GET
     @Path("traceCoin/back/{account}")
     @Description("Traces")
-    public List<Transaction> reverseGraphWalk(@PathParam("account") String account, 
-            @QueryParam("fromDate") @LocalDateTimeFormat(DATE_FORMAT) LocalDateTime fromDate, 
+    public List<TransactionDTO> reverseGraphWalk(@PathParam("account") String account,
+            @QueryParam("fromDate") @LocalDateTimeFormat(DATE_FORMAT) LocalDateTime fromDate,
             @QueryParam("toDate") @LocalDateTimeFormat(DATE_FORMAT) LocalDateTime toDate) throws ORIException {
         try {
             LocalDateTime to = toDate == null ? LocalDateTime.now() : toDate;
-            LocalDateTime from = fromDate==null 
+            LocalDateTime from = fromDate == null
                     ? to.minusDays(ConfigProvider.getConfig().getValue("ori.aml.long-window", int.class))
                     : fromDate;
-            return transactionService.reverseGraphWalk(account, from, to);
+            return transactionService.reverseGraphWalk(account, from, to).stream().map(TransactionDTO::fromModel)
+                    .collect(Collectors.toList());
         } catch (ORIException e) {
             throw e;
         } catch (Exception e) {
@@ -92,28 +96,30 @@ public class TransactionMonitorAPI {
     }
 
     /**
-     * GET method to retrieve the graph of all forward-transactions linked to the given account 
+     * GET method to retrieve the graph of all forward-transactions linked to the
+     * given account
      * 
      * @param account
-     * @param from 
+     * @param from
      * @param to
      * @return List<Transaction>
      * @throws ORIException
      */
     @GET
     @Path("traceCoin/forward/{account}")
-    public List<Transaction> forwardGraphWalk(@PathParam("account") String account, 
-            @QueryParam("fromDate") @LocalDateTimeFormat(DATE_FORMAT) LocalDateTime fromDate, 
+    public List<TransactionDTO> forwardGraphWalk(@PathParam("account") String account,
+            @QueryParam("fromDate") @LocalDateTimeFormat(DATE_FORMAT) LocalDateTime fromDate,
             @QueryParam("toDate") @LocalDateTimeFormat(DATE_FORMAT) LocalDateTime toDate) throws ORIException {
         try {
             LocalDateTime to = toDate == null ? LocalDateTime.now() : toDate;
-            LocalDateTime from = fromDate==null 
+            LocalDateTime from = fromDate == null
                     ? to.minusDays(ConfigProvider.getConfig().getValue("ori.aml.long-window", int.class))
                     : fromDate;
-            return transactionService.forwardGraphWalk(account, from, to);
+            return transactionService.forwardGraphWalk(account, from, to).stream().map(TransactionDTO::fromModel)
+                    .collect(Collectors.toList());
         } catch (ORIException e) {
             throw e;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw transactionService.parseElasticError(e);
         }
     }

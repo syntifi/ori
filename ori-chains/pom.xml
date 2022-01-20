@@ -13,7 +13,6 @@
     <groupId>com.syntifi.ori</groupId>
     <artifactId>ori</artifactId>
     <version>0.2.0</version>
-    <relativePath>../</relativePath>
   </parent>
   <dependencies>
     <dependency>
@@ -45,7 +44,6 @@
       <groupId>com.syntifi.ori</groupId>
       <artifactId>ori-client</artifactId>
       <version>0.1.0</version>
-      <scope>jar</scope>
     </dependency>
   </dependencies>
 </project>

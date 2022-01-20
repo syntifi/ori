@@ -2,6 +2,7 @@ package com.syntifi.ori.rest;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -13,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
+import com.syntifi.ori.dto.BlockDTO;
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Block;
 import com.syntifi.ori.model.Token;
@@ -81,7 +83,7 @@ public class BlockRestAPI {
     }
 
     /**
-     * GET method to retreive all blocks indexed in ES. Note that the blocks are
+     * GET method to retrieve all blocks indexed in ES. Note that the blocks are
      * sorted in reverse chronological order
      * 
      * @return List<Block>
@@ -89,16 +91,17 @@ public class BlockRestAPI {
      */
     @GET
     @Path("/{tokenSymbol}")
-    public List<Block> getAllBlocks(@PathParam("tokenSymbol") String symbol) throws ORIException {
+    public List<BlockDTO> getAllBlocks(@PathParam("tokenSymbol") String symbol) throws ORIException {
         getToken(symbol);
-        return blockRepository.listAll(Sort.descending("timeStamp"));
+        return blockRepository.listAll(Sort.descending("timeStamp")).stream().map(BlockDTO::fromModel)
+                .collect(Collectors.toList());
     }
 
     @GET
     @Path("/{tokenSymbol}/last")
-    public Block getLastBlock(@PathParam("tokenSymbol") String symbol) throws ORIException {
+    public BlockDTO getLastBlock(@PathParam("tokenSymbol") String symbol) throws ORIException {
         Token token = getToken(symbol);
-        return blockRepository.getLastBlock(token);
+        return BlockDTO.fromModel(blockRepository.getLastBlock(token));
     }
 
     /**
@@ -110,14 +113,14 @@ public class BlockRestAPI {
      */
     @GET
     @Path("/{tokenSymbol}/hash/{hash}")
-    public Block getBlockByHash(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
+    public BlockDTO getBlockByHash(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
             throws ORIException {
         getToken(symbol);
         Block result = blockRepository.findByHash(hash);
         if (result == null) {
             throw new ORIException(hash + " not found", 404);
         }
-        return result;
+        return BlockDTO.fromModel(result);
     }
 
     /**
