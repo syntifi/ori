@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.syntifi.ori</groupId>
   <artifactId>ori-eth</artifactId>
@@ -11,4 +10,25 @@
     <version>0.1.0</version>
     <relativePath>../</relativePath>
   </parent>
-  </project>
+  <dependencies>
+    <dependency>
+      <groupId>org.web3j</groupId>
+      <artifactId>web3j-maven-plugin</artifactId>
+      <version>4.8.7</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <layers>
+            <enabled>true</enabled>
+          </layers>
+        </configuration>
+        <version>2.6.2</version>
+      </plugin>
+    </plugins>
+  </build>
+</project>

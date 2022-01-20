@@ -28,11 +28,16 @@ public class OriRestClient {
     }
 
     public OriRestClient(String host, String apiEndpoint, String apiVersion) {
-        client = WebClient
-                .builder()
-                .baseUrl(host)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
+        try {
+            WebClient test = WebClient
+                    .builder()
+                    .baseUrl(host)
+                    .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    .build();
+            client = test;
+        } catch (Exception e) {
+            int x = 0;
+        }
         apiPrefix = apiEndpoint + "/" + apiVersion;
 
     }

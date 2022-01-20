@@ -1,17 +1,15 @@
-package com.syntifi.ori.chains.cspr;
+package com.syntifi.ori.chains.eth;
 
-import com.syntifi.casper.sdk.service.CasperService;
-import com.syntifi.ori.chains.cspr.listeners.CustomChunkListener;
-import com.syntifi.ori.chains.cspr.listeners.JobResultListener;
-import com.syntifi.ori.chains.cspr.listeners.StepItemProcessListener;
-import com.syntifi.ori.chains.cspr.listeners.StepItemReadListener;
-import com.syntifi.ori.chains.cspr.listeners.StepItemWriteListener;
-import com.syntifi.ori.chains.cspr.listeners.StepResultListener;
-import com.syntifi.ori.chains.cspr.model.CsprBlockAndTransfers;
-import com.syntifi.ori.chains.cspr.model.OriBlockAndTransfers;
-import com.syntifi.ori.chains.cspr.processor.BlockAndTransfersProcessor;
-import com.syntifi.ori.chains.cspr.reader.BlockAndTransfersReader;
-import com.syntifi.ori.chains.cspr.writer.BlockAndTransfersWriter;
+import com.syntifi.ori.chains.eth.listeners.CustomChunkListener;
+import com.syntifi.ori.chains.eth.listeners.JobResultListener;
+import com.syntifi.ori.chains.eth.listeners.StepItemProcessListener;
+import com.syntifi.ori.chains.eth.listeners.StepItemReadListener;
+import com.syntifi.ori.chains.eth.listeners.StepItemWriteListener;
+import com.syntifi.ori.chains.eth.listeners.StepResultListener;
+import com.syntifi.ori.chains.eth.model.OriBlock;
+import com.syntifi.ori.chains.eth.processor.BlockAndTransfersProcessor;
+import com.syntifi.ori.chains.eth.reader.BlockAndTransfersReader;
+import com.syntifi.ori.chains.eth.writer.BlockAndTransfersWriter;
 import com.syntifi.ori.client.OriRestClient;
 import com.syntifi.ori.model.OriBlockPost;
 import com.syntifi.ori.model.OriToken;
@@ -31,24 +29,28 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.methods.response.EthBlock;
 
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 @EnableBatchProcessing
 @Configuration
 @ComponentScan
-public class CsprCrawlerApplication {
+@Component
+public class EthCrawlerApplication {
 
-    @Value("${cspr.token}")
+    @Value("${eth.token}")
     private String tokenSymbol;
 
-    @Value("${cspr.token.name}")
+    @Value("${eth.token.name}")
     private String tokenName;
 
-    @Value("${cspr.token.protocol}")
+    @Value("${eth.token.protocol}")
     private String tokenProtocol;
 
-    @Value("${cspr.block.zero}")
+    @Value("${eth.block.zero}")
     private String blockZero;
 
     @Autowired
@@ -61,7 +63,7 @@ public class CsprCrawlerApplication {
     private OriRestClient oriRestClient;
 
     @Autowired
-    private CasperService casperService;
+    private Web3j ethService;
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
@@ -102,8 +104,8 @@ public class CsprCrawlerApplication {
     @Bean
     public Step step1() {
         return stepBuilderFactory.get("step1")
-                .<CsprBlockAndTransfers, OriBlockAndTransfers>chunk(1)
-                .reader(new BlockAndTransfersReader(casperService,
+                .<EthBlock, OriBlock>chunk(1)
+                .reader(new BlockAndTransfersReader(ethService,
                         oriRestClient,
                         tokenSymbol))
                 .processor(new BlockAndTransfersProcessor())
@@ -130,6 +132,6 @@ public class CsprCrawlerApplication {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(CsprCrawlerApplication.class, args);
+        SpringApplication.run(EthCrawlerApplication.class, args);
     }
 }
