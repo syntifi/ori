@@ -1,6 +1,5 @@
 package com.syntifi.ori.dto;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.syntifi.ori.model.Account;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +22,6 @@ public class AccountDTO {
 
     private String token;
 
-    @JsonGetter("token")
     public static AccountDTO fromModel(Account model) {
         return model != null
                 ? new AccountDTO(model.getHash(), model.getPublicKey(), model.getLabel(), model.getToken().getSymbol())

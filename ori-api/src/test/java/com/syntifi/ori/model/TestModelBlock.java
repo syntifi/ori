@@ -9,13 +9,9 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import io.vertx.core.json.JsonObject;
 
 public class TestModelBlock {
     @Inject
@@ -25,39 +21,6 @@ public class TestModelBlock {
     public static void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
-    }
-
-    @Test
-    public void testSerializeWrongDateType() {
-        ObjectMapper mapper = new ObjectMapper();
-        var block = new JsonObject();
-        block.put("era", 0);
-        block.put("hash", "mockBlock");
-        block.put("height", 0);
-        block.put("parent", "parent");
-        block.put("root", "root");
-        block.put("timeStamp", "2099-08-05");
-        block.put("validator", "validator");
-        block.put("parent", null);
-        block.put("token", 1);
-        var e = Assertions.assertThrows(Exception.class, () ->  mapper.readValue(block.toString(), Block.class));
-        Assertions.assertTrue(e.getMessage().contains("Date"));
-    }
-
-    @Test
-    public void testSerializeWrongEraType() {
-        ObjectMapper mapper = new ObjectMapper();
-        var block = new JsonObject();
-        block.put("era", "0asdfasfas");
-        block.put("hash", "mockBlock");
-        block.put("height", 0);
-        block.put("root", "root");
-        block.put("timeStamp", "2099-08-05T00:00:00.000+0000");
-        block.put("validator", "validator");
-        block.put("parent", null);
-        block.put("token", 1);
-        var e = Assertions.assertThrows(Exception.class, () ->  mapper.readValue(block.toString(), Block.class));
-        Assertions.assertTrue(e.getMessage().contains("long"));
     }
 
     @Test

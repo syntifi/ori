@@ -33,7 +33,7 @@ import io.vertx.core.cli.annotations.Description;
 @Tag(name = "Transaction monitor", description = "Monitor accounts, trace transactions and calculate risk scores")
 public class TransactionMonitorAPI {
 
-    public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+    public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ";
 
     @Inject
     TransactionService transactionService;

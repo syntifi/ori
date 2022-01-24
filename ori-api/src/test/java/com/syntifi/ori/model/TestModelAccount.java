@@ -7,16 +7,12 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import io.vertx.core.json.JsonObject;
-
 public class TestModelAccount {
-    
+
     private static Validator validator;
 
     @BeforeAll
@@ -24,7 +20,7 @@ public class TestModelAccount {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
     }
-    
+
     @Test
     public void testNullToken() {
         var account = new Account();
@@ -49,19 +45,5 @@ public class TestModelAccount {
         account.setLabel("from");
         Set<ConstraintViolation<Account>> constraintViolations = validator.validate(account);
         Assertions.assertEquals(0, constraintViolations.size());
-    }
-    @Test
-    public void testSerializer() {
-        ObjectMapper mapper = new ObjectMapper();
-        var token = new JsonObject();
-        token.put("symbol", "SYM");
-        token.put("name", "name");
-        token.put("protocol", "protocol");
-        var account = new JsonObject();
-        account.put("token", token);
-        account.put("hash", "from");
-        account.put("publicKey", "key");
-        account.put("label", "from");
-        Assertions.assertDoesNotThrow(() -> mapper.readValue(account.toString(), Account.class));
     }
 }
