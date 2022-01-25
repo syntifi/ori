@@ -135,7 +135,7 @@ public class TestResourcesTransaction {
                 .statusCode(200)
                 .body("amount", equalTo(1234F))
                 .body("hash", equalTo("mockTransaction"))
-                .body("block", equalTo("transactionBlock"))
+                .body("blockHash", equalTo("transactionBlock"))
                 .body("from", equalTo("fromacc"))
                 .body("to", equalTo("toacc"))
                 .body("timeStamp", equalTo("2099-08-05T00:00:00.000+0000"));
@@ -152,7 +152,7 @@ public class TestResourcesTransaction {
                 .body("size()", equalTo(1))
                 .body("[0].amount", equalTo(1234F))
                 .body("[0].hash", equalTo("mockTransaction"))
-                .body("[0].block", equalTo("transactionBlock"))
+                .body("[0].blockHash", equalTo("transactionBlock"))
                 .body("[0].from", equalTo("fromacc"))
                 .body("[0].to", equalTo("toacc"))
                 .body("[0].timeStamp", equalTo("2099-08-05T00:00:00.000+0000"));
@@ -169,7 +169,7 @@ public class TestResourcesTransaction {
                 .body("size()", equalTo(1))
                 .body("[0].amount", equalTo(1234F))
                 .body("[0].hash", equalTo("mockTransaction"))
-                .body("[0].block", equalTo("transactionBlock"))
+                .body("[0].blockHash", equalTo("transactionBlock"))
                 .body("[0].from", equalTo("fromacc"))
                 .body("[0].to", equalTo("toacc"))
                 .body("[0].timeStamp", equalTo("2099-08-05T00:00:00.000+0000"));
@@ -186,7 +186,7 @@ public class TestResourcesTransaction {
                 .body("size()", equalTo(1))
                 .body("[0].amount", equalTo(1234F))
                 .body("[0].hash", equalTo("mockTransaction"))
-                .body("[0].block", equalTo("transactionBlock"))
+                .body("[0].blockHash", equalTo("transactionBlock"))
                 .body("[0].from", equalTo("fromacc"))
                 .body("[0].to", equalTo("toacc"))
                 .body("[0].timeStamp", equalTo("2099-08-05T00:00:00.000+0000"));
@@ -273,6 +273,5 @@ public class TestResourcesTransaction {
                 .body("method", equalTo("DELETE"))
                 .body("uri", equalTo("/token/ABC"));
     }
-
 
 }

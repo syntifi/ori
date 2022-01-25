@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import com.syntifi.ori.converter.LocalDateTimeFormat;
 import com.syntifi.ori.dto.TransactionDTO;
 import com.syntifi.ori.exception.ORIException;
+import com.syntifi.ori.mapper.TransactionMapper;
 import com.syntifi.ori.model.Transaction;
 import com.syntifi.ori.service.AMLRules;
 import com.syntifi.ori.service.TransactionService;
@@ -86,7 +87,7 @@ public class TransactionMonitorAPI {
             LocalDateTime from = fromDate == null
                     ? to.minusDays(ConfigProvider.getConfig().getValue("ori.aml.long-window", int.class))
                     : fromDate;
-            return transactionService.reverseGraphWalk(account, from, to).stream().map(TransactionDTO::fromModel)
+            return transactionService.reverseGraphWalk(account, from, to).stream().map(TransactionMapper::fromModel)
                     .collect(Collectors.toList());
         } catch (ORIException e) {
             throw e;
@@ -115,7 +116,7 @@ public class TransactionMonitorAPI {
             LocalDateTime from = fromDate == null
                     ? to.minusDays(ConfigProvider.getConfig().getValue("ori.aml.long-window", int.class))
                     : fromDate;
-            return transactionService.forwardGraphWalk(account, from, to).stream().map(TransactionDTO::fromModel)
+            return transactionService.forwardGraphWalk(account, from, to).stream().map(TransactionMapper::fromModel)
                     .collect(Collectors.toList());
         } catch (ORIException e) {
             throw e;

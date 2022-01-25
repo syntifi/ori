@@ -3,9 +3,9 @@ package com.syntifi.ori.dto;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.syntifi.ori.model.Transaction;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,8 +14,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class TransactionDTO {
-    private static final TransactionDTO DEFAULT_DTO_VALUE = null;
 
     private String hash;
 
@@ -28,11 +28,7 @@ public class TransactionDTO {
 
     private String to;
 
-    private String block;
+    private String blockHash;
 
-    public static TransactionDTO fromModel(Transaction model) {
-        return model != null ? new TransactionDTO(model.getHash(), model.getTimeStamp(), model.getAmount(),
-                model.getFromAccount().getHash(), model.getToAccount().getHash(), model.getBlock().getHash())
-                : DEFAULT_DTO_VALUE;
-    }
+    private String tokenSymbol;
 }

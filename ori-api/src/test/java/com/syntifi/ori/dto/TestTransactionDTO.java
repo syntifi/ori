@@ -18,7 +18,7 @@ public class TestTransactionDTO {
         transaction.put("from", "from");
         transaction.put("to", "to");
         transaction.put("amount", 1234);
-        transaction.put("block", "block");
+        transaction.put("blockHash", "block");
         var e = Assertions.assertThrows(Exception.class,
                 () -> mapper.readValue(transaction.toString(), TransactionDTO.class));
         Assertions.assertTrue(e.getMessage().contains("Date"));

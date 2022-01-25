@@ -16,10 +16,9 @@ import javax.ws.rs.core.Response;
 
 import com.syntifi.ori.dto.AccountDTO;
 import com.syntifi.ori.exception.ORIException;
+import com.syntifi.ori.mapper.AccountMapper;
 import com.syntifi.ori.model.Account;
-import com.syntifi.ori.model.Token;
 import com.syntifi.ori.repository.AccountRepository;
-import com.syntifi.ori.repository.TokenRepository;
 
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
@@ -34,20 +33,10 @@ import io.vertx.core.json.JsonObject;
  */
 @Singleton
 @Tag(name = "Account", description = "Account resources")
-public class AccountRestAPI {
+public class AccountRestAPI extends AbstractBaseRestApi {
+
    @Inject
    AccountRepository accountRepository;
-
-   @Inject
-   TokenRepository tokenRepository;
-
-   private Token getToken(String symbol) {
-      Token token = tokenRepository.findBySymbol(symbol);
-      if (token == null) {
-         throw new ORIException("Token not found", 404);
-      }
-      return token;
-   }
 
    /**
     * POST method to add a new account and index in ES
@@ -59,15 +48,21 @@ public class AccountRestAPI {
    @POST
    @Transactional
    @Path("/{tokenSymbol}/")
-   public Response addAccount(Account account, @PathParam("tokenSymbol") String symbol) throws ORIException {
+   public Response addAccount(@PathParam("tokenSymbol") String symbol, AccountDTO accountDTO) throws ORIException {
+
+      getTokenOr404(symbol);
+
+      accountDTO.setTokenSymbol(symbol);
+      Account account = AccountMapper.toModel(accountDTO, tokenRepository);
+
       boolean exists = accountRepository.existsAlready(account);
       if (exists) {
          throw new ORIException(account.getHash() + " exists already", 400);
       }
-      var token = getToken(symbol);
-      account.setToken(token);
+
       accountRepository.check(account);
       accountRepository.persist(account);
+
       return Response.ok(new JsonObject().put("created",
             URI.create("/account/" + symbol + "/" + account.getHash())))
             .build();
@@ -83,8 +78,10 @@ public class AccountRestAPI {
    @GET
    @Path("/{tokenSymbol}")
    public List<AccountDTO> getAllAccounts(@PathParam("tokenSymbol") String symbol) throws ORIException {
-      getToken(symbol);
-      return accountRepository.listAll(Sort.descending("hash")).stream().map(AccountDTO::fromModel)
+
+      getTokenOr404(symbol);
+
+      return accountRepository.listAll(Sort.descending("hash")).stream().map(AccountMapper::fromModel)
             .collect(Collectors.toList());
    }
 
@@ -99,12 +96,15 @@ public class AccountRestAPI {
    @Path("/{tokenSymbol}/hash/{hash}")
    public AccountDTO getAccountByHash(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
          throws ORIException {
-      getToken(symbol);
+
+      getTokenOr404(symbol);
+
       Account result = accountRepository.findByHash(hash);
       if (result == null) {
          throw new ORIException(hash + " not found", 404);
       }
-      return AccountDTO.fromModel(result);
+
+      return AccountMapper.fromModel(result);
    }
 
    /**
@@ -120,7 +120,9 @@ public class AccountRestAPI {
    @Path("/{tokenSymbol}/hash/{hash}")
    public Response deleteAccount(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
          throws ORIException {
+
       Account account = accountRepository.findByHash(hash);
+
       if (account == null) {
          throw new ORIException(hash + " not found", 404);
       }
@@ -129,10 +131,10 @@ public class AccountRestAPI {
       } else {
          throw new ORIException("Forbidden", 403);
       }
+
       return Response.ok(new JsonObject()
             .put("method", "DELETE")
             .put("uri", "/account/" + symbol + "/hash/" + hash))
             .build();
    }
-
 }

@@ -44,7 +44,7 @@ public class TransactionService {
      * @throws IOException
      */
     public void index(Transaction transaction) throws IOException {
-        Request request = new Request("POST", "/transaction/_doc/" + transaction.hash);
+        Request request = new Request("POST", "/transaction/_doc/" + transaction.getHash());
         request.setJsonEntity(JsonObject.mapFrom(transaction).toString());
         restClient.performRequest(request);
     }
@@ -231,12 +231,12 @@ public class TransactionService {
             if (graph.size() >= maxGraphLength) {
                 break;
             }
-            if (direction.equals("desc") && nodes.contains(transaction.toAccount)) {
-                nodes.add(transaction.fromAccount.getHash());
+            if (direction.equals("desc") && nodes.contains(transaction.getToAccount())) {
+                nodes.add(transaction.getFromAccount().getHash());
                 graph.add(transaction);
             }
-            if (direction.equals("asc") && nodes.contains(transaction.fromAccount)) {
-                nodes.add(transaction.toAccount.getHash());
+            if (direction.equals("asc") && nodes.contains(transaction.getFromAccount())) {
+                nodes.add(transaction.getToAccount().getHash());
                 graph.add(transaction);
             }
         }

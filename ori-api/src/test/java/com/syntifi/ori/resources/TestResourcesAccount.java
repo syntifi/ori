@@ -69,7 +69,7 @@ public class TestResourcesAccount {
                 .get("/api/v2/account/ABC/hash/mockAccount")
                 .then()
                 .statusCode(200)
-                .body("token", equalTo("ABC"))
+                .body("tokenSymbol", equalTo("ABC"))
                 .body("hash", equalTo("mockAccount"))
                 .body("publicKey", equalTo("key"))
                 .body("label", equalTo("label"));
@@ -84,7 +84,7 @@ public class TestResourcesAccount {
                 .get("/api/v2/account/ABC")
                 .then()
                 .statusCode(200)
-                .body("[0].token", equalTo("ABC"))
+                .body("[0].tokenSymbol", equalTo("ABC"))
                 .body("[0].hash", equalTo("mockAccount"))
                 .body("[0].publicKey", equalTo("key"))
                 .body("[0].label", equalTo("label"));

@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,10 +33,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@IdClass(BlockId.class)
+@Builder
 public class Block extends PanacheEntityBase {
+    
     @EmbeddedId
-    //@ManyToOne
     private BlockId blockId;
 
     @Column(insertable = false, updatable = false)
@@ -71,20 +72,4 @@ public class Block extends PanacheEntityBase {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "block")
     private Set<Transaction> transactions;
-
-/*    public Token getToken() {
-        return this.blockId.getToken();
-    }
-
-    public String getHash() {
-        return this.blockId.getHash();
-    }
-
-    public void setToken(Token token) {
-        this.blockId.setToken(token);
-    }
-
-    public void setHash(String hash) {
-        this.blockId.setHash(hash);
-    }*/
 }

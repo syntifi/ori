@@ -70,10 +70,10 @@ public class AMLRules {
         double[] interval = {0.9*threshold, 1.0*threshold};
         int N = in.size() + out.size();
         Long Nin = in.stream()
-                    .filter(x -> (x.amount<interval[1]) && (x.amount>=interval[0]))
+                    .filter(x -> (x.getAmount()<interval[1]) && (x.getAmount()>=interval[0]))
                     .collect(Collectors.counting());
         Long Nout = in.stream()
-                    .filter(x -> (x.amount<interval[1]) && (x.amount>=interval[0]))
+                    .filter(x -> (x.getAmount()<interval[1]) && (x.getAmount()>=interval[0]))
                     .collect(Collectors.counting());
         return (Nout + Nin)*1.0/N;
     } 
@@ -91,7 +91,7 @@ public class AMLRules {
             return 0.0;
         }
         int window = ConfigProvider.getConfig().getValue("ori.aml.short-window", int.class);
-        LocalDate lastDate = out.get(0).timeStamp
+        LocalDate lastDate = out.get(0).getTimeStamp()
                                     .toInstant()
                                     .atZone(ZoneId.of("GMT"))
                                     .plusDays(1)
@@ -101,10 +101,10 @@ public class AMLRules {
             java.sql.Date.valueOf(lastDate)};
         int[] NoutWindow = {0, 0}; 
         for (Transaction transaction: out){
-            if ((transaction.timeStamp.after(dates[0])) && (transaction.timeStamp.before(dates[1]))){
+            if ((transaction.getTimeStamp().after(dates[0])) && (transaction.getTimeStamp().before(dates[1]))){
                 NoutWindow[0] = NoutWindow[0] + 1;
             }
-            if ((transaction.timeStamp.after(dates[1])) && (transaction.timeStamp.before(dates[2]))){
+            if ((transaction.getTimeStamp().after(dates[1])) && (transaction.getTimeStamp().before(dates[2]))){
                 NoutWindow[1] = NoutWindow[1] + 1;
             }
         } 
@@ -118,17 +118,17 @@ public class AMLRules {
      */ 
     private double calculateUnusualBehaviourScore() {
         int window = ConfigProvider.getConfig().getValue("ori.aml.short-window", int.class);
-        Date fromDate = java.sql.Date.valueOf(out.get(0).timeStamp.toInstant()
+        Date fromDate = java.sql.Date.valueOf(out.get(0).getTimeStamp().toInstant()
                                                 .atZone(ZoneId.of("GMT"))
                                                 .minusDays(window)
                                                 .toLocalDate());
         double windowAvg = out.stream()
-                              .filter(x -> x.timeStamp.after(fromDate))
-                              .collect(Collectors.summingDouble(x -> x.amount));
+                              .filter(x -> x.getTimeStamp().after(fromDate))
+                              .collect(Collectors.summingDouble(x -> x.getAmount()));
         double avg = out.stream()
-                            .collect(Collectors.summingDouble(x -> x.amount));
+                            .collect(Collectors.summingDouble(x -> x.getAmount()));
         double std = out.stream()
-                        .collect(Collectors.summingDouble(x -> (x.amount-avg)*(x.amount-avg)))
+                        .collect(Collectors.summingDouble(x -> (x.getAmount()-avg)*(x.getAmount()-avg)))
                     /(out.size()-1);
         return Math.atan(Math.max((windowAvg - avg)/std, 0.0))/Math.PI/2.0;
     }     
@@ -141,19 +141,19 @@ public class AMLRules {
      */
     private double calculateFlowThroughScore() {
         int window = ConfigProvider.getConfig().getValue("ori.aml.mid-window", int.class);
-        Date lastDate = out.get(0).timeStamp.after(in.get(0).timeStamp) 
-                                ? out.get(0).timeStamp 
-                                : in.get(0).timeStamp;
+        Date lastDate = out.get(0).getTimeStamp().after(in.get(0).getTimeStamp()) 
+                                ? out.get(0).getTimeStamp() 
+                                : in.get(0).getTimeStamp();
         Date fromDate = java.sql.Date.valueOf(lastDate.toInstant()
                                                 .atZone(ZoneId.of("GMT"))
                                                 .minusDays(window)
                                                 .toLocalDate());
         double inValue = in.stream()
-                            .filter(x -> x.timeStamp.after(fromDate))
-                            .collect(Collectors.summingDouble(x -> x.amount));
+                            .filter(x -> x.getTimeStamp().after(fromDate))
+                            .collect(Collectors.summingDouble(x -> x.getAmount()));
         double outValue = out.stream()
-                            .filter(x -> x.timeStamp.after(fromDate))
-                            .collect(Collectors.summingDouble(x -> x.amount));
+                            .filter(x -> x.getTimeStamp().after(fromDate))
+                            .collect(Collectors.summingDouble(x -> x.getAmount()));
         return Math.exp(-Math.pow(outValue/inValue,2)/0.01);
     }     
 

@@ -13,7 +13,7 @@ public class TestAccountDTO {
     public void testSerializer() {
         ObjectMapper mapper = new ObjectMapper();
         var account = new JsonObject();
-        account.put("token", "TKN");
+        account.put("tokenSymbol", "TKN");
         account.put("hash", "from");
         account.put("publicKey", "key");
         account.put("label", "from");

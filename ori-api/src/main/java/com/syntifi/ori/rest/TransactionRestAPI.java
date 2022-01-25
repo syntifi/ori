@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 
 import com.syntifi.ori.dto.TransactionDTO;
 import com.syntifi.ori.exception.ORIException;
+import com.syntifi.ori.mapper.TransactionMapper;
 import com.syntifi.ori.model.Account;
 import com.syntifi.ori.model.Token;
 import com.syntifi.ori.model.Transaction;
@@ -103,7 +104,7 @@ public class TransactionRestAPI {
         transactionRepository.check(transaction);
         transactionRepository.persist(transaction);
         return Response
-                .ok(new JsonObject().put("created", URI.create("/transaction/" + symbol + "/hash/" + transaction.hash)))
+                .ok(new JsonObject().put("created", URI.create("/transaction/" + symbol + "/hash/" + transaction.getHash())))
                 .build();
     }
 
@@ -139,7 +140,7 @@ public class TransactionRestAPI {
         return transactions
                 .stream()
                 .filter(t -> t.getBlock().getToken().getSymbol().equals(symbol))
-                .map(TransactionDTO::fromModel)
+                .map(TransactionMapper::fromModel)
                 .collect(Collectors.toList())
                 .subList(0, Math.min(100, transactions.size()));
     }
@@ -160,7 +161,7 @@ public class TransactionRestAPI {
         if (out == null || !out.getBlock().getToken().getSymbol().equals(symbol)) {
             throw new ORIException(hash + " not found", 404);
         }
-        return TransactionDTO.fromModel(out);
+        return TransactionMapper.fromModel(out);
     }
 
     /**
@@ -181,7 +182,7 @@ public class TransactionRestAPI {
         return transactions
                 .stream()
                 .filter(t -> t.getBlock().getToken().getSymbol().equals(symbol))
-                .map(TransactionDTO::fromModel)
+                .map(TransactionMapper::fromModel)
                 .collect(Collectors.toList())
                 .subList(0, Math.min(100, transactions.size()));
     }
@@ -195,7 +196,7 @@ public class TransactionRestAPI {
         return transactions
                 .stream()
                 .filter(t -> t.getBlock().getToken().getSymbol().equals(symbol))
-                .map(TransactionDTO::fromModel)
+                .map(TransactionMapper::fromModel)
                 .collect(Collectors.toList())
                 .subList(0, Math.min(100, transactions.size()));
     }
@@ -209,7 +210,7 @@ public class TransactionRestAPI {
         return transactions
                 .stream()
                 .filter(t -> t.getBlock().getToken().getSymbol().equals(symbol))
-                .map(TransactionDTO::fromModel)
+                .map(TransactionMapper::fromModel)
                 .collect(Collectors.toList())
                 .subList(0, Math.min(100, transactions.size()));
     }

@@ -16,6 +16,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,27 +34,29 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Transaction extends PanacheEntityBase {
+    
     @Id
     @NotNull
     @FullTextField(analyzer = "standard")
-    public String hash;
+    private String hash;
 
     @NotNull
     @Column(name = "time_stamp")
-    public Date timeStamp;
+    private Date timeStamp;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    public Account fromAccount;
+    private Account fromAccount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    public Account toAccount;
+    private Account toAccount;
 
     @NotNull
     @GenericField
     @Min(0)
-    public Double amount;
+    private Double amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    public Block block;
+    private Block block;
 }

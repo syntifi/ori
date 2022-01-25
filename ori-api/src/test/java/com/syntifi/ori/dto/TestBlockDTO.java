@@ -20,7 +20,7 @@ public class TestBlockDTO {
         block.put("timeStamp", "2099-08-05");
         block.put("validator", "validator");
         block.put("parent", null);
-        block.put("token", "TKN");
+        block.put("tokenSymbol", "TKN");
         var e = Assertions.assertThrows(Exception.class,
                 () -> mapper.readValue(block.toString(), BlockDTO.class));
         Assertions.assertTrue(e.getMessage().contains("Date"));

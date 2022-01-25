@@ -16,10 +16,10 @@ import javax.ws.rs.core.Response;
 
 import com.syntifi.ori.dto.BlockDTO;
 import com.syntifi.ori.exception.ORIException;
+import com.syntifi.ori.mapper.BlockMapper;
 import com.syntifi.ori.model.Block;
 import com.syntifi.ori.model.Token;
 import com.syntifi.ori.repository.BlockRepository;
-import com.syntifi.ori.repository.TokenRepository;
 
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
@@ -33,20 +33,10 @@ import io.vertx.core.json.JsonObject;
  */
 @Singleton
 @Tag(name = "Block", description = "Block resources")
-public class BlockRestAPI {
+public class BlockRestAPI extends AbstractBaseRestApi {
+
     @Inject
     BlockRepository blockRepository;
-
-    @Inject
-    TokenRepository tokenRepository;
-
-    private Token getToken(String symbol) {
-        Token token = tokenRepository.findBySymbol(symbol);
-        if (token == null) {
-            throw new ORIException("Token not found", 404);
-        }
-        return token;
-    }
 
     /**
      * POST method to add and index a new block in ES
@@ -58,17 +48,22 @@ public class BlockRestAPI {
     @POST
     @Transactional
     @Path("/{tokenSymbol}/parent/{parent}")
-    public Response addBlock(BlockDTO input, @PathParam("tokenSymbol") String symbol, @PathParam("parent") String parent)
-            throws ORIException {
-        Token token = symbol == null ? null : getToken(symbol);
-        boolean exists = blockRepository.existsAlready(symbol, input.getHash());
+    public Response addBlock(@PathParam("tokenSymbol") String symbol, @PathParam("parent") String parent,
+            BlockDTO blockDTO) throws ORIException {
+
+        Token token = getTokenOr404(symbol);
+
+        boolean exists = blockRepository.existsAlready(symbol, blockDTO.getHash());
         if (exists) {
-            throw new ORIException(input.getHash() + " exists already", 400);
+            throw new ORIException(blockDTO.getHash() + " exists already", 400);
         }
-        input.setToken(symbol);
-        input.setParent(parent);
-        Block child = input.toModel(); 
+
+        blockDTO.setTokenSymbol(symbol);
+        blockDTO.setParent(parent);
+
+        Block child = BlockMapper.toModel(blockDTO, tokenRepository);
         child.setToken(token);
+
         boolean isFirstBlock = blockRepository.getBlocks(symbol).isEmpty();
         Block parentBlock = null;
         if (!isFirstBlock) {
@@ -78,8 +73,10 @@ public class BlockRestAPI {
             }
         }
         child.setParent(parentBlock);
+
         blockRepository.check(child);
         blockRepository.persist(child);
+
         return Response.ok(new JsonObject().put("created", URI.create("/block/" + symbol + "/hash/" + child.getHash())))
                 .build();
     }
@@ -94,16 +91,18 @@ public class BlockRestAPI {
     @GET
     @Path("/{tokenSymbol}")
     public List<BlockDTO> getAllBlocks(@PathParam("tokenSymbol") String symbol) throws ORIException {
-        getToken(symbol);
-        return blockRepository.getBlocks(symbol).stream().map(BlockDTO::fromModel)
+        getTokenOr404(symbol);
+
+        return blockRepository.getBlocks(symbol).stream().map(BlockMapper::fromModel)
                 .collect(Collectors.toList());
     }
 
     @GET
     @Path("/{tokenSymbol}/last")
     public BlockDTO getLastBlock(@PathParam("tokenSymbol") String symbol) throws ORIException {
-        getToken(symbol);
-        return BlockDTO.fromModel(blockRepository.getLastBlock(symbol));
+        getTokenOr404(symbol);
+
+        return BlockMapper.fromModel(blockRepository.getLastBlock(symbol));
     }
 
     /**
@@ -117,12 +116,14 @@ public class BlockRestAPI {
     @Path("/{tokenSymbol}/hash/{hash}")
     public BlockDTO getBlockByHash(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
             throws ORIException {
-        getToken(symbol);
+        getTokenOr404(symbol);
+
         Block result = blockRepository.findByHash(symbol, hash);
         if (result == null) {
             throw new ORIException(hash + " not found", 404);
         }
-        return BlockDTO.fromModel(result);
+
+        return BlockMapper.fromModel(result);
     }
 
     /**
@@ -138,7 +139,8 @@ public class BlockRestAPI {
     @Path("/{tokenSymbol}/hash/{hash}")
     public Response deleteBlock(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
             throws ORIException {
-        getToken(symbol);
+        getTokenOr404(symbol);
+
         Block block = blockRepository.findByHash(symbol, hash);
         if (block == null) {
             throw new ORIException(hash + " not found", 404);
@@ -148,10 +150,10 @@ public class BlockRestAPI {
         } else {
             throw new ORIException("Forbidden", 403);
         }
+
         return Response.ok(new JsonObject()
                 .put("method", "DELETE")
                 .put("uri", "/block/" + symbol + "/hash/" + hash))
                 .build();
     }
-
 }

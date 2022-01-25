@@ -14,12 +14,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class BlockId implements Serializable{
-    
+public class BlockId implements Serializable {
+
     private String hash;
 
     private String symbol;
-
 }
-
-
