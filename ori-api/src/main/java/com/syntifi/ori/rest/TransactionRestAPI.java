@@ -88,7 +88,7 @@ public class TransactionRestAPI {
             throw new ORIException(transaction.getHash() + " exists already", 400);
         }
         var token = getToken(symbol);
-        var block = blockRepository.findByHash(blockHash);
+        var block = blockRepository.findByHash(symbol, blockHash);
         if (block == null) {
             throw new ORIException("Block not found", 404);
         }

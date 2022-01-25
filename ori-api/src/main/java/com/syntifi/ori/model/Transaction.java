@@ -6,7 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -45,11 +44,9 @@ public class Transaction extends PanacheEntityBase {
     public Date timeStamp;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "from_account_id", nullable = false)
     public Account fromAccount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "to_account_id", nullable = false)
     public Account toAccount;
 
     @NotNull
@@ -58,6 +55,5 @@ public class Transaction extends PanacheEntityBase {
     public Double amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "block_id", nullable = false)
     public Block block;
 }

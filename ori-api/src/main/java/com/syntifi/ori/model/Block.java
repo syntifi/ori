@@ -5,11 +5,11 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Min;
@@ -32,15 +32,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+//@IdClass(BlockId.class)
 public class Block extends PanacheEntityBase {
-    @Id
-    @NotNull
-    @Column(unique = true)
+    @EmbeddedId
+    //@ManyToOne
+    private BlockId blockId;
+
+    @Column(insertable = false, updatable = false)
     private String hash;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "token_id", nullable = false)
+    @MapsId("symbol")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Token token;
 
     @NotNull
@@ -56,7 +58,6 @@ public class Block extends PanacheEntityBase {
     private Long era;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_block_id", nullable = true)
     private Block parent;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "parent")
@@ -70,4 +71,20 @@ public class Block extends PanacheEntityBase {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "block")
     private Set<Transaction> transactions;
+
+/*    public Token getToken() {
+        return this.blockId.getToken();
+    }
+
+    public String getHash() {
+        return this.blockId.getHash();
+    }
+
+    public void setToken(Token token) {
+        this.blockId.setToken(token);
+    }
+
+    public void setHash(String hash) {
+        this.blockId.setHash(hash);
+    }*/
 }

@@ -5,24 +5,25 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 
 import com.syntifi.ori.model.Block;
-import com.syntifi.ori.model.Token;
 
 import io.quarkus.panache.common.Sort;
 
 @ApplicationScoped
 public class BlockRepository implements Repository<Block> {
 
-    public Block findByHash(String hash) {
-        List<Block> result = list("hash", hash);
-        return result.isEmpty() ? null : result.get(0);
+    public Block findByHash(String tokenSymbol, String blockHash) {
+        return find("token_symbol= ?1 and hash = ?2", tokenSymbol, blockHash).firstResult();
+    }
+    
+    public Block getLastBlock(String tokenSymbol) {
+        return find("token_symbol", Sort.descending("timeStamp"), tokenSymbol).firstResult();
     }
 
-    public Block getLastBlock(Token token) {
-        List<Block> result = list("token", Sort.descending("timeStamp"), token);
-        return result.isEmpty() ? null : result.get(0);
+    public List<Block> getBlocks(String tokenSymbol) {
+        return list("token_symbol", Sort.descending("timeStamp"), tokenSymbol);
     }
 
-    public boolean existsAlready(Block block) {
-        return findByHash(block.getHash()) != null;
+    public boolean existsAlready(String tokenSymbol, String blockHash) {
+        return findByHash(tokenSymbol, blockHash) != null;
     }
 }

@@ -5,8 +5,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
@@ -35,8 +35,7 @@ public class Account extends PanacheEntityBase {
     private String hash;
 
     @NotNull
-    @ManyToOne()
-    @JoinColumn(name = "token_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Token token;
 
     @Column(name = "public_key")

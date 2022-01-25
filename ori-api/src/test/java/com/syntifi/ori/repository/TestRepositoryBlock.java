@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Block;
+import com.syntifi.ori.model.Token;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,11 @@ public class TestRepositoryBlock {
 
     @Test
     public void testGetNonExistingBlock() {
-        Assertions.assertEquals(null, blockRepository.findByHash("testBlock"));
+        var token = new Token();
+        token.setName("name");
+        token.setProtocol("protocol");
+        token.setSymbol("symbol");
+        Assertions.assertEquals(null, blockRepository.findByHash(token.getSymbol(), "testBlock"));
     }
 
     @Test

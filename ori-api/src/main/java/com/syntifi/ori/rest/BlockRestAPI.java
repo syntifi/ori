@@ -23,7 +23,6 @@ import com.syntifi.ori.repository.TokenRepository;
 
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
-import io.quarkus.panache.common.Sort;
 import io.vertx.core.json.JsonObject;
 
 /**
@@ -59,18 +58,21 @@ public class BlockRestAPI {
     @POST
     @Transactional
     @Path("/{tokenSymbol}/parent/{parent}")
-    public Response addBlock(Block child, @PathParam("tokenSymbol") String symbol, @PathParam("parent") String parent)
+    public Response addBlock(BlockDTO input, @PathParam("tokenSymbol") String symbol, @PathParam("parent") String parent)
             throws ORIException {
-        boolean exists = blockRepository.existsAlready(child);
+        Token token = symbol == null ? null : getToken(symbol);
+        boolean exists = blockRepository.existsAlready(symbol, input.getHash());
         if (exists) {
-            throw new ORIException(child.getHash() + " exists already", 400);
+            throw new ORIException(input.getHash() + " exists already", 400);
         }
-        var token = symbol == null ? null : getToken(symbol);
+        input.setToken(symbol);
+        input.setParent(parent);
+        Block child = input.toModel(); 
         child.setToken(token);
-        boolean isFirstBlock = blockRepository.count() == 0;
+        boolean isFirstBlock = blockRepository.getBlocks(symbol).isEmpty();
         Block parentBlock = null;
         if (!isFirstBlock) {
-            parentBlock = blockRepository.findByHash(parent);
+            parentBlock = blockRepository.findByHash(symbol, parent);
             if (parentBlock == null) {
                 throw new ORIException("Parent block not found", 404);
             }
@@ -93,15 +95,15 @@ public class BlockRestAPI {
     @Path("/{tokenSymbol}")
     public List<BlockDTO> getAllBlocks(@PathParam("tokenSymbol") String symbol) throws ORIException {
         getToken(symbol);
-        return blockRepository.listAll(Sort.descending("timeStamp")).stream().map(BlockDTO::fromModel)
+        return blockRepository.getBlocks(symbol).stream().map(BlockDTO::fromModel)
                 .collect(Collectors.toList());
     }
 
     @GET
     @Path("/{tokenSymbol}/last")
     public BlockDTO getLastBlock(@PathParam("tokenSymbol") String symbol) throws ORIException {
-        Token token = getToken(symbol);
-        return BlockDTO.fromModel(blockRepository.getLastBlock(token));
+        getToken(symbol);
+        return BlockDTO.fromModel(blockRepository.getLastBlock(symbol));
     }
 
     /**
@@ -116,7 +118,7 @@ public class BlockRestAPI {
     public BlockDTO getBlockByHash(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
             throws ORIException {
         getToken(symbol);
-        Block result = blockRepository.findByHash(hash);
+        Block result = blockRepository.findByHash(symbol, hash);
         if (result == null) {
             throw new ORIException(hash + " not found", 404);
         }
@@ -136,7 +138,8 @@ public class BlockRestAPI {
     @Path("/{tokenSymbol}/hash/{hash}")
     public Response deleteBlock(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
             throws ORIException {
-        Block block = blockRepository.findByHash(hash);
+        getToken(symbol);
+        Block block = blockRepository.findByHash(symbol, hash);
         if (block == null) {
             throw new ORIException(hash + " not found", 404);
         }
