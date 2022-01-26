@@ -41,7 +41,9 @@ public class BlockRestAPI extends AbstractBaseRestApi {
     /**
      * POST method to add and index a new block in ES
      * 
-     * @param block
+     * @param symbol
+     * @param parent
+     * @param blockDTO
      * @return Response
      * @throws ORIException
      */
@@ -85,7 +87,8 @@ public class BlockRestAPI extends AbstractBaseRestApi {
      * GET method to retrieve all blocks indexed in ES. Note that the blocks are
      * sorted in reverse chronological order
      * 
-     * @return List<Block>
+     * @param symbol
+     * @return a list of {@link BlockDTO}
      * @throws ORIException
      */
     @GET

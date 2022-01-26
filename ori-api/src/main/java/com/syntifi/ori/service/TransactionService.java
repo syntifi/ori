@@ -25,9 +25,9 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 /**
- * All transaction related services for querying ES using the low level API 
+ * All transaction related services for querying ES using the low level API
  * 
- * @author Andre Bertolace 
+ * @author Andre Bertolace
  * @since 0.1.0
  */
 @ApplicationScoped
@@ -38,7 +38,7 @@ public class TransactionService {
     RestClient restClient;
 
     /**
-     * Indexes a new transaction document on Elastic Search 
+     * Indexes a new transaction document on Elastic Search
      * 
      * @param transaction
      * @throws IOException
@@ -49,10 +49,9 @@ public class TransactionService {
         restClient.performRequest(request);
     }
 
-
     /**
      * Removes all transation documents indexed in ES
-     *  
+     * 
      * @return ES Response
      * @throws IOException
      */
@@ -92,9 +91,10 @@ public class TransactionService {
     }
 
     /**
-     * Retrieves all transactions indexed in the database sorted by date in descending order
+     * Retrieves all transactions indexed in the database sorted by date in
+     * descending order
      * 
-     * @return List<Transaction>
+     * @return a list of {@link Transaction}
      * @throws IOException
      */
     public List<Transaction> getAllTransactions() throws IOException {
@@ -106,9 +106,9 @@ public class TransactionService {
 
     /**
      * Retrieves all ongoing transactions from a given account
-     *  
+     * 
      * @param from
-     * @return List<Transaction>
+     * @return a list of {@link Transaction}
      * @throws IOException
      */
     public List<Transaction> getOutgoingTransactions(String from) throws IOException {
@@ -116,23 +116,25 @@ public class TransactionService {
     }
 
     /**
-     * Retrieves all ongoing transactions from a given account in a given period [fromDate, toDate]
+     * Retrieves all ongoing transactions from a given account in a given period
+     * [fromDate, toDate]
      * 
      * @param from
      * @param fromDate
      * @param toDate
-     * @return List<Transaction>
+     * @return a list of {@link Transaction}
      * @throws IOException
      */
-    public List<Transaction> getOutgoingTransactions(String from, LocalDateTime fromDate, LocalDateTime toDate) throws IOException {
+    public List<Transaction> getOutgoingTransactions(String from, LocalDateTime fromDate, LocalDateTime toDate)
+            throws IOException {
         return search("from", from, fromDate, toDate);
     }
 
     /**
      * Retrieves all incoming transactions to a given account
-     *  
-     * @param to 
-     * @return List<Transaction>
+     * 
+     * @param to
+     * @return a list of {@link Transaction}
      * @throws IOException
      */
     public List<Transaction> getIncomingTransactions(String to) throws IOException {
@@ -140,23 +142,25 @@ public class TransactionService {
     }
 
     /**
-     * Retrieves all incoming transactions to a given account in a given period [fromDate, toDate]
+     * Retrieves all incoming transactions to a given account in a given period
+     * [fromDate, toDate]
      * 
-     * @param to 
+     * @param to
      * @param fromDate
      * @param toDate
-     * @return List<Transaction>
+     * @return a list of {@link Transaction}
      * @throws IOException
      */
-    public List<Transaction> getIncomingTransactions(String to, LocalDateTime fromDate, LocalDateTime toDate) throws IOException {
+    public List<Transaction> getIncomingTransactions(String to, LocalDateTime fromDate, LocalDateTime toDate)
+            throws IOException {
         return search("to", to, fromDate, toDate);
     }
 
     /**
      * Retrieves all incoming and outgoing transactions in a given account
-     *  
-     * @param account  
-     * @return List<Transaction>
+     * 
+     * @param account
+     * @return a list of {@link Transaction}
      * @throws IOException
      */
     public List<Transaction> getAllTransactionsByAccount(String account) throws IOException {
@@ -165,10 +169,10 @@ public class TransactionService {
 
     /**
      * Retrieves all transactions from one account to annother account
-     *  
+     * 
      * @param from
      * @param to
-     * @return List<Transaction>
+     * @return a list of {@link Transaction}
      * @throws IOException
      */
     public List<Transaction> getTransactionsFromAccountToAccount(String from, String to) throws IOException {
@@ -176,58 +180,64 @@ public class TransactionService {
     }
 
     /**
-     * Feature to walk backwards in the graph an trace the origin of the coin landing in 
+     * Feature to walk backwards in the graph an trace the origin of the coin
+     * landing in
      * the given account in a given period [fromDate, toDate]
      * 
      * @param account
      * @param fromDate
      * @param toDate
-     * @return List<Transaction>
+     * @return a list of {@link Transaction}
      * @throws IOException
      */
-    public List<Transaction> reverseGraphWalk(String account, LocalDateTime fromDate, LocalDateTime toDate) throws IOException {
+    public List<Transaction> reverseGraphWalk(String account, LocalDateTime fromDate, LocalDateTime toDate)
+            throws IOException {
         return graphWalk(account, fromDate, toDate, "desc");
     }
 
     /**
-     * Feature to walk forward in the graph an trace the destination of the coin leaving the 
+     * Feature to walk forward in the graph an trace the destination of the coin
+     * leaving the
      * given account in a given period [fromDate, toDate]
      * 
      * @param account
      * @param fromDate
      * @param toDate
-     * @return List<Transaction>
+     * @return a list of {@link Transaction}
      * @throws IOException
      */
-    public List<Transaction> forwardGraphWalk(String account, LocalDateTime fromDate, LocalDateTime toDate) throws IOException {
+    public List<Transaction> forwardGraphWalk(String account, LocalDateTime fromDate, LocalDateTime toDate)
+            throws IOException {
         return graphWalk(account, fromDate, toDate, "asc");
     }
 
     /**
-     * Base feature to walk back/forward the graph. Note that it uses the fact that the transactions
+     * Base feature to walk back/forward the graph. Note that it uses the fact that
+     * the transactions
      * are sorted in reverse chronological order.
      * 
      * @param account
      * @param fromDate
      * @param toDate
      * @param direction
-     * @return List<Transaction>
+     * @return a list of {@link Transaction}
      * @throws IOException
      */
-    public List<Transaction> graphWalk(String account, LocalDateTime fromDate, LocalDateTime toDate, String direction) throws IOException {
-        // construct a Json query like   "query": { "range": {  "timestamp": {
-        //     "gte": <fromDate>,  "lte": <toDate>  } } } 
+    public List<Transaction> graphWalk(String account, LocalDateTime fromDate, LocalDateTime toDate, String direction)
+            throws IOException {
+        // construct a Json query like "query": { "range": { "timestamp": {
+        // "gte": <fromDate>, "lte": <toDate> } } }
         JsonObject dateRangeJson = new JsonObject().put("gte", fromDate);
         dateRangeJson.put("lte", toDate);
         JsonObject timeStampJson = new JsonObject().put("timeStamp", dateRangeJson);
         JsonObject rangeJson = new JsonObject().put("range", timeStampJson);
-        JsonObject queryJson = new JsonObject().put("query", rangeJson);       
+        JsonObject queryJson = new JsonObject().put("query", rangeJson);
         List<Transaction> transactions = queryTransaction(queryJson, direction, 10000);
         // This only works because the list is sorted by time
         Set<String> nodes = new HashSet<>();
         nodes.add(account);
         List<Transaction> graph = new ArrayList<>();
-        for (Transaction transaction: transactions){
+        for (Transaction transaction : transactions) {
             if (graph.size() >= maxGraphLength) {
                 break;
             }
@@ -244,13 +254,14 @@ public class TransactionService {
     }
 
     /**
-     * Base feature to communicate with the low level ES API. This method builds a JSON query like 
-     * {"query": {"bool": {"should": [{"term": {"<term1>": "<match>"}}, ..]}}}
+     * Base feature to communicate with the low level ES API. This method builds a
+     * JSON query like
+     * {@code {"query": {"bool": {"should": [{"term": {"<term1>": "<match>"}}, ..]}}} }
      * 
      * @param from
      * @param to
      * @param term
-     * @return List<Transaction>
+     * @return a list of {@link Transaction}
      * @throws IOException
      */
     public List<Transaction> getFromToTransactions(String from, String to, String term) throws IOException {
@@ -268,11 +279,11 @@ public class TransactionService {
     }
 
     /**
-     * Base feature to search the ES database by a document field 
+     * Base feature to search the ES database by a document field
      * 
      * @param term
      * @param match
-     * @return List<TRansaction>
+     * @return a list of {@link Transaction}
      * @throws IOException
      */
     private List<Transaction> search(String term, String match) throws IOException {
@@ -280,17 +291,19 @@ public class TransactionService {
     }
 
     /**
-     * Base search method. Uses the low level ES API to match a specific term in the transaction 
+     * Base search method. Uses the low level ES API to match a specific term in the
+     * transaction
      * documents that happened between fromDate and toDate
-     *  
+     * 
      * @param term
      * @param match
      * @param fromDate
      * @param toDate
-     * @return List<Transaction>
+     * @return a list of {@link Transaction}
      * @throws IOException
      */
-    private List<Transaction> search(String term, String match, LocalDateTime fromDate, LocalDateTime toDate) throws IOException {
+    private List<Transaction> search(String term, String match, LocalDateTime fromDate, LocalDateTime toDate)
+            throws IOException {
         // construct a JSON query like {"query": {"match": {"<term>": "<match>"}}}
         JsonObject queryJson = new JsonObject();
         JsonObject termJson = new JsonObject().put(term, match);
@@ -317,11 +330,11 @@ public class TransactionService {
     }
 
     /**
-     * Wrapper of a more complete queryTransaction method 
+     * Wrapper of a more complete queryTransaction method
      * 
      * @param queryJson
      * @param timeSort
-     * @return List<Transaction>
+     * @return a list of {@link Transaction}
      * @throws IOException
      */
 
@@ -330,18 +343,19 @@ public class TransactionService {
     }
 
     /**
-     * Most fundamental methods in this class. It ensures that the results are sorted either in 
+     * Most fundamental methods in this class. It ensures that the results are
+     * sorted either in
      * ascending or descending (default) order and limits the results size
      * 
      * @param queryJson
      * @param timeSort
      * @param size
-     * @return List<Transaction>
+     * @return a list of {@link Transaction}
      * @throws IOException
      */
     private List<Transaction> queryTransaction(JsonObject queryJson, String timeSort, int size) throws IOException {
         JsonArray sortTerm = new JsonArray();
-        sortTerm.add(new JsonObject().put("timeStamp", timeSort==null ? "desc" : timeSort));
+        sortTerm.add(new JsonObject().put("timeStamp", timeSort == null ? "desc" : timeSort));
         queryJson.put("sort", sortTerm);
         Request request = new Request("GET", "/transaction/_search?scroll=1m&size=" + size);
         request.setJsonEntity(queryJson.encode());

@@ -43,7 +43,7 @@ public class TransactionMonitorAPI {
      * GET method to return the different AML scores in [0,1]
      * 
      * @param account
-     * @param date
+     * @param dateTime
      * @return {@link AMLRules}
      * @throws ORIException
      */
@@ -71,9 +71,9 @@ public class TransactionMonitorAPI {
      * account
      * 
      * @param account
-     * @param from
-     * @param to
-     * @return List<Transaction>
+     * @param fromDate
+     * @param toDate
+     * @return a list of {@link Transaction}
      * @throws ORIException
      */
     @GET
@@ -101,9 +101,9 @@ public class TransactionMonitorAPI {
      * given account
      * 
      * @param account
-     * @param from
-     * @param to
-     * @return List<Transaction>
+     * @param fromDate
+     * @param toDate
+     * @return a list of {@link Transaction}
      * @throws ORIException
      */
     @GET

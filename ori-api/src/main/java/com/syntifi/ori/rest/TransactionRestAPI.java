@@ -69,11 +69,15 @@ public class TransactionRestAPI {
         }
         return account;
     }
-
+    
     /**
      * POST method to add and index a new transactions in ES
      * 
      * @param transaction
+     * @param symbol
+     * @param blockHash
+     * @param fromHash
+     * @param toHash
      * @return Response
      * @throws ORIException
      */
@@ -104,7 +108,8 @@ public class TransactionRestAPI {
         transactionRepository.check(transaction);
         transactionRepository.persist(transaction);
         return Response
-                .ok(new JsonObject().put("created", URI.create("/transaction/" + symbol + "/hash/" + transaction.getHash())))
+                .ok(new JsonObject().put("created",
+                        URI.create("/transaction/" + symbol + "/hash/" + transaction.getHash())))
                 .build();
     }
 
@@ -114,9 +119,11 @@ public class TransactionRestAPI {
      * to another account. Note that the transactions are sorted in reverse
      * chronological order
      * 
-     * @param from
-     * @param to
-     * @return List<Transaction>
+     * @param symbol
+     * @param fromHash
+     * @param toHash
+     * @param block
+     * @return a list of {@link Transaction}
      * @throws ORIException
      */
     @GET
@@ -169,7 +176,7 @@ public class TransactionRestAPI {
      * account
      * 
      * @param symbol
-     * @param account
+     * @param hash
      * @return
      * @throws ORIException
      */

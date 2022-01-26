@@ -41,7 +41,8 @@ public class AccountRestAPI extends AbstractBaseRestApi {
    /**
     * POST method to add a new account and index in ES
     * 
-    * @param block
+    * @param symbol
+    * @param accountDTO
     * @return Response
     * @throws ORIException
     */
@@ -72,7 +73,7 @@ public class AccountRestAPI extends AbstractBaseRestApi {
     * GET method to retreive all blocks indexed in ES. Note that the blocks are
     * sorted in reverse chronological order
     * 
-    * @return List<Block>
+    * @return a list of {@link AccountDTO}
     * @throws ORIException
     */
    @GET
