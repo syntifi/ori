@@ -90,7 +90,7 @@ public class EthCrawlerApplication {
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
                 OriBlockPost block = new OriBlockPost();
-                block.setTimeStamp("2000-01-01T00:00:00.000+0000");
+                block.setTimeStamp("1970-01-01T00:00:00.000+0000");
                 block.setHash(blockZero);
                 block.setHeight(-1L);
                 block.setEra(-1L);
