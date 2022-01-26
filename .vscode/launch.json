@@ -1,0 +1,33 @@
+// A launch configuration that compiles the extension and then opens it inside a new window
+// Use IntelliSense to learn about possible attributes.
+// Hover to view descriptions of existing attributes.
+// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch EthCrawlerApplication",
+            "request": "launch",
+            "mainClass": "com.syntifi.ori.chains.eth.EthCrawlerApplication",
+            "projectName": "ori-eth",
+            "console": "internalConsole"
+        },
+        {
+            "type": "java",
+            "name": "Launch CsprCrawlerApplication",
+            "request": "launch",
+            "mainClass": "com.syntifi.ori.chains.cspr.CsprCrawlerApplication",
+            "projectName": "ori-cspr",
+            "console": "internalConsole"
+        },
+        {
+            "preLaunchTask": "quarkus:dev (ori-api)",
+            "type": "java",
+            "request": "attach",
+            "hostName": "localhost",
+            "name": "Debug Quarkus application (ori-api)",            
+            "port": 5005
+        }
+    ]
+}
