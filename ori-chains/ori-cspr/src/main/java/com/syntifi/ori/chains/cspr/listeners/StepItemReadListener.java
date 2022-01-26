@@ -1,12 +1,12 @@
 package com.syntifi.ori.chains.cspr.listeners;
 
-import java.util.logging.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ItemReadListener;
 
 public class StepItemReadListener implements ItemReadListener<String> {
 
-    private Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     @Override
     public void beforeRead() {

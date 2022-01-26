@@ -3,19 +3,30 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.syntifi.ori.chains</groupId>
   <artifactId>ori-cspr</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.0-SNAPSHOT</version>
+
   <parent>
     <groupId>com.syntifi.ori</groupId>
     <artifactId>ori-chains</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.0-SNAPSHOT</version>
   </parent>
+
+  <properties>
+    <casper-sdk.version>0.0.1-SNAPSHOT</casper-sdk.version>
+  </properties>
+
   <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.syntifi.casper</groupId>
       <artifactId>casper-sdk</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>${casper-sdk.version}</version>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -26,7 +37,7 @@
             <enabled>true</enabled>
           </layers>
         </configuration>
-        <version>2.6.2</version>
+        <version>${spring-boot.version}</version>
       </plugin>
     </plugins>
   </build>
