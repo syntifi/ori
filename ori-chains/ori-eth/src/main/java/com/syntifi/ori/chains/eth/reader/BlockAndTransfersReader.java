@@ -47,8 +47,9 @@ public class BlockAndTransfersReader implements ItemReader<EthBlock> {
     public EthBlock read() throws IOException, InterruptedException {
         if (blockHeight == null)
             return null;
-        EthBlock block = eth.ethGetBlockByNumber( 
-            DefaultBlockParameter.valueOf(BigInteger.valueOf(blockHeight)), true).send(); 
+        BigInteger height = BigInteger.valueOf(blockHeight);
+        var blockParam = DefaultBlockParameter.valueOf(height);
+        EthBlock block = eth.ethGetBlockByNumber(blockParam, true).send();
         nextItem();
         return block;
     }
