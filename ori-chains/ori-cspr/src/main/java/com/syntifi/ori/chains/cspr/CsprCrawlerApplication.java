@@ -16,8 +16,6 @@ import com.syntifi.ori.client.OriRestClient;
 import com.syntifi.ori.model.OriBlockPost;
 import com.syntifi.ori.model.OriToken;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -40,8 +38,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 @Configuration
 @ComponentScan
 public class CsprCrawlerApplication {
-    private static Logger LOGGER = LoggerFactory.getLogger(CsprCrawlerApplication.class);
-
     @Value("${cspr.token}")
     private String tokenSymbol;
 
@@ -133,7 +129,6 @@ public class CsprCrawlerApplication {
     }
 
     public static void main(String[] args) {
-        LOGGER.debug("Starting {}", CsprCrawlerApplication.class.getSimpleName());
         SpringApplication.run(CsprCrawlerApplication.class, args);
     }
 }
