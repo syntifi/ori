@@ -10,16 +10,14 @@
             "name": "Launch EthCrawlerApplication",
             "request": "launch",
             "mainClass": "com.syntifi.ori.chains.eth.EthCrawlerApplication",
-            "projectName": "ori-eth",
-            "console": "internalConsole"
+            "projectName": "ori-eth"
         },
         {
             "type": "java",
             "name": "Launch CsprCrawlerApplication",
             "request": "launch",
             "mainClass": "com.syntifi.ori.chains.cspr.CsprCrawlerApplication",
-            "projectName": "ori-cspr",
-            "console": "internalConsole"
+            "projectName": "ori-cspr"
         },
         {
             "preLaunchTask": "quarkus:dev (ori-api)",

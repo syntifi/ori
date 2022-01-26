@@ -25,9 +25,9 @@
 			],
 			"group": "build",
 			"label": "quarkus:dev (ori-api)",
-			"command": "./mvnw -pl ori-api quarkus:dev ",
+			"command": "./mvnw -pl ori-api quarkus:dev",
 			"windows": {
-				"command": "./mvnw -pl ori-api quarkus:dev "
+				"command": "./mvnw -pl ori-api quarkus:dev"
 			},
 			"options": {
 				"cwd": ""
@@ -53,9 +53,9 @@
 			],
 			"group": "build",
 			"label": "package -Pnative (ori-api)",
-			"command": "./mvnw package -Pnative ",
+			"command": "./mvnw package -Pnative",
 			"windows": {
-				"command": "./mvnw package -Pnative "
+				"command": "./mvnw package -Pnative"
 			},
 			"options": {
 				"cwd": "ori-api"
