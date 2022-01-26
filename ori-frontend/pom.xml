@@ -4,6 +4,7 @@
   <groupId>com.syntifi.ori</groupId>
   <artifactId>ori-frontend</artifactId>
   <version>0.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
   
   <parent>
     <groupId>com.syntifi.ori</groupId>

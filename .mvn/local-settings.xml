@@ -22,12 +22,25 @@
       </repositories>
     </profile>
   </profiles>
-
   <servers>
     <server>
       <id>casper-sdk-github</id>
       <username>${env.GITHUB_ACTOR}</username>
       <password>${env.GITHUB_TOKEN}</password>
+    </server>
+    <server>
+      <id>ossrh</id>
+      <username>${env.MAVEN_USERNAME}</username>
+      <password>${env.MAVEN_PASSWORD}</password>
+    </server>
+    <server>
+      <id>ossrh-snapshot</id>
+      <username>${env.MAVEN_USERNAME}</username>
+      <password>${env.MAVEN_PASSWORD}</password>
+    </server>
+    <server>
+      <id>gpg.passphrase</id>
+      <passphrase>${env.GPG_SIGNING_KEY_PASSWORD}</passphrase>
     </server>
   </servers>
 </settings>
