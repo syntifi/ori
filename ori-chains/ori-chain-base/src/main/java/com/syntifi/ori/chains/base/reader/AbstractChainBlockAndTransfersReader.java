@@ -16,7 +16,7 @@ import lombok.Getter;
  * input from chain
  * 
  * @author Alexandre Carvalho <adcarvalho@gmail.com>
- * @author Andre Bertoalce <andre@syntifi.com>
+ * @author Andre Bertolace <andre@syntifi.com>
  * 
  * @since 0.1.0
  */

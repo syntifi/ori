@@ -12,7 +12,7 @@ import lombok.Setter;
  * ORI compliant Block and Transfer class
  * 
  * @author Alexandre Carvalho <adcarvalho@gmail.com>
- * @author Andre Bertoalce <andre@syntifi.com>
+ * @author Andre Bertolace <andre@syntifi.com>
  * 
  * @since 0.1.0
  */
