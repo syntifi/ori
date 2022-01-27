@@ -13,12 +13,12 @@ public class OriStepExecutionListener {
 
     @BeforeStep
     public void beforeStep(StepExecution stepExecution) {
-        logger.info("Called beforeStep().");
+        logger.info("OriStepExecutionListener - beforeStep");
     }
 
     @AfterStep
     public ExitStatus afterStep(StepExecution stepExecution) {
-        logger.info("Called afterStep().");
+        logger.info("OriStepExecutionListener - afterStep");
 
         return stepExecution.getExitStatus();
     }

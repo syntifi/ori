@@ -18,7 +18,7 @@ public class OriChunkListener {
 
     @AfterChunk
     public void afterChunk(ChunkContext context) {
-        logger.info("Called afterChunk().");
+        logger.info("OriChunkListener - afterChunk");
         processedItems = processedItems.add(BigDecimal.ONE);
         if (processedItems.remainder(tenBigDecimal) == BigDecimal.ZERO) {
             logger.info("{} items processed.", processedItems);
@@ -27,11 +27,11 @@ public class OriChunkListener {
 
     @BeforeChunk
     public void beforeChunk(ChunkContext context) {
-        logger.info("Called beforeChunk().");
+        logger.info("OriChunkListener - beforeChunk");
     }
 
     @AfterChunkError
     public void afterChunkError(ChunkContext context) {
-        logger.info("Called afterChunkError().");
+        logger.info("OriChunkListener - afterChunkError");
     }
 }

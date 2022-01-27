@@ -15,16 +15,16 @@ public class ChainItemProcessListener<T extends ChainBlockAndTransfers<?, ?>> {
 
     @BeforeProcess
     public void beforeProcess(T item) {
-        logger.info("ItemProcessListener - beforeProcess");
+        logger.info("ChainItemProcessListener - beforeProcess");
     }
 
     @AfterProcess
     public void afterProcess(T item, OriBlockAndTransfers result) {
-        logger.info("ItemProcessListener - afterProcess");
+        logger.info("ChainItemProcessListener - afterProcess");
     }
 
     @OnProcessError
     public void onProcessError(T item, Exception e) {
-        logger.info("ItemProcessListener - onProcessError");
+        logger.info("ChainItemProcessListener - onProcessError");
     }
 }

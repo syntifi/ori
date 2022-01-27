@@ -14,16 +14,16 @@ public class ChainItemReadListener<T extends ChainBlockAndTransfers<?, ?>> {
 
     @BeforeRead
     public void beforeRead() {
-        logger.info("ItemReadListener - beforeRead");
+        logger.info("ChainItemReadListener - beforeRead");
     }
 
     @AfterRead
     public void afterRead(T item) {
-        logger.info("ItemReadListener - afterRead");
+        logger.info("ChainItemReadListener - afterRead");
     }
 
     @OnReadError
     public void onReadError(Exception ex) {
-        logger.info("ItemReadListener - onReadError");
+        logger.info("ChainItemReadListener - onReadError");
     }
 }

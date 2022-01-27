@@ -16,16 +16,16 @@ public class OriItemWriteListener {
 
     @BeforeWrite
     public void beforeWrite(List<OriBlockAndTransfers> items) {
-        logger.info("ItemWriteListener - beforeWrite");
+        logger.info("OriItemWriteListener - beforeWrite");
     }
 
     @AfterWrite
     public void afterWrite(List<OriBlockAndTransfers> items) {
-        logger.info("ItemWriteListener - afterWrite");
+        logger.info("OriItemWriteListener - afterWrite");
     }
 
     @OnWriteError
     public void onWriteError(Exception exception, List<OriBlockAndTransfers> items) {
-        logger.info("ItemWriteListener - onWriteError");
+        logger.info("OriItemWriteListener - onWriteError");
     }
 }

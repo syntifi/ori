@@ -13,11 +13,12 @@ public class OriJobExecutionListener {
 
     @BeforeJob
     public void beforeJob(JobExecution jobExecution) {
-        logger.info("Called beforeJob().");
+        logger.info("OriJobExecutionListener - beforeJob");
     }
 
     @AfterJob
     public void afterJob(JobExecution jobExecution) {
+        logger.info("OriJobExecutionListener - afterJob");
         if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
             // job success
             logger.info("Success");
