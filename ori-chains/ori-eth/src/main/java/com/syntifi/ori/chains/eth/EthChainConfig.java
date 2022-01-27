@@ -40,8 +40,11 @@ public class EthChainConfig extends AbstractChainConfig<Web3j> {
     @Value("${eth.token.protocol}")
     private String tokenProtocol;
 
-    @Value("${eth.block.zero}")
-    private String blockZero;
+    @Value("${eth.block.zero.hash}")
+    private String blockZeroHash;
+
+    @Value("${eth.block.zero.height}")
+    private long blockZeroHeight;
 
     @Value("${eth.batch.chunk.size}")
     private int chunkSize;

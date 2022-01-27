@@ -19,9 +19,8 @@
   </modules>
 
   <properties>
-    <ori-client.version>0.1.0-SNAPSHOT</ori-client.version>
     <javax-ws-rs.version>2.1.1</javax-ws-rs.version>
-    <ori-chain-base.version>0.1.0-SNAPSHOT</ori-chain-base.version>
+    <ori-client.version>0.1.0-SNAPSHOT</ori-client.version>
   </properties>
 
   <dependencies>

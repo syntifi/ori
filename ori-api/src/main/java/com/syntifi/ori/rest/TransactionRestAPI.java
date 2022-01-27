@@ -16,6 +16,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 
 import com.syntifi.ori.dto.TransactionDTO;
 import com.syntifi.ori.exception.ORIException;
@@ -29,6 +31,7 @@ import com.syntifi.ori.repository.TokenRepository;
 import com.syntifi.ori.repository.TransactionRepository;
 
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.jboss.resteasy.specimpl.ResponseBuilderImpl;
 
 import io.vertx.core.json.JsonObject;
 
@@ -69,48 +72,78 @@ public class TransactionRestAPI {
         }
         return account;
     }
-    
+
     /**
      * POST method to add and index a new transactions in ES
      * 
-     * @param transaction
      * @param symbol
-     * @param blockHash
-     * @param fromHash
-     * @param toHash
+     * @param transactionDTO
      * @return Response
      * @throws ORIException
      */
     @POST
     @Transactional
-    @Path("/{tokenSymbol}/block/{blockHash}/from/{fromAccount}/to/{toAccount}")
-    public Response addTransaction(Transaction transaction, @PathParam("tokenSymbol") String symbol,
-            @PathParam("blockHash") String blockHash, @PathParam("fromAccount") String fromHash,
-            @PathParam("toAccount") String toHash)
+    @Path("/{tokenSymbol}")
+    public Response addTransaction(@PathParam("tokenSymbol") String symbol, TransactionDTO transactionDTO)
             throws ORIException {
-        boolean exists = transactionRepository.existsAlready(transaction);
+        boolean exists = transactionRepository.existsAlready(transactionDTO.getHash());
         if (exists) {
-            throw new ORIException(transaction.getHash() + " exists already", 400);
+            throw new ORIException(transactionDTO.getHash() + " exists already", 400);
         }
         var token = getToken(symbol);
-        var block = blockRepository.findByHash(symbol, blockHash);
+        var block = blockRepository.findByHash(symbol, transactionDTO.getBlockHash());
         if (block == null) {
             throw new ORIException("Block not found", 404);
         }
         if (!block.getToken().equals(token)) {
-            throw new ORIException("Block hash " + blockHash + " not found for " + symbol, 404);
+            throw new ORIException("Block hash " + transactionDTO.getBlockHash() + " not found for " + symbol, 404);
         }
-        Account fromAccount = getAccount(fromHash);
-        Account toAccount = getAccount(toHash);
-        transaction.setFromAccount(fromAccount);
-        transaction.setToAccount(toAccount);
-        transaction.setBlock(block);
+
+        Transaction transaction = TransactionMapper.toModel(transactionDTO, accountRepository, blockRepository);
+
         transactionRepository.check(transaction);
         transactionRepository.persist(transaction);
         return Response
                 .ok(new JsonObject().put("created",
                         URI.create("/transaction/" + symbol + "/hash/" + transaction.getHash())))
                 .build();
+    }
+
+    @POST
+    @Transactional
+    @Path("/{tokenSymbol}/multiple")
+    public Response addTransactions(@PathParam("tokenSymbol") String symbol, List<TransactionDTO> transactionDTOs)
+            throws ORIException {
+        List<Transaction> transactions = new ArrayList<>();
+        for (TransactionDTO transactionDTO : transactionDTOs) {
+            boolean exists = transactionRepository.existsAlready(transactionDTO.getHash());
+            if (exists) {
+                throw new ORIException(transactionDTO.getHash() + " exists already", 400);
+            }
+            var token = getToken(symbol);
+            var block = blockRepository.findByHash(symbol, transactionDTO.getBlockHash());
+            if (block == null) {
+                throw new ORIException("Block not found", 404);
+            }
+            if (!block.getToken().equals(token)) {
+                throw new ORIException("Block hash " + transactionDTO.getBlockHash() + " not found for " + symbol, 404);
+            }
+
+            Transaction transaction = TransactionMapper.toModel(transactionDTO, accountRepository, blockRepository);
+
+            transactionRepository.check(transaction);
+
+            transactions.add(transaction);
+        }
+
+        transactionRepository.persist(transactions);
+
+        ResponseBuilder response = new ResponseBuilderImpl().status(Status.CREATED);
+        for (Transaction transaction : transactions) {
+            response.link(URI.create(String.format("/transaction/%s/hash/%s", symbol, transaction.getHash())), "self");
+        }
+
+        return response.build();
     }
 
     /**

@@ -11,7 +11,16 @@
     <version>0.2.0-SNAPSHOT</version>
   </parent>
 
+  <properties>
+    <ori-shared.version>0.1.0-SNAPSHOT</ori-shared.version>
+  </properties>
+
   <dependencies>
+    <dependency>
+      <groupId>com.syntifi.ori</groupId>
+      <artifactId>ori-shared</artifactId>
+      <version>${ori-shared.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>

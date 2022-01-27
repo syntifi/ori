@@ -1,10 +1,12 @@
 package com.syntifi.ori.chains.base.writer;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.syntifi.ori.chains.base.model.OriBlockAndTransfers;
 import com.syntifi.ori.client.OriRestClient;
-import com.syntifi.ori.model.OriAccountPost;
+import com.syntifi.ori.dto.AccountDTO;
+import com.syntifi.ori.dto.TransactionDTO;
 
 import org.springframework.batch.item.ItemWriter;
 
@@ -29,21 +31,23 @@ public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfe
     @Override
     public void write(List<? extends OriBlockAndTransfers> blockAndTransfersResults) {
         // Write Block
+        if (blockAndTransfersResults.size() > 1) {
+            oriRestClient.postBlocks(tokenSymbol,
+                    blockAndTransfersResults.stream().map(OriBlockAndTransfers::getBlock).collect(Collectors.toList()));
+        } else {
+            OriBlockAndTransfers oriBlockAndTransfers = blockAndTransfersResults.get(0);
+            oriRestClient.postBlock(tokenSymbol, oriBlockAndTransfers.getBlock());
+        }
+
+        // Write transactions
         for (OriBlockAndTransfers oriBlockAndTransfers : blockAndTransfersResults) {
-            oriRestClient.postBlock(tokenSymbol,
-                    oriBlockAndTransfers.getParentBlock(),
-                    oriBlockAndTransfers.getBlock());
-            if (oriBlockAndTransfers.getTransfers() != null) {
-                for (int i = 0; i < oriBlockAndTransfers.getTransfers().size(); i++) {
-                    oriRestClient.postAccount(tokenSymbol,
-                            new OriAccountPost("", oriBlockAndTransfers.getFrom().get(i), ""));
-                    oriRestClient.postAccount(tokenSymbol,
-                            new OriAccountPost("", oriBlockAndTransfers.getTo().get(i), ""));
-                    oriRestClient.postTransfer(tokenSymbol,
-                            oriBlockAndTransfers.getBlock().getHash(),
-                            oriBlockAndTransfers.getFrom().get(i),
-                            oriBlockAndTransfers.getTo().get(i),
-                            oriBlockAndTransfers.getTransfers().get(i));
+            List<TransactionDTO> transfers = oriBlockAndTransfers.getTransfers();
+            if (transfers != null) {
+                for (TransactionDTO transfer : transfers) {
+                    // TODO: PubKey/label needed from account?
+                    oriRestClient.postAccount(tokenSymbol, AccountDTO.builder().hash(transfer.getFromHash()).build());
+                    oriRestClient.postAccount(tokenSymbol, AccountDTO.builder().hash(transfer.getToHash()).build());
+                    oriRestClient.postTransfer(tokenSymbol, transfer);
                 }
             }
         }

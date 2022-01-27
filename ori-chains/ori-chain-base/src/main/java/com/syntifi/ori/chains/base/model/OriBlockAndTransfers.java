@@ -2,8 +2,8 @@ package com.syntifi.ori.chains.base.model;
 
 import java.util.List;
 
-import com.syntifi.ori.model.OriBlockPost;
-import com.syntifi.ori.model.OriTransferPost;
+import com.syntifi.ori.dto.BlockDTO;
+import com.syntifi.ori.dto.TransactionDTO;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,12 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OriBlockAndTransfers {
-    private OriBlockPost block;
+    private BlockDTO block;
 
-    private String parentBlock;
-
-    private List<OriTransferPost> transfers;
-    private List<String> from;
-    private List<String> to;
-
+    private List<TransactionDTO> transfers;
 }

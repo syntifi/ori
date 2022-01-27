@@ -1,10 +1,13 @@
 package com.syntifi.ori.chains.base;
 
-import com.syntifi.ori.chains.base.listeners.OriChunkListener;
-import com.syntifi.ori.chains.base.listeners.OriJobExecutionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import com.syntifi.ori.chains.base.listeners.ChainItemProcessListener;
 import com.syntifi.ori.chains.base.listeners.ChainItemReadListener;
+import com.syntifi.ori.chains.base.listeners.OriChunkListener;
 import com.syntifi.ori.chains.base.listeners.OriItemWriteListener;
+import com.syntifi.ori.chains.base.listeners.OriJobExecutionListener;
 import com.syntifi.ori.chains.base.listeners.OriStepExecutionListener;
 import com.syntifi.ori.chains.base.model.ChainBlockAndTransfers;
 import com.syntifi.ori.chains.base.model.OriBlockAndTransfers;
@@ -12,8 +15,8 @@ import com.syntifi.ori.chains.base.processor.AbstractChainBlockAndTransfersProce
 import com.syntifi.ori.chains.base.reader.AbstractChainBlockAndTransfersReader;
 import com.syntifi.ori.chains.base.writer.OriBlockAndTransfersWriter;
 import com.syntifi.ori.client.OriRestClient;
-import com.syntifi.ori.model.OriBlockPost;
-import com.syntifi.ori.model.OriToken;
+import com.syntifi.ori.dto.BlockDTO;
+import com.syntifi.ori.dto.TokenDTO;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -58,7 +61,7 @@ public abstract class AbstractChainCrawlerApplication<S, T extends ChainBlockAnd
             oriRestClient.getToken(getChainConfig().getTokenSymbol());
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
-                OriToken token = new OriToken();
+                TokenDTO token = new TokenDTO();
                 token.setSymbol(getChainConfig().getTokenSymbol());
                 token.setName(getChainConfig().getTokenName());
                 token.setProtocol(getChainConfig().getTokenProtocol());
@@ -69,17 +72,23 @@ public abstract class AbstractChainCrawlerApplication<S, T extends ChainBlockAnd
 
     private void addBlockZeroIfNeeded() {
         try {
-            oriRestClient.getBlock(getChainConfig().getTokenSymbol(), getChainConfig().getBlockZero());
+            oriRestClient.getBlock(getChainConfig().getTokenSymbol(), getChainConfig().getBlockZeroHash());
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
-                OriBlockPost block = new OriBlockPost();
-                block.setTimeStamp("1970-01-01T00:00:00.000+0000");
-                block.setHash(getChainConfig().getBlockZero());
-                block.setHeight(-1L);
+                final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+                BlockDTO block = new BlockDTO();
+                // TODO: fix this
+                try {
+                    block.setTimeStamp(dateFormatter.parse("1970-01-01T00:00:00.000+0000"));
+                } catch (ParseException pe) {
+                    throw new RuntimeException("Invalid timestamp for block zero");
+                }
+                block.setHash(getChainConfig().getBlockZeroHash());
+                block.setHeight(getChainConfig().getBlockZeroHeight());
                 block.setEra(-1L);
-                block.setRoot(getChainConfig().getBlockZero());
-                block.setValidator(getChainConfig().getBlockZero());
-                oriRestClient.postBlock(getChainConfig().getTokenSymbol(), "null", block);
+                block.setRoot(getChainConfig().getBlockZeroHash());
+                block.setValidator(getChainConfig().getBlockZeroHash());
+                oriRestClient.postBlock(getChainConfig().getTokenSymbol(), block);
             }
         }
     }

@@ -1,15 +1,13 @@
 package com.syntifi.ori.client;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 import com.google.gson.JsonObject;
-import com.syntifi.ori.model.OriAccountPost;
-import com.syntifi.ori.model.OriAccountResponse;
-import com.syntifi.ori.model.OriBlockPost;
-import com.syntifi.ori.model.OriBlockResponse;
-import com.syntifi.ori.model.OriToken;
-import com.syntifi.ori.model.OriTransferPost;
-import com.syntifi.ori.model.OriTransferResponse;
+import com.syntifi.ori.dto.AccountDTO;
+import com.syntifi.ori.dto.BlockDTO;
+import com.syntifi.ori.dto.TokenDTO;
+import com.syntifi.ori.dto.TransactionDTO;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -42,89 +40,109 @@ public class OriRestClient {
 
     }
 
-    public OriToken getToken(String tokenSymbol) throws WebClientResponseException {
+    public TokenDTO getToken(String tokenSymbol) throws WebClientResponseException {
         return client
                 .get()
                 .uri(MessageFormat.format("{0}/token/{1}", apiPrefix, tokenSymbol))
                 .retrieve()
-                .bodyToMono(OriToken.class)
+                .bodyToMono(TokenDTO.class)
                 .block();
     }
 
-    public JsonObject postToken(OriToken token) throws WebClientResponseException {
+    public JsonObject postToken(TokenDTO token) throws WebClientResponseException {
         return client
                 .post()
                 .uri(MessageFormat.format("{0}/token", apiPrefix))
-                .body(Mono.just(token), OriToken.class)
+                .body(Mono.just(token), TokenDTO.class)
                 .retrieve()
                 .bodyToMono(JsonObject.class)
                 .block();
     }
 
-    public OriBlockResponse getBlock(String tokenSymbol, String hash) throws WebClientResponseException {
+    public BlockDTO getBlock(String tokenSymbol, String hash) throws WebClientResponseException {
         return client
                 .get()
                 .uri(MessageFormat.format("{0}/block/{1}/hash/{2}", apiPrefix, tokenSymbol, hash))
                 .retrieve()
-                .bodyToMono(OriBlockResponse.class)
+                .bodyToMono(BlockDTO.class)
                 .block();
     }
 
-    public OriBlockResponse getLastBlock(String tokenSymbol) throws WebClientResponseException {
+    public BlockDTO getLastBlock(String tokenSymbol) throws WebClientResponseException {
         return client
                 .get()
                 .uri(MessageFormat.format("{0}/block/{1}/last", apiPrefix, tokenSymbol))
                 .retrieve()
-                .bodyToMono(OriBlockResponse.class)
+                .bodyToMono(BlockDTO.class)
                 .block();
     }
 
-    public JsonObject postBlock(String tokenSymbol, String parentHash, OriBlockPost block)
+    public JsonObject postBlock(String tokenSymbol, BlockDTO block)
             throws WebClientResponseException {
         return client
                 .post()
-                .uri(MessageFormat.format("{0}/block/{1}/parent/{2}", apiPrefix, tokenSymbol, parentHash))
-                .body(Mono.just(block), OriBlockPost.class)
+                .uri(MessageFormat.format("{0}/block/{1}", apiPrefix, tokenSymbol))
+                .body(Mono.just(block), BlockDTO.class)
                 .retrieve()
                 .bodyToMono(JsonObject.class)
                 .block();
     }
 
-    public OriAccountResponse getAccount(String tokenSymbol, String hash) throws WebClientResponseException {
+    public JsonObject postBlocks(String tokenSymbol, List<BlockDTO> blocks)
+            throws WebClientResponseException {
+        return client
+                .post()
+                .uri(MessageFormat.format("{0}/block/{1}/multiple", apiPrefix, tokenSymbol))
+                .body(Mono.just(blocks), List.class)
+                .retrieve()
+                .bodyToMono(JsonObject.class)
+                .block();
+    }
+
+    public AccountDTO getAccount(String tokenSymbol, String hash) throws WebClientResponseException {
         return client
                 .get()
                 .uri(MessageFormat.format("{0}/account/{1}/hash/{2}", apiPrefix, tokenSymbol, hash))
                 .retrieve()
-                .bodyToMono(OriAccountResponse.class)
+                .bodyToMono(AccountDTO.class)
                 .block();
     }
 
-    public JsonObject postAccount(String tokenSymbol, OriAccountPost account) throws WebClientResponseException {
+    public JsonObject postAccount(String tokenSymbol, AccountDTO account) throws WebClientResponseException {
         return client
                 .post()
-                .uri(MessageFormat.format("{0}/block/{1}", apiPrefix, tokenSymbol))
-                .body(Mono.just(account), OriBlockPost.class)
+                .uri(MessageFormat.format("{0}/account/{1}", apiPrefix, tokenSymbol))
+                .body(Mono.just(account), BlockDTO.class)
                 .retrieve()
                 .bodyToMono(JsonObject.class)
                 .block();
     }
 
-    public OriTransferResponse getTransfer(String tokenSymbol, String hash) throws WebClientResponseException {
+    public TransactionDTO getTransfer(String tokenSymbol, String hash) throws WebClientResponseException {
         return client
                 .get()
                 .uri(MessageFormat.format("{0}/transaction/{1}/hash/{2}", apiPrefix, tokenSymbol, hash))
                 .retrieve()
-                .bodyToMono(OriTransferResponse.class)
+                .bodyToMono(TransactionDTO.class)
                 .block();
     }
 
-    public JsonObject postTransfer(String tokenSymbol, String blockHash, String from,
-            String to, OriTransferPost account) throws WebClientResponseException {
+    public JsonObject postTransfer(String tokenSymbol, TransactionDTO transfer) throws WebClientResponseException {
         return client
                 .post()
-                .uri(MessageFormat.format("{0}/transaction/{1}/block/{2}/from/{3}/to/{4}",
-                        apiPrefix, tokenSymbol, blockHash, from, to))
-                .body(Mono.just(account), OriBlockPost.class)
+                .uri(MessageFormat.format("{0}/transaction/{1}", apiPrefix, tokenSymbol))
+                .body(Mono.just(transfer), BlockDTO.class)
+                .retrieve()
+                .bodyToMono(JsonObject.class)
+                .block();
+    }
+
+    public JsonObject postTransfers(String tokenSymbol, List<TransactionDTO> transfers)
+            throws WebClientResponseException {
+        return client
+                .post()
+                .uri(MessageFormat.format("{0}/transaction/{1}/multiple", apiPrefix, tokenSymbol))
+                .body(Mono.just(transfers), List.class)
                 .retrieve()
                 .bodyToMono(JsonObject.class)
                 .block();

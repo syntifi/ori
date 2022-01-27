@@ -48,7 +48,7 @@ public class AccountRestAPI extends AbstractBaseRestApi {
     */
    @POST
    @Transactional
-   @Path("/{tokenSymbol}/")
+   @Path("/{tokenSymbol}")
    public Response addAccount(@PathParam("tokenSymbol") String symbol, AccountDTO accountDTO) throws ORIException {
 
       getTokenOr404(symbol);

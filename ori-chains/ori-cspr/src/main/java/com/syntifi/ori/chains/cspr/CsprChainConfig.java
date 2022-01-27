@@ -39,8 +39,11 @@ public class CsprChainConfig extends AbstractChainConfig<CasperService> {
     @Value("${cspr.token.protocol}")
     private String tokenProtocol;
 
-    @Value("${cspr.block.zero}")
-    private String blockZero;
+    @Value("${cspr.block.zero.hash}")
+    private String blockZeroHash;
+
+    @Value("${cspr.block.zero.height}")
+    private long blockZeroHeight;
 
     @Value("${cspr.batch.chunk.size}")
     private int chunkSize;
