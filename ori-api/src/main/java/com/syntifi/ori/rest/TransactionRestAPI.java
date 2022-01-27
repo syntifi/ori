@@ -21,7 +21,6 @@ import com.syntifi.ori.dto.TransactionDTO;
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.mapper.TransactionMapper;
 import com.syntifi.ori.model.Account;
-import com.syntifi.ori.model.Token;
 import com.syntifi.ori.model.Transaction;
 import com.syntifi.ori.repository.AccountRepository;
 import com.syntifi.ori.repository.BlockRepository;
@@ -40,7 +39,7 @@ import io.vertx.core.json.JsonObject;
  */
 @Singleton
 @Tag(name = "Transaction", description = "Transaction resources")
-public class TransactionRestAPI {
+public class TransactionRestAPI extends AbstractBaseRestApi {
 
     @Inject
     TransactionRepository transactionRepository;
@@ -54,22 +53,8 @@ public class TransactionRestAPI {
     @Inject
     AccountRepository accountRepository;
 
-    private Token getToken(String symbol) {
-        Token token = tokenRepository.findBySymbol(symbol);
-        if (token == null) {
-            throw new ORIException("Token not found", 404);
-        }
-        return token;
-    }
 
-    private Account getAccount(String hash) {
-        Account account = accountRepository.findByHash(hash);
-        if (account == null) {
-            throw new ORIException("Account not found", 404);
-        }
-        return account;
-    }
-    
+
     /**
      * POST method to add and index a new transactions in ES
      * 
@@ -88,11 +73,11 @@ public class TransactionRestAPI {
             @PathParam("blockHash") String blockHash, @PathParam("fromAccount") String fromHash,
             @PathParam("toAccount") String toHash)
             throws ORIException {
-        boolean exists = transactionRepository.existsAlready(transaction);
+        boolean exists = transactionRepository.existsAlready(symbol, transaction.getHash());
         if (exists) {
             throw new ORIException(transaction.getHash() + " exists already", 400);
         }
-        var token = getToken(symbol);
+        var token = getTokenOr404(symbol);
         var block = blockRepository.findByHash(symbol, blockHash);
         if (block == null) {
             throw new ORIException("Block not found", 404);
@@ -100,8 +85,8 @@ public class TransactionRestAPI {
         if (!block.getToken().equals(token)) {
             throw new ORIException("Block hash " + blockHash + " not found for " + symbol, 404);
         }
-        Account fromAccount = getAccount(fromHash);
-        Account toAccount = getAccount(toHash);
+        Account fromAccount = getAccountOr404(symbol, fromHash);
+        Account toAccount = getAccountOr404(symbol, toHash);
         transaction.setFromAccount(fromAccount);
         transaction.setToAccount(toAccount);
         transaction.setBlock(block);
@@ -132,14 +117,14 @@ public class TransactionRestAPI {
             @QueryParam("fromAccount") String fromHash, @QueryParam("toAccount") String toHash,
             @QueryParam("blockHash") String block) throws ORIException {
         List<Transaction> transactions = new ArrayList<>();
-        Account from = fromHash == null ? null : getAccount(fromHash);
-        Account to = toHash == null ? null : getAccount(toHash);
+        Account from = fromHash == null ? null : getAccountOr404(symbol, fromHash);
+        Account to = toHash == null ? null : getAccountOr404(symbol, toHash);
         if ((from != null) && (to == null)) {
-            transactions = transactionRepository.getOutgoingTransactions(from);
+            transactions = transactionRepository.getOutgoingTransactions(symbol, from.getHash());
         } else if ((from == null) && (to != null)) {
-            transactions = transactionRepository.getIncomingTransactions(to);
+            transactions = transactionRepository.getIncomingTransactions(symbol, to.getHash());
         } else if ((from != null) && (to != null)) {
-            transactions = transactionRepository.getTransactionsFromAccountToAccount(from, to);
+            transactions = transactionRepository.getTransactionsFromAccountToAccount(symbol, from.getHash(), to.getHash());
         } else {
             transactions = transactionRepository.getAllTransactions();
         }
@@ -164,7 +149,7 @@ public class TransactionRestAPI {
     @Path("/{tokenSymbol}/hash/{transactionHash}")
     public TransactionDTO getTransactionByHash(@PathParam("tokenSymbol") String symbol,
             @PathParam("transactionHash") String hash) throws ORIException {
-        Transaction out = transactionRepository.findByHash(hash);
+        Transaction out = transactionRepository.findByHash(symbol, hash);
         if (out == null || !out.getBlock().getToken().getSymbol().equals(symbol)) {
             throw new ORIException(hash + " not found", 404);
         }
@@ -184,8 +169,8 @@ public class TransactionRestAPI {
     @Path("{tokenSymbol}/account/{account}")
     public List<TransactionDTO> getTransactionsByAccount(@PathParam("tokenSymbol") String symbol,
             @PathParam("account") String hash) throws ORIException {
-        Account account = getAccount(hash);
-        List<Transaction> transactions = transactionRepository.getTransactionsByAccount(account);
+        Account account = getAccountOr404(symbol, hash);
+        List<Transaction> transactions = transactionRepository.getTransactionsByAccount(symbol, account.getHash());
         return transactions
                 .stream()
                 .filter(t -> t.getBlock().getToken().getSymbol().equals(symbol))
@@ -198,8 +183,8 @@ public class TransactionRestAPI {
     @Path("{tokenSymbol}/incoming/account/{account}")
     public List<TransactionDTO> getIncomingTransactionsToAccount(@PathParam("tokenSymbol") String symbol,
             @PathParam("account") String hash) throws ORIException {
-        Account account = getAccount(hash);
-        List<Transaction> transactions = transactionRepository.getIncomingTransactions(account);
+        Account account = getAccountOr404(symbol, hash);
+        List<Transaction> transactions = transactionRepository.getIncomingTransactions(symbol, account.getHash());
         return transactions
                 .stream()
                 .filter(t -> t.getBlock().getToken().getSymbol().equals(symbol))
@@ -212,8 +197,8 @@ public class TransactionRestAPI {
     @Path("{tokenSymbol}/outgoing/account/{account}")
     public List<TransactionDTO> getOutgoingTransactionsFromAccount(@PathParam("tokenSymbol") String symbol,
             @PathParam("account") String hash) throws ORIException {
-        Account account = getAccount(hash);
-        var transactions = transactionRepository.getOutgoingTransactions(account);
+        Account account = getAccountOr404(symbol, hash);
+        var transactions = transactionRepository.getOutgoingTransactions(symbol, account.getHash());
         return transactions
                 .stream()
                 .filter(t -> t.getBlock().getToken().getSymbol().equals(symbol))
@@ -236,7 +221,7 @@ public class TransactionRestAPI {
     @Path("/{tokenSymbol}/hash/{transactionHash}")
     public Response delete(@PathParam("tokenSymbol") String symbol,
             @PathParam("transactionHash") String hash) throws ORIException {
-        Transaction transaction = transactionRepository.findByHash(hash);
+        Transaction transaction = transactionRepository.findByHash(symbol, hash);
         if (transaction == null) {
             throw new ORIException(symbol + " not found", 404);
         }

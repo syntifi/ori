@@ -16,11 +16,11 @@ public class BlockRepository implements Repository<Block> {
     }
     
     public Block getLastBlock(String tokenSymbol) {
-        return find("token_symbol", Sort.descending("timeStamp"), tokenSymbol).firstResult();
+        return find("token_symbol", Sort.descending("time_stamp"), tokenSymbol).firstResult();
     }
 
     public List<Block> getBlocks(String tokenSymbol) {
-        return list("token_symbol", Sort.descending("timeStamp"), tokenSymbol);
+        return list("token_symbol", Sort.descending("time_stamp"), tokenSymbol);
     }
 
     public boolean existsAlready(String tokenSymbol, String blockHash) {

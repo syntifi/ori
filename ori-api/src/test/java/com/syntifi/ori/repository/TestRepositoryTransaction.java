@@ -21,7 +21,7 @@ public class TestRepositoryTransaction {
 
     @Test
     public void testGetNonExistingTransaction() {
-        Assertions.assertEquals(null, transactionRepository.findByHash("testTransaction"));
+        Assertions.assertEquals(null, transactionRepository.findByHash("ABC", "testTransaction"));
     }
 
     @Test

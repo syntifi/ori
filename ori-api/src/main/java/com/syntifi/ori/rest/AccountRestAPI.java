@@ -56,7 +56,7 @@ public class AccountRestAPI extends AbstractBaseRestApi {
       accountDTO.setTokenSymbol(symbol);
       Account account = AccountMapper.toModel(accountDTO, tokenRepository);
 
-      boolean exists = accountRepository.existsAlready(account);
+      boolean exists = accountRepository.existsAlready(symbol, account);
       if (exists) {
          throw new ORIException(account.getHash() + " exists already", 400);
       }
@@ -100,7 +100,7 @@ public class AccountRestAPI extends AbstractBaseRestApi {
 
       getTokenOr404(symbol);
 
-      Account result = accountRepository.findByHash(hash);
+      Account result = accountRepository.findByHash(symbol, hash);
       if (result == null) {
          throw new ORIException(hash + " not found", 404);
       }
@@ -122,7 +122,7 @@ public class AccountRestAPI extends AbstractBaseRestApi {
    public Response deleteAccount(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
          throws ORIException {
 
-      Account account = accountRepository.findByHash(hash);
+      Account account = accountRepository.findByHash(symbol, hash);
 
       if (account == null) {
          throw new ORIException(hash + " not found", 404);

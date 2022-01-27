@@ -32,8 +32,8 @@ public class TransactionMapper {
                 .hash(dto.getHash())
                 .timeStamp(dto.getTimeStamp())
                 .amount(dto.getAmount())
-                .fromAccount(accountRepository.findByHash(dto.getFrom()))
-                .toAccount(accountRepository.findByHash(dto.getTo()))
+                .fromAccount(accountRepository.findByHash(dto.getTokenSymbol(), dto.getFrom()))
+                .toAccount(accountRepository.findByHash(dto.getTokenSymbol(), dto.getTo()))
                 .block(blockRepository.findByHash(dto.getTokenSymbol(), dto.getBlockHash()))
                 .build();
     }
