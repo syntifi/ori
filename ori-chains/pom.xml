@@ -13,13 +13,15 @@
   </parent>
 
   <modules>
-    <module>ori-eth</module>
+    <module>ori-chain-base</module>
     <module>ori-cspr</module>
+    <module>ori-eth</module>
   </modules>
 
   <properties>
     <ori-client.version>0.1.0-SNAPSHOT</ori-client.version>
     <javax-ws-rs.version>2.1.1</javax-ws-rs.version>
+    <ori-chain-base.version>0.1.0-SNAPSHOT</ori-chain-base.version>
   </properties>
 
   <dependencies>
@@ -71,6 +73,17 @@
       <artifactId>log4j-slf4j-impl</artifactId>
     </dependency>
   </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.syntifi.ori.chains</groupId>
+        <artifactId>ori-chain-base</artifactId>
+        <version>${ori-chain-base.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
 
   <build>
     <pluginManagement>

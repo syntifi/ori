@@ -25,6 +25,10 @@
       <artifactId>core</artifactId>
       <version>${web3j.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.syntifi.ori.chains</groupId>
+      <artifactId>ori-chain-base</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

@@ -7,16 +7,16 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch EthCrawlerApplication",
+            "name": "Launch EthChainCrawlerApplication",
             "request": "launch",
-            "mainClass": "com.syntifi.ori.chains.eth.EthCrawlerApplication",
+            "mainClass": "com.syntifi.ori.chains.eth.EthChainCrawlerApplication",
             "projectName": "ori-eth"
         },
         {
             "type": "java",
-            "name": "Launch CsprCrawlerApplication",
+            "name": "Launch CsprChainCrawlerApplication",
             "request": "launch",
-            "mainClass": "com.syntifi.ori.chains.cspr.CsprCrawlerApplication",
+            "mainClass": "com.syntifi.ori.chains.cspr.CsprChainCrawlerApplication",
             "projectName": "ori-cspr"
         },
         {
@@ -24,7 +24,7 @@
             "type": "java",
             "request": "attach",
             "hostName": "localhost",
-            "name": "Debug Quarkus application (ori-api)",            
+            "name": "Debug Quarkus application (ori-api)",
             "port": 5005
         }
     ]
