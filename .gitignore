@@ -3,6 +3,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,node,react,maven,visualstudiocode,gradle
 
 ### Java ###
+bin/
 # Compiled class file
 *.class
 
