@@ -1,6 +1,6 @@
 package com.syntifi.ori.chains.cspr;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 
 import com.syntifi.casper.sdk.service.CasperService;
 import com.syntifi.ori.chains.base.AbstractChainConfig;
@@ -44,7 +44,7 @@ public class CsprChainConfig extends AbstractChainConfig<CasperService> {
 
     @Bean(name = "casperService")
     @Override
-    public CasperService service() throws MalformedURLException {
+    public CasperService service() throws IOException {
         return CasperService.usingPeer(chainNode, chainNodePort);
     }
 

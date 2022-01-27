@@ -1,6 +1,6 @@
 package com.syntifi.ori.chains.base;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 
 import com.syntifi.ori.client.OriRestClient;
 
@@ -32,5 +32,5 @@ public abstract class AbstractChainConfig<S> {
     }
 
     @Bean
-    public abstract S service() throws MalformedURLException;
+    public abstract S service() throws IOException;
 }

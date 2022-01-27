@@ -1,6 +1,6 @@
 package com.syntifi.ori.chains.eth;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 
 import com.syntifi.ori.chains.base.AbstractChainConfig;
 import com.syntifi.ori.chains.eth.processor.EthChainBlockAndTransfersProcessor;
@@ -45,7 +45,7 @@ public class EthChainConfig extends AbstractChainConfig<Web3j> {
 
     @Bean(name = "ethService")
     @Override
-    public Web3j service() throws MalformedURLException {
+    public Web3j service() throws IOException {
         return Web3j.build(new HttpService("http://" + chainNode + ":" + chainNodePort));
     }
 
