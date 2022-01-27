@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
 
 import com.syntifi.ori.model.Transaction;
 
@@ -16,6 +17,7 @@ import org.eclipse.microprofile.config.ConfigProvider;
 import io.quarkus.panache.common.Sort;
 
 @ApplicationScoped
+@Transactional
 public class TransactionRepository implements Repository<Transaction> {
 
     static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
@@ -50,19 +52,23 @@ public class TransactionRepository implements Repository<Transaction> {
                 tokenSymbol, account, fromDate.format(formatter), toDate.format(formatter));
     }
 
-    public List<Transaction> getTransactionsFromAccountToAccount(String tokenSymbol, String fromAccount, String toAccount) {
+    public List<Transaction> getTransactionsFromAccountToAccount(String tokenSymbol, String fromAccount,
+            String toAccount) {
         return list("block_token_symbol = ?1 and and fromaccount_hash = ?2 and toaccount_hash = ?3",
                 tokenSymbol, fromAccount, toAccount);
     }
 
-    public List<Transaction> getTransactionsFromAccountToAccount(String tokenSymbol, String fromAccount, String toAccount,
+    public List<Transaction> getTransactionsFromAccountToAccount(String tokenSymbol, String fromAccount,
+            String toAccount,
             LocalDateTime fromDate, LocalDateTime toDate) {
-        return list("block_token_symbol = ?1 and and fromaccount_hash = ?2 and toaccount_hash = ?3 and time_stamp>=?3 and time_stamp<=?4",
+        return list(
+                "block_token_symbol = ?1 and and fromaccount_hash = ?2 and toaccount_hash = ?3 and time_stamp>=?3 and time_stamp<=?4",
                 tokenSymbol, fromAccount, toAccount, fromDate.format(formatter), toDate.format(formatter));
     }
 
     public List<Transaction> getTransactionsByAccount(String tokenSymbol, String account) {
         return list("block_token_symbo = ?1 and fromaccount_hash = ?2 or toaccount_hash = ?2", tokenSymbol, account);
+
     }
 
     public List<Transaction> getAllTransactions() {

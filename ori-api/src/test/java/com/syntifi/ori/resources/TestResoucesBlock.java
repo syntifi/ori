@@ -51,14 +51,14 @@ public class TestResoucesBlock {
         block.put("root", "root");
         block.put("timeStamp", "2099-08-05T00:00:00.000+0000");
         block.put("validator", "validator");
+        block.put("parent", "null");
         given()
                 .body(block.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when()
-                .post("/api/v2/block/ABC/parent/null")
+                .post("/api/v2/block/ABC")
                 .then()
-                .statusCode(200)
-                .body("created", equalTo("/block/ABC/hash/mockBlock"));
+                .statusCode(201);
         synchronized (LOCK) {
             LOCK.wait(5000);
         }
@@ -141,14 +141,14 @@ public class TestResoucesBlock {
         block.put("root", "root");
         block.put("timeStamp", "2099-08-05T00:00:00.000+0000");
         block.put("validator", "validator");
+        block.put("parent", "mockBlock");
         given()
                 .body(block.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when()
-                .post("/api/v2/block/ABC/parent/mockBlock")
+                .post("/api/v2/block/ABC")
                 .then()
-                .statusCode(200)
-                .body("created", equalTo("/block/ABC/hash/mockBlock2"));
+                .statusCode(201);
         synchronized (LOCK) {
             LOCK.wait(5000);
         }

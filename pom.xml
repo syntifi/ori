@@ -8,9 +8,10 @@
 
   <modules>
     <module>ori-api</module>
+    <module>ori-shared</module>
+    <module>ori-client</module>
     <module>ori-chains</module>
     <module>ori-frontend</module>
-    <module>ori-client</module>
   </modules>
 
   <name>${project.groupId}:${project.artifactId}</name>

@@ -13,6 +13,7 @@
 
   <properties>
     <casper-sdk.version>0.0.1-SNAPSHOT</casper-sdk.version>
+    <ori-chain-base.version>0.1.0-SNAPSHOT</ori-chain-base.version>
   </properties>
 
   <dependencies>

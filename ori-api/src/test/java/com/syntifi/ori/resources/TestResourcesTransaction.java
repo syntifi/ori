@@ -91,14 +91,14 @@ public class TestResourcesTransaction {
         block.put("root", "root");
         block.put("timeStamp", "2099-08-05T00:00:00.000+0000");
         block.put("validator", "validator");
+        block.put("parent", "null");
         given()
                 .body(block.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when()
-                .post("/api/v2/block/ABC/parent/null")
+                .post("/api/v2/block/ABC")
                 .then()
-                .statusCode(200)
-                .body("created", equalTo("/block/ABC/hash/transactionBlock"));
+                .statusCode(201);
         synchronized (LOCK) {
             LOCK.wait(5000);
         }
@@ -111,15 +111,17 @@ public class TestResourcesTransaction {
         transaction.put("amount", 1234);
         transaction.put("hash", "mockTransaction");
         transaction.put("timeStamp", "2099-08-05T00:00:00.000+0000");
+        transaction.put("blockHash", "transactionBlock");
+        transaction.put("fromHash", "fromacc");
+        transaction.put("toHash", "toacc");
         given()
                 .body(transaction.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
                 .when()
-                .post("/api/v2/transaction/ABC/block/transactionBlock/from/fromacc/to/toacc")
+                .post("/api/v2/transaction/ABC")
                 .then()
-                .statusCode(200)
-                .body("created", equalTo("/transaction/ABC/hash/mockTransaction"));
+                .statusCode(201);
         synchronized (LOCK) {
             LOCK.wait(5000);
         }

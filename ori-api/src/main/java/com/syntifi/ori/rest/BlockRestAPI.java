@@ -1,7 +1,9 @@
 package com.syntifi.ori.rest;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -13,15 +15,18 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 
 import com.syntifi.ori.dto.BlockDTO;
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.mapper.BlockMapper;
 import com.syntifi.ori.model.Block;
-import com.syntifi.ori.model.Token;
+import com.syntifi.ori.model.BlockId;
 import com.syntifi.ori.repository.BlockRepository;
 
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.jboss.resteasy.specimpl.ResponseBuilderImpl;
 
 import io.vertx.core.json.JsonObject;
 
@@ -38,6 +43,18 @@ public class BlockRestAPI extends AbstractBaseRestApi {
     @Inject
     BlockRepository blockRepository;
 
+    private void checkParent(String symbol, BlockDTO blockDTO, List<BlockDTO> blockDTOs) {
+        boolean isFirstBlock = blockRepository.getBlocks(symbol).isEmpty();
+        if (!isFirstBlock) {
+            if (blockDTOs != null && blockDTOs.stream().anyMatch(t -> t.getHash().equals(blockDTO.getParent()))) {
+                return;
+            }
+            if (blockRepository.findByHash(symbol, blockDTO.getParent()) == null) {
+                throw new ORIException("Parent block not found", 404);
+            }
+        }
+    }
+
     /**
      * POST method to add and index a new block in ES
      * 
@@ -49,11 +66,11 @@ public class BlockRestAPI extends AbstractBaseRestApi {
      */
     @POST
     @Transactional
-    @Path("/{tokenSymbol}/parent/{parent}")
-    public Response addBlock(@PathParam("tokenSymbol") String symbol, @PathParam("parent") String parent,
+    @Path("/{tokenSymbol}")
+    public Response addBlock(@PathParam("tokenSymbol") String symbol,
             BlockDTO blockDTO) throws ORIException {
 
-        Token token = getTokenOr404(symbol);
+        getTokenOr404(symbol);
 
         boolean exists = blockRepository.existsAlready(symbol, blockDTO.getHash());
         if (exists) {
@@ -61,26 +78,51 @@ public class BlockRestAPI extends AbstractBaseRestApi {
         }
 
         blockDTO.setTokenSymbol(symbol);
-        blockDTO.setParent(parent);
 
-        Block child = BlockMapper.toModel(blockDTO, tokenRepository);
-        child.setToken(token);
+        checkParent(symbol, blockDTO, null);
 
-        boolean isFirstBlock = blockRepository.getBlocks(symbol).isEmpty();
-        Block parentBlock = null;
-        if (!isFirstBlock) {
-            parentBlock = blockRepository.findByHash(symbol, parent);
-            if (parentBlock == null) {
-                throw new ORIException("Parent block not found", 404);
+        Block block = BlockMapper.toModel(blockDTO, blockRepository, tokenRepository);
+
+        blockRepository.check(block);
+        blockRepository.persist(block);
+
+        return Response.created(URI.create(String.format("/block/%s/hash/%s", symbol, block.getHash()))).build();
+    }
+
+    @POST
+    @Transactional
+    @Path("/{tokenSymbol}/multiple")
+    public Response addBlocks(@PathParam("tokenSymbol") String symbol,
+            List<BlockDTO> blockDTOs) throws ORIException {
+
+        getTokenOr404(symbol);
+
+        List<Block> blocks = new ArrayList<>();
+        for (BlockDTO blockDTO : blockDTOs) {
+            boolean exists = blockRepository.existsAlready(symbol, blockDTO.getHash());
+            if (exists) {
+                throw new ORIException(blockDTO.getHash() + " exists already", 400);
             }
+
+            blockDTO.setTokenSymbol(symbol);
+
+            checkParent(symbol, blockDTO, blockDTOs);
+
+            Block block = BlockMapper.toModel(blockDTO, blockRepository, tokenRepository);
+
+            blockRepository.check(block);
+
+            blocks.add(block);
         }
-        child.setParent(parentBlock);
 
-        blockRepository.check(child);
-        blockRepository.persist(child);
+        blockRepository.persist(blocks);
 
-        return Response.ok(new JsonObject().put("created", URI.create("/block/" + symbol + "/hash/" + child.getHash())))
-                .build();
+        ResponseBuilder response = new ResponseBuilderImpl().status(Status.CREATED);
+        for (Block block : blocks) {
+            response.link(URI.create(String.format("/block/%s/hash/%s", symbol, block.getHash())), "self");
+        }
+
+        return response.build();
     }
 
     /**

@@ -24,9 +24,9 @@ public class TransactionDTO {
 
     private Double amount;
 
-    private String from;
+    private String fromHash;
 
-    private String to;
+    private String toHash;
 
     private String blockHash;
 

@@ -9,10 +9,11 @@ import com.syntifi.casper.sdk.model.transfer.Transfer;
 import com.syntifi.ori.chains.base.model.OriBlockAndTransfers;
 import com.syntifi.ori.chains.base.processor.AbstractChainBlockAndTransfersProcessor;
 import com.syntifi.ori.chains.cspr.model.CsprChainBlockAndTransfers;
-import com.syntifi.ori.model.OriBlockPost;
-import com.syntifi.ori.model.OriTransferPost;
+import com.syntifi.ori.dto.BlockDTO;
+import com.syntifi.ori.dto.TransactionDTO;
 
-public class CsprChainBlockAndTransfersProcessor extends AbstractChainBlockAndTransfersProcessor<CsprChainBlockAndTransfers> {
+public class CsprChainBlockAndTransfersProcessor
+        extends AbstractChainBlockAndTransfersProcessor<CsprChainBlockAndTransfers> {
 
     @Override
     public OriBlockAndTransfers process(CsprChainBlockAndTransfers item) throws Exception {
@@ -20,32 +21,28 @@ public class CsprChainBlockAndTransfersProcessor extends AbstractChainBlockAndTr
 
         // Block processor
         JsonBlock casperBlock = item.getChainBlock();
-        OriBlockPost block = new OriBlockPost();
+        BlockDTO block = new BlockDTO();
+        block.setParent(item.getChainBlock().getHeader().getParentHash());
         block.setEra(casperBlock.getHeader().getEraId());
         block.setHash(casperBlock.getHash());
         block.setHeight(casperBlock.getHeader().getHeight());
         block.setRoot(casperBlock.getHeader().getStateRootHash());
-        block.setValidator(
-                new BigInteger(casperBlock.getBody().getProposer().getKey()).toString(16));
-        block.setTimeStamp(
-                dateFormatter.format(casperBlock.getHeader().getTimeStamp()) + "+0000");
+        block.setValidator(new BigInteger(casperBlock.getBody().getProposer().getKey()).toString(16));
+        block.setTimeStamp(casperBlock.getHeader().getTimeStamp());
 
         result.setBlock(block);
-        result.setParentBlock(item.getChainBlock().getHeader().getParentHash());
 
         // Transfer processor
-        List<OriTransferPost> transfers = new LinkedList<>();
-        List<String> from = new LinkedList<>();
-        List<String> to = new LinkedList<>();
-        for (Transfer t : item.getChainTransfers()) {
-            OriTransferPost transfer = new OriTransferPost();
-            transfer.setTimeStamp(
-                    dateFormatter.format(casperBlock.getHeader().getTimeStamp()) + "+0000");
-            transfer.setAmount(t.getAmount().doubleValue());
-            transfer.setHash(t.getDeployHash());
-            transfers.add(transfer);
-            from.add(t.getFrom());
-            to.add(t.getTo());
+        List<TransactionDTO> transfers = new LinkedList<>();
+        for (Transfer chainTransfer : item.getChainTransfers()) {
+            TransactionDTO oriTransfer = new TransactionDTO();
+            oriTransfer.setBlockHash(block.getHash());
+            oriTransfer.setFromHash(chainTransfer.getFrom());
+            oriTransfer.setToHash(chainTransfer.getTo());
+            oriTransfer.setTimeStamp(casperBlock.getHeader().getTimeStamp());
+            oriTransfer.setAmount(chainTransfer.getAmount().doubleValue());
+            oriTransfer.setHash(chainTransfer.getDeployHash());
+            transfers.add(oriTransfer);
         }
 
         return result;

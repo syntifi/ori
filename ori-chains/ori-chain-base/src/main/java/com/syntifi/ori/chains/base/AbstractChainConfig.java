@@ -27,7 +27,9 @@ public abstract class AbstractChainConfig<S> {
 
     public abstract String getTokenProtocol();
 
-    public abstract String getBlockZero();
+    public abstract String getBlockZeroHash();
+
+    public abstract long getBlockZeroHeight();
 
     @Bean
     public OriRestClient oriRestClient() {
