@@ -16,16 +16,17 @@ public class OriItemWriteListener {
 
     @BeforeWrite
     public void beforeWrite(List<OriBlockAndTransfers> items) {
-        logger.info("OriItemWriteListener - beforeWrite");
+        logger.debug("[{}] Writing next blocks (count: {})", items.get(0).getClass().getSimpleName(), items.size());
     }
 
     @AfterWrite
     public void afterWrite(List<OriBlockAndTransfers> items) {
-        logger.info("OriItemWriteListener - afterWrite");
+        logger.debug("[{}] Next blocks read (count: {})", items.get(0).getClass().getSimpleName(), items.size());
     }
 
     @OnWriteError
-    public void onWriteError(Exception exception, List<OriBlockAndTransfers> items) {
-        logger.info("OriItemWriteListener - onWriteError");
+    public void onWriteError(Exception e, List<OriBlockAndTransfers> items) {
+        logger.error("[{}] Error reading next blocks (count: {}): {}", items.get(0).getClass().getSimpleName(),
+                items.size(), e.getMessage());
     }
 }

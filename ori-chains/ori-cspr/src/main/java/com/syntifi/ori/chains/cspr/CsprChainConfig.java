@@ -42,6 +42,9 @@ public class CsprChainConfig extends AbstractChainConfig<CasperService> {
     @Value("${cspr.block.zero}")
     private String blockZero;
 
+    @Value("${cspr.batch.chunk.size}")
+    private int chunkSize;
+
     @Bean(name = "casperService")
     @Override
     public CasperService service() throws IOException {

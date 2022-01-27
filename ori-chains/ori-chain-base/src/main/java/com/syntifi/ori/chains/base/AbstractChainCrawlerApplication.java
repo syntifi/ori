@@ -86,7 +86,7 @@ public abstract class AbstractChainCrawlerApplication<S, T extends ChainBlockAnd
 
     @Bean
     public Step step1() {
-        return stepBuilderFactory.get("step1").<T, OriBlockAndTransfers>chunk(1)
+        return stepBuilderFactory.get("step1").<T, OriBlockAndTransfers>chunk(getChainConfig().getChunkSize())
                 .reader(getBlockAndTransfersReader())
                 .processor(getBlockAndTransfersProcessor())
                 .writer(new OriBlockAndTransfersWriter(oriRestClient, getChainConfig().getTokenSymbol()))

@@ -16,6 +16,9 @@ import org.springframework.context.annotation.Bean;
  * @since 0.1.0
  */
 public abstract class AbstractChainConfig<S> {
+
+    public abstract int getChunkSize();
+
     public abstract String getOriHost();
 
     public abstract String getTokenSymbol();

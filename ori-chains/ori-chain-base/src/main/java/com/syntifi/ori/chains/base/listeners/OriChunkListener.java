@@ -16,22 +16,21 @@ public class OriChunkListener {
     private BigDecimal processedItems = BigDecimal.ZERO;
     private final BigDecimal tenBigDecimal = new BigDecimal(10);
 
-    @AfterChunk
-    public void afterChunk(ChunkContext context) {
-        logger.info("OriChunkListener - afterChunk");
-        processedItems = processedItems.add(BigDecimal.ONE);
-        if (processedItems.remainder(tenBigDecimal) == BigDecimal.ZERO) {
-            logger.info("{} items processed.", processedItems);
-        }
-    }
-
     @BeforeChunk
     public void beforeChunk(ChunkContext context) {
-        logger.info("OriChunkListener - beforeChunk");
+        logger.debug("Processing next chunk");
+    }
+
+    @AfterChunk
+    public void afterChunk(ChunkContext context) {
+        processedItems = processedItems.add(BigDecimal.ONE);
+        if (processedItems.remainder(tenBigDecimal) == BigDecimal.ZERO) {
+            logger.debug("{} items processed.", processedItems);
+        }
     }
 
     @AfterChunkError
     public void afterChunkError(ChunkContext context) {
-        logger.info("OriChunkListener - afterChunkError");
+        logger.error("Chunk error!");
     }
 }

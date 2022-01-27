@@ -43,6 +43,9 @@ public class EthChainConfig extends AbstractChainConfig<Web3j> {
     @Value("${eth.block.zero}")
     private String blockZero;
 
+    @Value("${eth.batch.chunk.size}")
+    private int chunkSize;
+
     @Bean(name = "ethService")
     @Override
     public Web3j service() throws IOException {

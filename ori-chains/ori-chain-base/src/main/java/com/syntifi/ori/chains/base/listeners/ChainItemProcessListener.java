@@ -15,16 +15,21 @@ public class ChainItemProcessListener<T extends ChainBlockAndTransfers<?, ?>> {
 
     @BeforeProcess
     public void beforeProcess(T item) {
-        logger.info("ChainItemProcessListener - beforeProcess");
+        logger.debug("[{}] Starting processing of block with {} transfers.",
+                item.getChainBlock().getClass().getSimpleName(),
+                item.getChainTransfers() != null ? item.getChainTransfers().size() : 0);
     }
 
     @AfterProcess
     public void afterProcess(T item, OriBlockAndTransfers result) {
-        logger.info("ChainItemProcessListener - afterProcess");
+        logger.debug("[{}] Finished processing of block with {} transfers.",
+                item.getChainBlock().getClass().getSimpleName(),
+                result.getTransfers() != null ? result.getTransfers().size() : 0);
     }
 
     @OnProcessError
     public void onProcessError(T item, Exception e) {
-        logger.info("ChainItemProcessListener - onProcessError");
+        logger.error("[{}] Error processing block: {}", item.getChainBlock().getClass().getSimpleName(),
+                e.getMessage());
     }
 }
