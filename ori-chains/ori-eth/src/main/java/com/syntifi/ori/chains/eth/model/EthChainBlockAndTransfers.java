@@ -5,7 +5,7 @@ import java.util.List;
 import com.syntifi.ori.chains.base.model.ChainBlockAndTransfers;
 
 import org.web3j.protocol.core.methods.response.EthBlock;
-import org.web3j.protocol.core.methods.response.EthTransaction;
+import org.web3j.protocol.core.methods.response.EthBlock.TransactionObject;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,9 +16,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EthChainBlockAndTransfers implements ChainBlockAndTransfers<EthBlock, EthTransaction> {
+public class EthChainBlockAndTransfers implements ChainBlockAndTransfers<EthBlock, TransactionObject> {
 
     private EthBlock chainBlock;
 
-    private List<EthTransaction> chainTransfers;
+    private List<TransactionObject> chainTransfers;
 }

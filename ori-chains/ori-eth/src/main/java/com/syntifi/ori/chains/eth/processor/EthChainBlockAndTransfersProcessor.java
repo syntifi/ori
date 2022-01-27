@@ -2,11 +2,16 @@ package com.syntifi.ori.chains.eth.processor;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.syntifi.ori.chains.base.model.OriBlockAndTransfers;
 import com.syntifi.ori.chains.base.processor.AbstractChainBlockAndTransfersProcessor;
 import com.syntifi.ori.chains.eth.model.EthChainBlockAndTransfers;
 import com.syntifi.ori.model.OriBlockPost;
+import com.syntifi.ori.model.OriTransferPost;
+
+import org.web3j.protocol.core.methods.response.EthBlock.TransactionObject;
 
 public class EthChainBlockAndTransfersProcessor
         extends AbstractChainBlockAndTransfersProcessor<EthChainBlockAndTransfers> {
@@ -31,6 +36,19 @@ public class EthChainBlockAndTransfersProcessor
         out.setBlock(block);
         out.setParentBlock(item.getChainBlock().getResult().getParentHash());
 
+        // Transfer processor
+        List<OriTransferPost> transfers = new LinkedList<>();
+        List<String> from = new LinkedList<>();
+        List<String> to = new LinkedList<>();
+        for (TransactionObject t: item.getChainTransfers()) {
+            OriTransferPost transfer = new OriTransferPost();
+            transfer.setTimeStamp(getDateString(item.getChainBlock().getResult().getTimestamp()));
+            transfer.setAmount(t.getValue().doubleValue());
+            transfer.setHash(t.getHash());
+            transfers.add(transfer);
+            from.add(t.getFrom());
+            to.add(t.getTo());
+        }
         return out;
     }
 

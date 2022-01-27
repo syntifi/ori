@@ -1,15 +1,10 @@
 package com.syntifi.ori.repository;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 
-import com.syntifi.ori.exception.ORIException;
-import com.syntifi.ori.model.Block;
 import com.syntifi.ori.model.Token;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
@@ -28,7 +23,7 @@ public class TestRepositoryBlock {
         Assertions.assertEquals(null, blockRepository.findByHash(token.getSymbol(), "testBlock"));
     }
 
-    @Test
+/*    @Test
     @Disabled("Check if this is still a valid test")
     public void testBlockCheck() {
         var block = new Block();
@@ -43,5 +38,5 @@ public class TestRepositoryBlock {
         Assertions.assertEquals("token must not be null", e.getMessage());
         Assertions.assertEquals(400, e.getStatus().getStatusCode());
     }
-
+*/
 }
