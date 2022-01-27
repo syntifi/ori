@@ -1,24 +1,28 @@
 package com.syntifi.ori.chains.base.listeners;
 
+import com.syntifi.ori.chains.base.model.ChainBlockAndTransfers;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.ItemReadListener;
+import org.springframework.batch.core.annotation.AfterRead;
+import org.springframework.batch.core.annotation.BeforeRead;
+import org.springframework.batch.core.annotation.OnReadError;
 
-public class StepItemReadListener implements ItemReadListener<String> {
+public class ChainItemReadListener<T extends ChainBlockAndTransfers<?, ?>> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-    @Override
+    @BeforeRead
     public void beforeRead() {
         logger.info("ItemReadListener - beforeRead");
     }
 
-    @Override
-    public void afterRead(String item) {
+    @AfterRead
+    public void afterRead(T item) {
         logger.info("ItemReadListener - afterRead");
     }
 
-    @Override
+    @OnReadError
     public void onReadError(Exception ex) {
         logger.info("ItemReadListener - onReadError");
     }

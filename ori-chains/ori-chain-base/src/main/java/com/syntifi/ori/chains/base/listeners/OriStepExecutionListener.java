@@ -4,20 +4,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.batch.core.annotation.AfterStep;
+import org.springframework.batch.core.annotation.BeforeStep;
 
-public class StepResultListener implements StepExecutionListener {
+public class OriStepExecutionListener {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-    @Override
+    @BeforeStep
     public void beforeStep(StepExecution stepExecution) {
         logger.info("Called beforeStep().");
     }
 
-    @Override
+    @AfterStep
     public ExitStatus afterStep(StepExecution stepExecution) {
         logger.info("Called afterStep().");
+
         return stepExecution.getExitStatus();
     }
 }

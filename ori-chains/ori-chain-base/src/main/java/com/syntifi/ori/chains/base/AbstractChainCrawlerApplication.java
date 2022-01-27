@@ -1,11 +1,11 @@
 package com.syntifi.ori.chains.base;
 
-import com.syntifi.ori.chains.base.listeners.CustomChunkListener;
-import com.syntifi.ori.chains.base.listeners.JobResultListener;
-import com.syntifi.ori.chains.base.listeners.StepItemProcessListener;
-import com.syntifi.ori.chains.base.listeners.StepItemReadListener;
-import com.syntifi.ori.chains.base.listeners.StepItemWriteListener;
-import com.syntifi.ori.chains.base.listeners.StepResultListener;
+import com.syntifi.ori.chains.base.listeners.OriChunkListener;
+import com.syntifi.ori.chains.base.listeners.OriJobExecutionListener;
+import com.syntifi.ori.chains.base.listeners.ChainItemProcessListener;
+import com.syntifi.ori.chains.base.listeners.ChainItemReadListener;
+import com.syntifi.ori.chains.base.listeners.OriItemWriteListener;
+import com.syntifi.ori.chains.base.listeners.OriStepExecutionListener;
 import com.syntifi.ori.chains.base.model.ChainBlockAndTransfers;
 import com.syntifi.ori.chains.base.model.OriBlockAndTransfers;
 import com.syntifi.ori.chains.base.processor.AbstractChainBlockAndTransfersProcessor;
@@ -90,11 +90,11 @@ public abstract class AbstractChainCrawlerApplication<S, T extends ChainBlockAnd
                 .reader(getBlockAndTransfersReader())
                 .processor(getBlockAndTransfersProcessor())
                 .writer(new OriBlockAndTransfersWriter(oriRestClient, getChainConfig().getTokenSymbol()))
-                .listener(new StepResultListener())
-                .listener(new CustomChunkListener())
-                .listener(new StepItemReadListener())
-                .listener(new StepItemProcessListener())
-                .listener(new StepItemWriteListener())
+                .listener(new OriStepExecutionListener())
+                .listener(new OriChunkListener())
+                .listener(new ChainItemReadListener<T>())
+                .listener(new ChainItemProcessListener<T>())
+                .listener(new OriItemWriteListener())
                 .build();
     }
 
@@ -104,7 +104,7 @@ public abstract class AbstractChainCrawlerApplication<S, T extends ChainBlockAnd
         addBlockZeroIfNeeded();
         return jobBuilderFactory.get("getBlockAndTransfersAndWrite")
                 .incrementer(new RunIdIncrementer())
-                .listener(new JobResultListener())
+                .listener(new OriJobExecutionListener())
                 .start(step1())
                 // .next(stepTwo())
                 .build();
