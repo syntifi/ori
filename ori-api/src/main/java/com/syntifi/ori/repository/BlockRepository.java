@@ -28,4 +28,8 @@ public class BlockRepository implements Repository<Block> {
     public boolean existsAlready(String tokenSymbol, String blockHash) {
         return findByHash(tokenSymbol, blockHash) != null;
     }
+
+    public boolean existsAnyByToken(String tokenSymbol) {
+        return find("token_symbol= ?1", tokenSymbol) != null;
+    }
 }

@@ -25,19 +25,26 @@ public class EthChainBlockAndTransfersReader
     // READ should return null if next item is not found
     @Override
     public EthChainBlockAndTransfers read() throws IOException, InterruptedException {
-        if (getBlockHeight() == null)
+        if (getBlockHeight() == null) {
             return null;
-        EthChainBlockAndTransfers out = new EthChainBlockAndTransfers();
+        }
+
+        EthChainBlockAndTransfers result = new EthChainBlockAndTransfers();
+
         BigInteger height = BigInteger.valueOf(getBlockHeight());
         DefaultBlockParameter blockParam = DefaultBlockParameter.valueOf(height);
         EthBlock block = getChainService().ethGetBlockByNumber(blockParam, true).send();
-        out.setChainBlock(block);
+
+        result.setChainBlock(block);
+
         List<TransactionResult> transactions = block.getResult().getTransactions();
-        out.setChainTransfers(transactions
+        result.setChainTransfers(transactions
                 .stream()
-                .map((transaction) -> (TransactionObject) transaction.get())
+                .map(transaction -> (TransactionObject) transaction.get())
                 .collect(Collectors.toList()));
+
         nextItem();
-        return out;
+
+        return result;
     }
 }

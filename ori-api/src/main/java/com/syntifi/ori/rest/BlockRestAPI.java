@@ -44,7 +44,7 @@ public class BlockRestAPI extends AbstractBaseRestApi {
     BlockRepository blockRepository;
 
     private void checkParent(String symbol, BlockDTO blockDTO, List<BlockDTO> blockDTOs) {
-        boolean isFirstBlock = blockRepository.getBlocks(symbol).isEmpty();
+        boolean isFirstBlock = blockRepository.getBlocks(symbol).isEmpty() || blockRepository.existsAnyByToken(symbol);
         if (!isFirstBlock) {
             if (blockDTOs != null && blockDTOs.stream().anyMatch(t -> t.getHash().equals(blockDTO.getParent()))) {
                 return;
@@ -161,6 +161,7 @@ public class BlockRestAPI extends AbstractBaseRestApi {
     @Path("/{tokenSymbol}/hash/{hash}")
     public BlockDTO getBlockByHash(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
             throws ORIException {
+
         getTokenOr404(symbol);
 
         Block result = blockRepository.findByHash(symbol, hash);
