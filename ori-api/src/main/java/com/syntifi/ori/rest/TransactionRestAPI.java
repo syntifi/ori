@@ -34,6 +34,7 @@ import org.jboss.resteasy.specimpl.ResponseBuilderImpl;
 
 import io.vertx.core.json.JsonObject;
 
+//TODO: pagination
 /**
  * REST API transaction endpoints
  * 
@@ -163,10 +164,8 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
         // TODO: PAGINATION HERE
         return transactions
                 .stream()
-                .filter(t -> t.getBlock().getToken().getSymbol().equals(symbol))
                 .map(TransactionMapper::fromModel)
-                .collect(Collectors.toList())
-                .subList(0, Math.min(100, transactions.size()));
+                .collect(Collectors.toList());
     }
 
     /**
@@ -185,7 +184,8 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
         if (out == null) {
             throw new ORIException(hash + " not found", 404);
         }
-        return TransactionMapper.fromModel(out);
+        TransactionDTO result = TransactionMapper.fromModel(out);
+        return result;
     }
 
     /**
@@ -205,10 +205,8 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
         List<Transaction> transactions = transactionRepository.getTransactionsByAccount(symbol, account.getHash());
         return transactions
                 .stream()
-                .filter(t -> t.getBlock().getToken().getSymbol().equals(symbol))
                 .map(TransactionMapper::fromModel)
-                .collect(Collectors.toList())
-                .subList(0, Math.min(100, transactions.size()));
+                .collect(Collectors.toList());
     }
 
     @GET
@@ -219,10 +217,8 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
         List<Transaction> transactions = transactionRepository.getIncomingTransactions(symbol, account.getHash());
         return transactions
                 .stream()
-                .filter(t -> t.getBlock().getToken().getSymbol().equals(symbol))
                 .map(TransactionMapper::fromModel)
-                .collect(Collectors.toList())
-                .subList(0, Math.min(100, transactions.size()));
+                .collect(Collectors.toList());
     }
 
     @GET
@@ -233,10 +229,8 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
         var transactions = transactionRepository.getOutgoingTransactions(symbol, account.getHash());
         return transactions
                 .stream()
-                .filter(t -> t.getBlock().getToken().getSymbol().equals(symbol))
                 .map(TransactionMapper::fromModel)
-                .collect(Collectors.toList())
-                .subList(0, Math.min(100, transactions.size()));
+                .collect(Collectors.toList());
     }
 
     /**

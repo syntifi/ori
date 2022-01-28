@@ -35,15 +35,19 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class Block extends PanacheEntityBase {
-    
+
     @EmbeddedId
     private BlockId blockId;
 
     @Column(insertable = false, updatable = false)
+    //@Getter(AccessLevel.NONE)
+    //@Setter(AccessLevel.NONE)
     private String hash;
 
     @MapsId("symbol")
     @ManyToOne(fetch = FetchType.LAZY)
+    //@Getter(AccessLevel.NONE)
+    //@Setter(AccessLevel.NONE)
     private Token token;
 
     @NotNull
@@ -72,4 +76,5 @@ public class Block extends PanacheEntityBase {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "block")
     private Set<Transaction> transactions;
+
 }

@@ -3,7 +3,6 @@ package com.syntifi.ori.rest;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -22,14 +21,13 @@ import com.syntifi.ori.dto.BlockDTO;
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.mapper.BlockMapper;
 import com.syntifi.ori.model.Block;
-import com.syntifi.ori.model.BlockId;
 import com.syntifi.ori.repository.BlockRepository;
 
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.specimpl.ResponseBuilderImpl;
 
 import io.vertx.core.json.JsonObject;
-
+//TODO: pagination
 /**
  * REST API block endpoints
  * 

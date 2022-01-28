@@ -44,12 +44,12 @@ public class TestResourcesTransaction {
     @Test
     @Order(2)
     public void testPostFromAccount() throws Exception {
-        var block = new JsonObject();
-        block.put("hash", "fromacc");
-        block.put("publicKey", "key");
-        block.put("label", "label");
+        var acc = new JsonObject();
+        acc.put("hash", "fromacc");
+        acc.put("publicKey", "key");
+        acc.put("label", "label");
         given()
-                .body(block.toString())
+                .body(acc.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when()
                 .post("/api/v2/account/ABC")
@@ -64,12 +64,12 @@ public class TestResourcesTransaction {
     @Test
     @Order(3)
     public void testPostToAccount() throws Exception {
-        var block = new JsonObject();
-        block.put("hash", "toacc");
-        block.put("publicKey", "key");
-        block.put("label", "label");
+        var acc = new JsonObject();
+        acc.put("hash", "toacc");
+        acc.put("publicKey", "key");
+        acc.put("label", "label");
         given()
-                .body(block.toString())
+                .body(acc.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when()
                 .post("/api/v2/account/ABC")
@@ -138,8 +138,8 @@ public class TestResourcesTransaction {
                 .body("amount", equalTo(1234F))
                 .body("hash", equalTo("mockTransaction"))
                 .body("blockHash", equalTo("transactionBlock"))
-                .body("from", equalTo("fromacc"))
-                .body("to", equalTo("toacc"))
+                .body("fromHash", equalTo("fromacc"))
+                .body("toHash", equalTo("toacc"))
                 .body("timeStamp", equalTo("2099-08-05T00:00:00.000+0000"));
     }
 
@@ -155,8 +155,8 @@ public class TestResourcesTransaction {
                 .body("[0].amount", equalTo(1234F))
                 .body("[0].hash", equalTo("mockTransaction"))
                 .body("[0].blockHash", equalTo("transactionBlock"))
-                .body("[0].from", equalTo("fromacc"))
-                .body("[0].to", equalTo("toacc"))
+                .body("[0].fromHash", equalTo("fromacc"))
+                .body("[0].toHash", equalTo("toacc"))
                 .body("[0].timeStamp", equalTo("2099-08-05T00:00:00.000+0000"));
     }
 
@@ -172,8 +172,8 @@ public class TestResourcesTransaction {
                 .body("[0].amount", equalTo(1234F))
                 .body("[0].hash", equalTo("mockTransaction"))
                 .body("[0].blockHash", equalTo("transactionBlock"))
-                .body("[0].from", equalTo("fromacc"))
-                .body("[0].to", equalTo("toacc"))
+                .body("[0].fromHash", equalTo("fromacc"))
+                .body("[0].toHash", equalTo("toacc"))
                 .body("[0].timeStamp", equalTo("2099-08-05T00:00:00.000+0000"));
     }
 
@@ -189,8 +189,8 @@ public class TestResourcesTransaction {
                 .body("[0].amount", equalTo(1234F))
                 .body("[0].hash", equalTo("mockTransaction"))
                 .body("[0].blockHash", equalTo("transactionBlock"))
-                .body("[0].from", equalTo("fromacc"))
-                .body("[0].to", equalTo("toacc"))
+                .body("[0].fromHash", equalTo("fromacc"))
+                .body("[0].toHash", equalTo("toacc"))
                 .body("[0].timeStamp", equalTo("2099-08-05T00:00:00.000+0000"));
     }
 
@@ -275,5 +275,4 @@ public class TestResourcesTransaction {
                 .body("method", equalTo("DELETE"))
                 .body("uri", equalTo("/token/ABC"));
     }
-
 }

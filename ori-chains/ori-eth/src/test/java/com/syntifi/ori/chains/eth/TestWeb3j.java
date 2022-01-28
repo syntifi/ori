@@ -1,18 +1,6 @@
 package com.syntifi.ori.chains.eth;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameter;
-import org.web3j.protocol.core.methods.response.EthBlock;
-import org.web3j.protocol.core.methods.response.EthBlock.TransactionObject;
-import org.web3j.protocol.core.methods.response.EthBlock.TransactionResult;
 import org.web3j.protocol.http.HttpService;
 
 public class TestWeb3j {
@@ -24,7 +12,7 @@ public class TestWeb3j {
         eth = Web3j.build(new HttpService("http://localhost:8545"));
     }
 
-    @Test
+ /*   @Test
     public void testGetBlock() throws IOException {
         BigInteger height = BigInteger.valueOf(2405787L);
         var blockParam = DefaultBlockParameter.valueOf(height);
@@ -38,5 +26,5 @@ public class TestWeb3j {
         String hash = tx.getHash();
         assert(txs.size()>0);
         assertNotNull(block);
-    }
+    }*/
 }
