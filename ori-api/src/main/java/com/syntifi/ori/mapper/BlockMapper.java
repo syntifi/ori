@@ -2,7 +2,6 @@ package com.syntifi.ori.mapper;
 
 import com.syntifi.ori.dto.BlockDTO;
 import com.syntifi.ori.model.Block;
-import com.syntifi.ori.model.BlockId;
 import com.syntifi.ori.repository.BlockRepository;
 import com.syntifi.ori.repository.TokenRepository;
 
@@ -31,7 +30,7 @@ public class BlockMapper {
 
     public static Block toModel(BlockDTO dto, BlockRepository blockRepository, TokenRepository tokenRepository) {
         return Block.builder()
-                .blockId(new BlockId(dto.getHash(), dto.getTokenSymbol()))
+                .hash(dto.getHash())
                 .parent(blockRepository.findByHash(dto.getTokenSymbol(), dto.getParent()))
                 .hash(dto.getHash())
                 .timeStamp(dto.getTimeStamp())

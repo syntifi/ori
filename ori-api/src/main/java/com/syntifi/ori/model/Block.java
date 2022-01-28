@@ -5,9 +5,10 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
@@ -34,20 +35,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@IdClass(BlockId.class)
 public class Block extends PanacheEntityBase {
-
-    @EmbeddedId
-    private BlockId blockId;
-
-    @Column(insertable = false, updatable = false)
-    //@Getter(AccessLevel.NONE)
-    //@Setter(AccessLevel.NONE)
+    
+    @Id
     private String hash;
 
+    @Id
     @MapsId("symbol")
     @ManyToOne(fetch = FetchType.LAZY)
-    //@Getter(AccessLevel.NONE)
-    //@Setter(AccessLevel.NONE)
     private Token token;
 
     @NotNull

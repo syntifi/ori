@@ -22,8 +22,8 @@ public class TransactionMapper {
                 .amount(model.getAmount())
                 .fromHash(model.getFromAccount().getHash())
                 .toHash(model.getToAccount().getHash())
-                .blockHash(model.getBlock().getBlockId().getHash())
-                .tokenSymbol(model.getBlock().getBlockId().getSymbol())
+                .blockHash(model.getBlock().getHash())
+                .tokenSymbol(model.getBlock().getToken().getSymbol())
                 .build()
                 : DEFAULT_DTO_VALUE;
     }
@@ -51,6 +51,5 @@ public class TransactionMapper {
         }
         return account;
     }
-
 
 }
