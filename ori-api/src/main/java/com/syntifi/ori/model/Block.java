@@ -43,7 +43,7 @@ public class Block extends PanacheEntityBase {
 
     @Id
     @MapsId("symbol")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Token token;
 
     @NotNull
@@ -70,7 +70,7 @@ public class Block extends PanacheEntityBase {
     @NotNull
     private String validator;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "block")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "block")
     private Set<Transaction> transactions;
 
 }

@@ -46,7 +46,7 @@ public class Transaction extends PanacheEntityBase {
     @Column(name = "time_stamp")
     private Date timeStamp;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Account fromAccount;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -57,6 +57,6 @@ public class Transaction extends PanacheEntityBase {
     @Min(0)
     private Double amount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Block block;
 }

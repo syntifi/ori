@@ -38,7 +38,7 @@ public class Account extends PanacheEntityBase {
     private String hash;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Token token;
 
     @Column(name = "public_key")
@@ -48,11 +48,11 @@ public class Account extends PanacheEntityBase {
     @FullTextField(analyzer = "standard")
     private String label;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "fromAccount")
+    @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true, mappedBy = "fromAccount")
     @IndexedEmbedded
     private Set<Transaction> out;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "toAccount")
+    @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true, mappedBy = "toAccount")
     @IndexedEmbedded
     private Set<Transaction> in;
 }

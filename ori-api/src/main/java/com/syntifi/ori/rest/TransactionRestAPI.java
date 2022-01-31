@@ -1,4 +1,3 @@
-
 package com.syntifi.ori.rest;
 
 import java.net.URI;
