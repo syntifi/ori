@@ -5,7 +5,7 @@ name: Java CI with Maven and ElasticSearch service
 
 on:
   push:
-    branches: [ main ]
+    branches: [ refactor ]
   pull_request:
     branches: [ main ]
 
@@ -30,7 +30,5 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: maven
-    - name: Install local jars 
-      run:   mvn install:install-file -Dfile="./src/main/resources/casper-sdk-0.1.2.jar" -DgroupId=com.syntifi.casper -DartifactId=casper-sdk -Dversion=0.1.2 -Dpackaging=jar -DgeneratePom=true
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: ./mvnw -B compile --file pom.xml

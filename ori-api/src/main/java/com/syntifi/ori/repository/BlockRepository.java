@@ -3,14 +3,12 @@ package com.syntifi.ori.repository;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Transactional;
 
 import com.syntifi.ori.model.Block;
 
 import io.quarkus.panache.common.Sort;
 
 @ApplicationScoped
-@Transactional
 public class BlockRepository implements Repository<Block> {
 
     public Block findByHash(String tokenSymbol, String blockHash) {

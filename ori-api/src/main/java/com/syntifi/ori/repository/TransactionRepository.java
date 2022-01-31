@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Transactional;
 
 import com.syntifi.ori.model.Transaction;
 
@@ -17,7 +16,6 @@ import org.eclipse.microprofile.config.ConfigProvider;
 import io.quarkus.panache.common.Sort;
 
 @ApplicationScoped
-@Transactional
 public class TransactionRepository implements Repository<Transaction> {
 
     static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
