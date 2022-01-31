@@ -1,7 +1,5 @@
 package com.syntifi.ori.repository;
 
-import java.util.List;
-
 import javax.enterprise.context.ApplicationScoped;
 
 import com.syntifi.ori.model.Account;
@@ -10,8 +8,7 @@ import com.syntifi.ori.model.Account;
 public class AccountRepository implements Repository<Account> {
 
     public Account findByHash(String tokenSymbol, String hash) {
-        List<Account> result = list("token_symbol = ?1 and hash = ?2", tokenSymbol, hash);
-        return result.isEmpty() ? null : result.get(0);
+        return find("token_symbol = ?1 and hash = ?2", tokenSymbol, hash).singleResult();
     }
 
     public boolean existsAlready(String tokenSymbol, Account account) {

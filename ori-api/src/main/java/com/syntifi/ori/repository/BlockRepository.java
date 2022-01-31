@@ -12,7 +12,7 @@ import io.quarkus.panache.common.Sort;
 public class BlockRepository implements Repository<Block> {
 
     public Block findByHash(String tokenSymbol, String blockHash) {
-        return find("token_symbol= ?1 and hash = ?2", tokenSymbol, blockHash).firstResult();
+        return find("token_symbol= ?1 and hash = ?2", tokenSymbol, blockHash).singleResult();
     }
 
     public Block getLastBlock(String tokenSymbol) {
