@@ -1,22 +1,24 @@
 package com.syntifi.ori.repository;
 
+import java.util.Optional;
+
 import javax.enterprise.context.ApplicationScoped;
 
-import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Token;
 
 @ApplicationScoped
 public class TokenRepository implements Repository<Token> {
 
-    public Token findBySymbol(String symbol) throws ORIException {
-        return find("symbol", symbol).singleResult();
+    private Optional<Token> query(String symbol) {
+        return find("symbol", symbol).singleResultOptional();
     }
 
-    public long countBySymbol(String symbol) throws ORIException {
-        return count("symbol", symbol);
+    public Token findBySymbol(String symbol) {
+        Optional<Token> token = query(symbol);
+        return token.isPresent() ? token.get() : null;
     }
 
     public boolean existsAlready(Token token) {
-        return countBySymbol(token.getSymbol()) > 0;
+        return query(token.getSymbol()).isPresent();
     }
 }
