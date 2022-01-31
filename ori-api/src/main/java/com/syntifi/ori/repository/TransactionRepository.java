@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -21,16 +22,17 @@ public class TransactionRepository implements Repository<Transaction> {
     static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
     private int maxGraphLength = ConfigProvider.getConfig().getValue("ori.aml.max-trace-coin-length", int.class);
 
-    public Transaction findByHash(String tokenSymbol, String hash) {
-        return find("block_token_symbol = ?1 and hash = ?2", tokenSymbol, hash).singleResult();
+    private Optional<Transaction> query(String tokenSymbol, String hash) {
+        return find("block_token_symbol = ?1 and hash = ?2", tokenSymbol, hash).singleResultOptional();
     }
 
-    public long countByHash(String tokenSymbol, String hash) {
-        return count("block_token_symbol = ?1 and hash = ?2", tokenSymbol, hash);
+    public Transaction findByHash(String tokenSymbol, String hash) {
+        Optional<Transaction> transaction = query(tokenSymbol, hash);
+        return transaction.isPresent() ? transaction.get() : null;
     }
 
     public boolean existsAlready(String tokenSymbol, String hash) {
-        return countByHash(tokenSymbol, hash) > 0;
+        return query(tokenSymbol, hash).isPresent();
     }
 
     public List<Transaction> getOutgoingTransactions(String tokenSymbol, String account) {
@@ -72,6 +74,7 @@ public class TransactionRepository implements Repository<Transaction> {
 
     }
 
+    //TODO: pagination
     public List<Transaction> getAllTransactions() {
         return listAll();
     }
