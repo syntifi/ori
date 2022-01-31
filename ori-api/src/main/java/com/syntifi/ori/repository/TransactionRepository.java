@@ -67,7 +67,7 @@ public class TransactionRepository implements Repository<Transaction> {
     }
 
     public List<Transaction> getTransactionsByAccount(String tokenSymbol, String account) {
-        return list("block_token_symbo = ?1 and fromaccount_hash = ?2 or toaccount_hash = ?2", tokenSymbol, account);
+        return list("block_token_symbol = ?1 and fromaccount_hash = ?2 or toaccount_hash = ?2", tokenSymbol, account);
 
     }
 
