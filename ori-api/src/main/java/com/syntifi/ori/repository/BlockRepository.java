@@ -15,6 +15,10 @@ public class BlockRepository implements Repository<Block> {
         return find("token_symbol= ?1 and hash = ?2", tokenSymbol, blockHash).singleResult();
     }
 
+    public long countByHash(String tokenSymbol, String blockHash) {
+        return count("token_symbol= ?1 and hash = ?2", tokenSymbol, blockHash);
+    }
+
     public Block getLastBlock(String tokenSymbol) {
         return find("token_symbol", Sort.descending("time_stamp"), tokenSymbol).firstResult();
     }
@@ -24,10 +28,10 @@ public class BlockRepository implements Repository<Block> {
     }
 
     public boolean existsAlready(String tokenSymbol, String blockHash) {
-        return findByHash(tokenSymbol, blockHash) != null;
+        return countByHash(tokenSymbol, blockHash) > 0;
     }
 
     public boolean existsAnyByToken(String tokenSymbol) {
-        return find("token_symbol= ?1", tokenSymbol) != null;
+        return count("token_symbol= ?1", tokenSymbol) > 0;
     }
 }
