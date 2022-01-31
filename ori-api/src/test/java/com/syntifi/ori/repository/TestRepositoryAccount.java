@@ -17,7 +17,7 @@ public class TestRepositoryAccount {
 
     @Test
     public void testGetNonExistingAccount() {
-        Assertions.assertEquals(null, accountRepository.findByHash("ABC", "testAccount"));
+        Assertions.assertEquals(null, accountRepository.findByHashAndTokenSymbol("ABC", "testAccount"));
     }
 
     @Test

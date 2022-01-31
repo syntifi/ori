@@ -25,7 +25,7 @@ public abstract class AbstractBaseRestApi {
     }
 
     protected Account getAccountOr404(String symbol, String hash) {
-        Account account = accountRepository.findByHash(symbol, hash);
+        Account account = accountRepository.findByHashAndTokenSymbol(symbol, hash);
         if (account == null) {
             throw new ORIException("Account not found", 404);
         }

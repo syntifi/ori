@@ -100,7 +100,7 @@ public class AccountRestAPI extends AbstractBaseRestApi {
 
       getTokenOr404(symbol);
 
-      Account result = accountRepository.findByHash(symbol, hash);
+      Account result = accountRepository.findByHashAndTokenSymbol(symbol, hash);
       if (result == null) {
          throw new ORIException(hash + " not found", 404);
       }
@@ -122,7 +122,7 @@ public class AccountRestAPI extends AbstractBaseRestApi {
    public Response deleteAccount(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
          throws ORIException {
 
-      Account account = accountRepository.findByHash(symbol, hash);
+      Account account = accountRepository.findByHashAndTokenSymbol(symbol, hash);
 
       if (account == null) {
          throw new ORIException(hash + " not found", 404);

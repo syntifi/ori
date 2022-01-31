@@ -49,7 +49,7 @@ public class Transaction extends PanacheEntityBase {
     @ManyToOne
     private Account fromAccount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Account toAccount;
 
     @NotNull

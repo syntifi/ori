@@ -1,5 +1,8 @@
 package com.syntifi.ori.mapper;
 
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+
 import com.syntifi.ori.dto.TransactionDTO;
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Account;
@@ -46,21 +49,31 @@ public class TransactionMapper {
     }
 
     private static Account getAccount(String tokenSymbol, String hash, AccountRepository accountRepository) {
-        Account account = accountRepository.findByHash(tokenSymbol, hash);
-        // TODO: Throw with different exception and throw this @ controller level
-        if (account == null) {
-            throw new ORIException("Account not found", 404);
+        try {
+            Account account = accountRepository.findByHashAndTokenSymbol(tokenSymbol, hash);
+            return account;
         }
-        return account;
+        // TODO: Throw with different exception and throw this @ controller level
+        catch (NoResultException e) {
+            throw new ORIException("Account not found", 404);
+        } catch (NonUniqueResultException e) {
+            throw new ORIException("Account not unique", 500);
+        }
     }
 
     private static Block getBlock(String tokenSymbol, String hash, BlockRepository blockRepository) {
-        Block block = blockRepository.findByHash(tokenSymbol, hash);
-        // TODO: Throw with different exception and throw this @ controller level
-        if (block == null) {
-            throw new ORIException("Account not found", 404);
+        try {
+            Block block = blockRepository.findByHash(tokenSymbol, hash);
+            return block;
         }
-        return block;
+        // TODO: Throw with different exception and throw this @ controller level
+        // TODO: Throw with different exception and throw this @ controller level
+        catch (NoResultException e) {
+            throw new ORIException("Block not found", 404);
+        } catch (NonUniqueResultException e) {
+            throw new ORIException("Block not unique", 500);
+        }
+
     }
 
 }

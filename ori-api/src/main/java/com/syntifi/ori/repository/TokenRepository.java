@@ -12,7 +12,11 @@ public class TokenRepository implements Repository<Token> {
         return find("symbol", symbol).singleResult();
     }
 
+    public long countBySymbol(String symbol) throws ORIException {
+        return count("symbol", symbol);
+    }
+
     public boolean existsAlready(Token token) {
-        return findBySymbol(token.getSymbol()) != null;
+        return countBySymbol(token.getSymbol()) > 0;
     }
 }
