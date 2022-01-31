@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
 
 import com.syntifi.ori.model.Transaction;
 
@@ -16,18 +17,22 @@ import org.eclipse.microprofile.config.ConfigProvider;
 import io.quarkus.panache.common.Sort;
 
 @ApplicationScoped
+@Transactional
 public class TransactionRepository implements Repository<Transaction> {
 
     static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
     private int maxGraphLength = ConfigProvider.getConfig().getValue("ori.aml.max-trace-coin-length", int.class);
 
     public Transaction findByHash(String tokenSymbol, String hash) {
-        List<Transaction> result = list("block_token_symbol = ?1 and hash = ?2", tokenSymbol, hash);
-        return result.isEmpty() ? null : result.get(0);
+        return find("block_token_symbol = ?1 and hash = ?2", tokenSymbol, hash).singleResult();
+    }
+
+    public long countByHash(String tokenSymbol, String hash) {
+        return count("block_token_symbol = ?1 and hash = ?2", tokenSymbol, hash);
     }
 
     public boolean existsAlready(String tokenSymbol, String hash) {
-        return findByHash(tokenSymbol, hash) != null;
+        return countByHash(tokenSymbol, hash) > 0;
     }
 
     public List<Transaction> getOutgoingTransactions(String tokenSymbol, String account) {

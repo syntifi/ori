@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.transaction.Transactional;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -180,12 +182,14 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
     @Path("/{tokenSymbol}/hash/{transactionHash}")
     public TransactionDTO getTransactionByHash(@PathParam("tokenSymbol") String symbol,
             @PathParam("transactionHash") String hash) throws ORIException {
-        Transaction out = transactionRepository.findByHash(symbol, hash);
-        if (out == null) {
+        try {
+            Transaction out = transactionRepository.findByHash(symbol, hash);
+            return TransactionMapper.fromModel(out);
+        } catch (NoResultException nre) {
             throw new ORIException(hash + " not found", 404);
+        } catch (NonUniqueResultException nure) {
+            throw new ORIException(hash + " found more than once", 500);
         }
-        TransactionDTO result = TransactionMapper.fromModel(out);
-        return result;
     }
 
     /**
@@ -247,18 +251,23 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
     @Path("/{tokenSymbol}/hash/{transactionHash}")
     public Response delete(@PathParam("tokenSymbol") String symbol,
             @PathParam("transactionHash") String hash) throws ORIException {
-        Transaction transaction = transactionRepository.findByHash(symbol, hash);
-        if (transaction == null) {
-            throw new ORIException(symbol + " not found", 404);
+        try {
+            Transaction transaction = transactionRepository.findByHash(symbol, hash);
+
+            // TODO: Still need this?
+            if (transaction.getBlock().getToken().getSymbol().equals(symbol)) {
+                transactionRepository.delete(transaction);
+            } else {
+                throw new ORIException("Forbidden", 403);
+            }
+            return Response.ok(new JsonObject()
+                    .put("method", "DELETE")
+                    .put("uri", "/transaction/" + symbol + "/hash/" + hash))
+                    .build();
+        } catch (NoResultException nre) {
+            throw new ORIException(hash + " not found", 404);
+        } catch (NonUniqueResultException nure) {
+            throw new ORIException(hash + " found more than once", 500);
         }
-        if (transaction.getBlock().getToken().getSymbol().equals(symbol)) {
-            transactionRepository.delete(transaction);
-        } else {
-            throw new ORIException("Forbidden", 403);
-        }
-        return Response.ok(new JsonObject()
-                .put("method", "DELETE")
-                .put("uri", "/transaction/" + symbol + "/hash/" + hash))
-                .build();
     }
 }
