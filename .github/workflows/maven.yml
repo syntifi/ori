@@ -42,4 +42,4 @@ jobs:
     - name: Build with Maven
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
-      run: ./mvnw -B compile --no-transfer-progress
+      run: ./mvnw --no-transfer-progress --batch-mode verify
