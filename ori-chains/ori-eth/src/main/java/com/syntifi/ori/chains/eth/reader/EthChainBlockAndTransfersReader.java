@@ -2,7 +2,6 @@ package com.syntifi.ori.chains.eth.reader;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import com.syntifi.ori.chains.base.reader.AbstractChainBlockAndTransfersReader;
@@ -14,7 +13,6 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthBlock.TransactionObject;
-import org.web3j.protocol.core.methods.response.EthBlock.TransactionResult;
 
 public class EthChainBlockAndTransfersReader
         extends AbstractChainBlockAndTransfersReader<Web3j, EthChainBlockAndTransfers> {
