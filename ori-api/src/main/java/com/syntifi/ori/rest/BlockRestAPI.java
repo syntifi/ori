@@ -104,6 +104,7 @@ public class BlockRestAPI extends AbstractBaseRestApi {
         ResponseBuilder response = new ResponseBuilderImpl().status(Status.CREATED);
         for (BlockDTO blockDTO : blockDTOs) {
             boolean exists = blockRepository.existsAlready(symbol, blockDTO.getHash());
+            // TODO: very important to check what happens here
             if (exists) {
                 throw new ORIException(blockDTO.getHash() + " exists already", Status.CONFLICT);
             }

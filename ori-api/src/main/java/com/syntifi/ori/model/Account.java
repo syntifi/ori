@@ -11,6 +11,7 @@ import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,7 @@ public class Account extends PanacheEntityBase {
     private String hash;
 
     @Id
+    @NotNull
     @MapsId("symbol")
     @ManyToOne
     private Token token;
