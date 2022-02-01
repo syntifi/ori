@@ -38,7 +38,7 @@ const AccountTrace: FC<any> = ({ date, submit, direction }): ReactElement => {
             const uniqueIds: any[] = [];
             const accountIdMap: any = {};
             var i = 0;
-            response.data.map((item: any) => {
+            response.data.forEach((item: any) => {
                 if (uniqueIds.indexOf(item.to) === -1) {
                     uniqueIds.push(item.to)
                     accountIdMap[item.to] = i
@@ -49,7 +49,7 @@ const AccountTrace: FC<any> = ({ date, submit, direction }): ReactElement => {
                     accountIdMap[item.from] = i
                     i = i + 1
                 }
-
+                
             })
             const newEdges: any[] = response.data.map((item: any) =>
             ({
