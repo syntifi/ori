@@ -9,6 +9,8 @@ import com.syntifi.ori.client.OriRestClient;
 import com.syntifi.ori.dto.AccountDTO;
 import com.syntifi.ori.dto.TransactionDTO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -22,6 +24,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
  * @since 0.1.0
  */
 public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfers> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OriBlockAndTransfersWriter.class);
 
     private String tokenSymbol;
     private OriRestClient oriRestClient;
@@ -76,9 +79,8 @@ public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfe
 
     private void writeTransactions(List<? extends OriBlockAndTransfers> blockAndTransfersResults) {
         for (OriBlockAndTransfers oriBlockAndTransfers : blockAndTransfersResults) {
-            List<TransactionDTO> transfers = oriBlockAndTransfers.getTransfers();
-            if (transfers != null) {
-                for (TransactionDTO transfer : transfers) {
+            if (oriBlockAndTransfers.getTransfers() != null) {
+                for (TransactionDTO transfer : oriBlockAndTransfers.getTransfers()) {
                     writeAccount(transfer.getFromHash());
                     writeAccount(transfer.getToHash());
                     try {
@@ -109,8 +111,7 @@ public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfe
                 throw new OriItemWriterException(String.format(
                         "error while writing account %s", hash), e);
             } else {
-                throw new OriItemWriterException(String.format(
-                        "account %s already exists", hash), e);
+                LOGGER.warn("account {} already exists", hash);
             }
         }
     }

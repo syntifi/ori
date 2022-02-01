@@ -3,7 +3,6 @@ package com.syntifi.ori.model;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -24,10 +23,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class Token extends PanacheEntityBase {
-    
+
     @Id
-    @NotNull
-    @Column(unique = true)
     private String symbol;
 
     @NotNull
