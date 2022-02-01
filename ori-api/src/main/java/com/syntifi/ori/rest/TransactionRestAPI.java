@@ -74,7 +74,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
         transactionDTO.setTokenSymbol(symbol);
 
         try {
-            Block block = blockRepository.findByHash(symbol, transactionDTO.getBlockHash());
+            Block block = blockRepository.findByTokenSymbolAndHash(symbol, transactionDTO.getBlockHash());
             if (!block.getToken().equals(token)) {
                 throw new ORIException("Block hash " + transactionDTO.getBlockHash() + " not found for " + symbol, 404);
             }
@@ -106,7 +106,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
             }
             var token = getTokenOr404(symbol);
             try {
-                var block = blockRepository.findByHash(symbol, transactionDTO.getBlockHash());
+                var block = blockRepository.findByTokenSymbolAndHash(symbol, transactionDTO.getBlockHash());
 
                 if (!block.getToken().equals(token)) {
                     throw new ORIException("Block hash " + transactionDTO.getBlockHash() + " not found for " + symbol,
@@ -163,7 +163,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
         } else if ((from == null) && (to != null)) {
             transactions = transactionRepository.getIncomingTransactions(symbol, to.getHash());
         } else if ((from != null) && (to != null)) {
-            transactions = transactionRepository.getTransactionsFromAccountToAccount(symbol, from.getHash(),
+            transactions = transactionRepository.getTransactionsByTokenSymbolAndFromAccountAndToAccount(symbol, from.getHash(),
                     to.getHash());
         } else {
             transactions = transactionRepository.getAllTransactions();
@@ -188,7 +188,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
     public TransactionDTO getTransactionByHash(@PathParam("tokenSymbol") String symbol,
             @PathParam("transactionHash") String hash) throws ORIException {
         try {
-            Transaction out = transactionRepository.findByHash(symbol, hash);
+            Transaction out = transactionRepository.findByTokenSymbolAndHash(symbol, hash);
             return TransactionMapper.fromModel(out);
         } catch (NoResultException nre) {
             throw new ORIException(hash + " not found", 404);
@@ -211,7 +211,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
     public List<TransactionDTO> getTransactionsByAccount(@PathParam("tokenSymbol") String symbol,
             @PathParam("account") String hash) throws ORIException {
         Account account = getAccountOr404(symbol, hash);
-        List<Transaction> transactions = transactionRepository.getTransactionsByAccount(symbol, account.getHash());
+        List<Transaction> transactions = transactionRepository.getTransactionsByTokenSymbolAndAccount(symbol, account.getHash());
         return transactions
                 .stream()
                 .map(TransactionMapper::fromModel)
@@ -257,7 +257,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
     public Response delete(@PathParam("tokenSymbol") String symbol,
             @PathParam("transactionHash") String hash) throws ORIException {
         try {
-            Transaction transaction = transactionRepository.findByHash(symbol, hash);
+            Transaction transaction = transactionRepository.findByTokenSymbolAndHash(symbol, hash);
 
             // TODO: Still need this?
             if (transaction.getBlock().getToken().getSymbol().equals(symbol)) {

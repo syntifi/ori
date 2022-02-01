@@ -21,16 +21,16 @@ public class TransactionRepository implements Repository<Transaction> {
     static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
     private int maxGraphLength = ConfigProvider.getConfig().getValue("ori.aml.max-trace-coin-length", int.class);
 
-    public Transaction findByHash(String tokenSymbol, String hash) {
+    public Transaction findByTokenSymbolAndHash(String tokenSymbol, String hash) {
         return find("block_token_symbol = ?1 and hash = ?2", tokenSymbol, hash).singleResult();
     }
 
-    public long countByHash(String tokenSymbol, String hash) {
+    public long countByTokenSymbolAndHash(String tokenSymbol, String hash) {
         return count("block_token_symbol = ?1 and hash = ?2", tokenSymbol, hash);
     }
 
     public boolean existsAlready(String tokenSymbol, String hash) {
-        return countByHash(tokenSymbol, hash) > 0;
+        return countByTokenSymbolAndHash(tokenSymbol, hash) > 0;
     }
 
     public List<Transaction> getOutgoingTransactions(String tokenSymbol, String account) {
@@ -53,13 +53,15 @@ public class TransactionRepository implements Repository<Transaction> {
                 tokenSymbol, account, fromDate.format(formatter), toDate.format(formatter));
     }
 
-    public List<Transaction> getTransactionsFromAccountToAccount(String tokenSymbol, String fromAccount,
+    public List<Transaction> getTransactionsByTokenSymbolAndFromAccountAndToAccount(String tokenSymbol,
+            String fromAccount,
             String toAccount) {
         return list("block_token_symbol = ?1 and and fromaccount_hash = ?2 and toaccount_hash = ?3",
                 tokenSymbol, fromAccount, toAccount);
     }
 
-    public List<Transaction> getTransactionsFromAccountToAccount(String tokenSymbol, String fromAccount,
+    public List<Transaction> getTransactionsByTokenSymbolAndFromAccountAndToAccountBetweenTimeStamps(String tokenSymbol,
+            String fromAccount,
             String toAccount,
             LocalDateTime fromDate, LocalDateTime toDate) {
         return list(
@@ -67,7 +69,7 @@ public class TransactionRepository implements Repository<Transaction> {
                 tokenSymbol, fromAccount, toAccount, fromDate.format(formatter), toDate.format(formatter));
     }
 
-    public List<Transaction> getTransactionsByAccount(String tokenSymbol, String account) {
+    public List<Transaction> getTransactionsByTokenSymbolAndAccount(String tokenSymbol, String account) {
         return list("block_token_symbol = ?1 and fromaccount_hash = ?2 or toaccount_hash = ?2", tokenSymbol, account);
 
     }

@@ -98,7 +98,7 @@ public class AccountRestAPI extends AbstractBaseRestApi {
       getTokenOr404(symbol);
 
       try {
-         Account result = accountRepository.findByHashAndTokenSymbol(symbol, hash);
+         Account result = accountRepository.findByTokenSymbolAndHash(symbol, hash);
          return AccountMapper.fromModel(result);
       } catch (NoResultException e) {
          throw new ORIException(hash + " not found", 404);
@@ -122,7 +122,7 @@ public class AccountRestAPI extends AbstractBaseRestApi {
          throws ORIException {
 
       try {
-         Account account = accountRepository.findByHashAndTokenSymbol(symbol, hash);
+         Account account = accountRepository.findByTokenSymbolAndHash(symbol, hash);
          if (account.getToken().getSymbol().equals(symbol)) {
             accountRepository.delete(account);
 

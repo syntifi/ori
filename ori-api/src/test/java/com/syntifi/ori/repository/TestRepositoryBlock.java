@@ -22,7 +22,7 @@ public class TestRepositoryBlock {
         token.setProtocol("protocol");
         token.setSymbol("symbol");
         Assertions.assertThrows(NoResultException.class,
-                () -> blockRepository.findByHash(token.getSymbol(), "testBlock"));
+                () -> blockRepository.findByTokenSymbolAndHash(token.getSymbol(), "testBlock"));
     }
 
     /*

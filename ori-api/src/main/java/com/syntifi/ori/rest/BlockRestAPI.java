@@ -51,7 +51,7 @@ public class BlockRestAPI extends AbstractBaseRestApi {
                 return;
             }
             try {
-                blockRepository.findByHash(symbol, blockDTO.getParent());
+                blockRepository.findByTokenSymbolAndHash(symbol, blockDTO.getParent());
             } catch (NoResultException e) {
                 throw new ORIException("Parent block not found", 404);
             } catch (NonUniqueResultException e) {
@@ -172,7 +172,7 @@ public class BlockRestAPI extends AbstractBaseRestApi {
         getTokenOr404(symbol);
 
         try {
-            Block result = blockRepository.findByHash(symbol, hash);
+            Block result = blockRepository.findByTokenSymbolAndHash(symbol, hash);
             return BlockMapper.fromModel(result);
         } catch (NoResultException e) {
             throw new ORIException(hash + " not found", 404);
@@ -197,7 +197,7 @@ public class BlockRestAPI extends AbstractBaseRestApi {
         getTokenOr404(symbol);
 
         try {
-            Block block = blockRepository.findByHash(symbol, hash);
+            Block block = blockRepository.findByTokenSymbolAndHash(symbol, hash);
             if (block.getToken().getSymbol().equals(symbol)) {
                 blockRepository.delete(block);
             } else {

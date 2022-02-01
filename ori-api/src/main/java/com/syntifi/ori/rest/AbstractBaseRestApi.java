@@ -30,7 +30,7 @@ public abstract class AbstractBaseRestApi {
 
     protected Account getAccountOr404(String symbol, String hash) {
         try {
-            return accountRepository.findByHashAndTokenSymbol(symbol, hash);
+            return accountRepository.findByTokenSymbolAndHash(symbol, hash);
         } catch (NoResultException e) {
             throw new ORIException(hash + " not found", 404);
         } catch (NonUniqueResultException e) {

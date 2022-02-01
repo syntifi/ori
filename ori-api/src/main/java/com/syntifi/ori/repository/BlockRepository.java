@@ -11,12 +11,12 @@ import io.quarkus.panache.common.Sort;
 @ApplicationScoped
 public class BlockRepository implements Repository<Block> {
 
-    public Block findByHash(String tokenSymbol, String blockHash) {
-        return find("token_symbol= ?1 and hash = ?2", tokenSymbol, blockHash).singleResult();
+    public Block findByTokenSymbolAndHash(String tokenSymbol, String hash) {
+        return find("token_symbol= ?1 and hash = ?2", tokenSymbol, hash).singleResult();
     }
 
-    public long countByHash(String tokenSymbol, String blockHash) {
-        return count("token_symbol= ?1 and hash = ?2", tokenSymbol, blockHash);
+    public long countByTokenSymbolAndHash(String tokenSymbol, String hash) {
+        return count("token_symbol= ?1 and hash = ?2", tokenSymbol, hash);
     }
 
     public Block getLastBlock(String tokenSymbol) {
@@ -28,7 +28,7 @@ public class BlockRepository implements Repository<Block> {
     }
 
     public boolean existsAlready(String tokenSymbol, String blockHash) {
-        return countByHash(tokenSymbol, blockHash) > 0;
+        return countByTokenSymbolAndHash(tokenSymbol, blockHash) > 0;
     }
 
     public boolean existsAnyByToken(String tokenSymbol) {

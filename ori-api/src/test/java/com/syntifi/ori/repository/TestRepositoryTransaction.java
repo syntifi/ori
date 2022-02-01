@@ -23,7 +23,7 @@ public class TestRepositoryTransaction {
     @Test
     public void testGetNonExistingTransaction() {
         Assertions.assertThrows(NoResultException.class,
-                () -> transactionRepository.findByHash("ABC", "testTransaction"));
+                () -> transactionRepository.findByTokenSymbolAndHash("ABC", "testTransaction"));
     }
 
     @Test
