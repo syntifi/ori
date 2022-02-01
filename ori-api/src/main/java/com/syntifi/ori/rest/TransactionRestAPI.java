@@ -125,7 +125,9 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
             }
         }
 
-        transactionRepository.persist(transactions);
+        for (Transaction transaction : transactions) {
+            transactionRepository.persistAndFlush(transaction);
+        }
 
         ResponseBuilder response = new ResponseBuilderImpl().status(Status.CREATED);
         for (Transaction transaction : transactions) {

@@ -120,7 +120,9 @@ public class BlockRestAPI extends AbstractBaseRestApi {
             blocks.add(block);
         }
 
-        blockRepository.persist(blocks);
+        for (Block block : blocks) {
+            blockRepository.persistAndFlush(block);
+        }
 
         ResponseBuilder response = new ResponseBuilderImpl().status(Status.CREATED);
         for (Block block : blocks) {

@@ -15,6 +15,9 @@ public class BlockMapper {
         private static final BlockDTO DEFAULT_DTO_VALUE = null;
 
         public static BlockDTO fromModel(Block model) {
+                String parentBlockHash = (model != null && model.getParent() != null) ? model.getParent().getHash()
+                                : null;
+
                 return model != null
                                 ? BlockDTO.builder()
                                                 .hash(model.getHash())
@@ -23,7 +26,7 @@ public class BlockMapper {
                                                 .era(model.getEra())
                                                 .root(model.getRoot())
                                                 .validator(model.getValidator())
-                                                .parent(model.getParent() != null ? model.getParent().getHash() : null)
+                                                .parent(parentBlockHash)
                                                 .tokenSymbol(model.getToken().getSymbol())
                                                 .build()
                                 : DEFAULT_DTO_VALUE;
