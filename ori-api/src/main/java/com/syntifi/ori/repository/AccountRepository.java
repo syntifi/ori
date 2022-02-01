@@ -15,7 +15,7 @@ public class AccountRepository implements Repository<Account> {
         return count("token_symbol = ?1 and hash = ?2", tokenSymbol, hash);
     }
 
-    public boolean existsAlready(String tokenSymbol, Account account) {
-        return countByHashAndTokenSymbol(tokenSymbol, account.getHash()) > 0;
+    public boolean existsAlready(String tokenSymbol, String hash) {
+        return countByHashAndTokenSymbol(tokenSymbol, hash) > 0;
     }
 }

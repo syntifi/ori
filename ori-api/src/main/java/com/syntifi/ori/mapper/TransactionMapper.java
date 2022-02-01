@@ -1,15 +1,10 @@
 package com.syntifi.ori.mapper;
 
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-
 import com.syntifi.ori.dto.TransactionDTO;
-import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Account;
 import com.syntifi.ori.model.Block;
+import com.syntifi.ori.model.Token;
 import com.syntifi.ori.model.Transaction;
-import com.syntifi.ori.repository.AccountRepository;
-import com.syntifi.ori.repository.BlockRepository;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -32,11 +27,11 @@ public class TransactionMapper {
                 : DEFAULT_DTO_VALUE;
     }
 
-    public static Transaction toModel(TransactionDTO dto, AccountRepository accountRepository,
-            BlockRepository blockRepository) {
-        Account fromAccount = getAccount(dto.getTokenSymbol(), dto.getFromHash(), accountRepository);
-        Account toAccount = getAccount(dto.getTokenSymbol(), dto.getToHash(), accountRepository);
-        Block block = getBlock(dto.getTokenSymbol(), dto.getBlockHash(), blockRepository);
+    public static Transaction toModel(TransactionDTO dto) {
+        Token token = Token.builder().symbol(dto.getTokenSymbol()).build();
+        Account fromAccount = Account.builder().token(token).hash(dto.getFromHash()).build();
+        Account toAccount = Account.builder().token(token).hash(dto.getToHash()).build();
+        Block block = Block.builder().hash(dto.getBlockHash()).token(token).build();
 
         return Transaction.builder()
                 .hash(dto.getHash())
@@ -47,30 +42,4 @@ public class TransactionMapper {
                 .block(block)
                 .build();
     }
-
-    private static Account getAccount(String tokenSymbol, String hash, AccountRepository accountRepository) {
-        try {
-            return accountRepository.findByHashAndTokenSymbol(tokenSymbol, hash);
-        }
-        // TODO: Throw with different exception and throw this @ controller level
-        catch (NoResultException e) {
-            throw new ORIException(hash + " not found", 404);
-        } catch (NonUniqueResultException e) {
-            throw new ORIException(hash + " not unique", 500);
-        }
-    }
-
-    private static Block getBlock(String tokenSymbol, String hash, BlockRepository blockRepository) {
-        try {
-            return blockRepository.findByHash(tokenSymbol, hash);
-        }
-        // TODO: Throw with different exception and throw this @ controller level
-        catch (NoResultException e) {
-            throw new ORIException(hash + " not found", 404);
-        } catch (NonUniqueResultException e) {
-            throw new ORIException(hash + " not unique", 500);
-        }
-
-    }
-
 }

@@ -79,7 +79,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
                 throw new ORIException("Block hash " + transactionDTO.getBlockHash() + " not found for " + symbol, 404);
             }
 
-            Transaction transaction = TransactionMapper.toModel(transactionDTO, accountRepository, blockRepository);
+            Transaction transaction = TransactionMapper.toModel(transactionDTO);
 
             transactionRepository.check(transaction);
             transactionRepository.persist(transaction);
@@ -113,7 +113,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
                             404);
                 }
 
-                Transaction transaction = TransactionMapper.toModel(transactionDTO, accountRepository, blockRepository);
+                Transaction transaction = TransactionMapper.toModel(transactionDTO);
 
                 transactionRepository.check(transaction);
 

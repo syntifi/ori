@@ -50,13 +50,13 @@ public class AccountRestAPI extends AbstractBaseRestApi {
 
       getTokenOr404(symbol);
 
-      accountDTO.setTokenSymbol(symbol);
-      Account account = AccountMapper.toModel(accountDTO, tokenRepository);
-
-      boolean exists = accountRepository.existsAlready(symbol, account);
+      boolean exists = accountRepository.existsAlready(symbol, accountDTO.getHash());
       if (exists) {
-         throw new ORIException(account.getHash() + " exists already", 400);
+         throw new ORIException(accountDTO.getHash() + " exists already", 400);
       }
+
+      accountDTO.setTokenSymbol(symbol);
+      Account account = AccountMapper.toModel(accountDTO);
 
       accountRepository.check(account);
       accountRepository.persist(account);

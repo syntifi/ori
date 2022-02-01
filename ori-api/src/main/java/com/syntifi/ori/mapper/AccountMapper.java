@@ -2,14 +2,14 @@ package com.syntifi.ori.mapper;
 
 import com.syntifi.ori.dto.AccountDTO;
 import com.syntifi.ori.model.Account;
-import com.syntifi.ori.repository.TokenRepository;
+import com.syntifi.ori.model.Token;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountMapper {
-    
+
     private static final AccountDTO DEFAULT_DTO_VALUE = null;
 
     public static AccountDTO fromModel(Account model) {
@@ -23,12 +23,14 @@ public class AccountMapper {
                 : DEFAULT_DTO_VALUE;
     }
 
-    public static Account toModel(AccountDTO dto, TokenRepository tokenRepository) {
+    public static Account toModel(AccountDTO dto) {
+        Token token = Token.builder().symbol(dto.getTokenSymbol()).build();
+        
         return Account.builder()
                 .hash(dto.getHash())
                 .publicKey(dto.getPublicKey())
                 .label(dto.getLabel())
-                .token(tokenRepository.findBySymbol(dto.getTokenSymbol()))
+                .token(token)
                 .build();
     }
 

@@ -86,7 +86,7 @@ public class BlockRestAPI extends AbstractBaseRestApi {
 
         checkParent(symbol, blockDTO, null);
 
-        Block block = BlockMapper.toModel(blockDTO, blockRepository, tokenRepository);
+        Block block = BlockMapper.toModel(blockDTO);
 
         blockRepository.check(block);
         blockRepository.persist(block);
@@ -113,7 +113,7 @@ public class BlockRestAPI extends AbstractBaseRestApi {
 
             checkParent(symbol, blockDTO, blockDTOs);
 
-            Block block = BlockMapper.toModel(blockDTO, blockRepository, tokenRepository);
+            Block block = BlockMapper.toModel(blockDTO);
 
             blockRepository.check(block);
 

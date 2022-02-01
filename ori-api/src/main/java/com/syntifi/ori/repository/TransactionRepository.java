@@ -39,7 +39,7 @@ public class TransactionRepository implements Repository<Transaction> {
 
     public List<Transaction> getOutgoingTransactions(String tokenSymbol, String account,
             LocalDateTime fromDate, LocalDateTime toDate) {
-        return list("block_token_symbol = ?1 and fromaccount_hash = ?2 and time_stamp>=?3 and time_stamp<=?4",
+        return list("block_token_symbol = ?1 and fromaccount_hash = ?2 and time_stamp >= ?3 and time_stamp <= ?4",
                 tokenSymbol, account, fromDate.format(formatter), toDate.format(formatter));
     }
 
@@ -63,7 +63,7 @@ public class TransactionRepository implements Repository<Transaction> {
             String toAccount,
             LocalDateTime fromDate, LocalDateTime toDate) {
         return list(
-                "block_token_symbol = ?1 and and fromaccount_hash = ?2 and toaccount_hash = ?3 and time_stamp>=?3 and time_stamp<=?4",
+                "block_token_symbol = ?1 and and fromaccount_hash = ?2 and toaccount_hash = ?3 and time_stamp >= ?3 and time_stamp <= ?4",
                 tokenSymbol, fromAccount, toAccount, fromDate.format(formatter), toDate.format(formatter));
     }
 
@@ -78,7 +78,7 @@ public class TransactionRepository implements Repository<Transaction> {
 
     public List<Transaction> getAllTransactionsFromDateToDate(LocalDateTime fromDate, LocalDateTime toDate, Sort sort,
             int pageIndex, int pageSize) {
-        return find("timeStamp>=?1 and timeStamp<=?2", sort, fromDate.format(formatter), toDate.format(formatter))
+        return find("timeStamp >= ?1 and timeStamp <= ?2", sort, fromDate.format(formatter), toDate.format(formatter))
                 .page(pageIndex, pageSize)
                 .list();
     }
