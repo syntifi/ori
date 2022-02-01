@@ -47,9 +47,15 @@ public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfe
                         blockAndTransfersResults.stream().map(OriBlockAndTransfers::getBlock)
                                 .collect(Collectors.toList()));
             } catch (WebClientResponseException e) {
-                throw new OriItemWriterException(String.format(
-                        "blocks (or some blocks) already exists (% blocks)", blockAndTransfersResults.size()),
-                        e);
+                if (e.getStatusCode() != HttpStatus.CONFLICT) {
+                    throw new OriItemWriterException(String.format(
+                            "error while writing blocks (or blocks) - (% blocks)", blockAndTransfersResults.size()),
+                            e);
+                } else {
+                    throw new OriItemWriterException(String.format(
+                            "blocks (or some blocks) already exists (% blocks)", blockAndTransfersResults.size()),
+                            e);
+                }
             }
         } else {
             OriBlockAndTransfers oriBlockAndTransfers = blockAndTransfersResults.get(0);
@@ -57,6 +63,9 @@ public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfe
                 oriRestClient.postBlock(tokenSymbol, oriBlockAndTransfers.getBlock());
             } catch (WebClientResponseException e) {
                 if (e.getStatusCode() != HttpStatus.CONFLICT) {
+                    throw new OriItemWriterException(String.format(
+                            "error while writing block %s", oriBlockAndTransfers.getBlock().getHash()), e);
+                } else {
                     throw new OriItemWriterException(String.format(
                             "block %s already exists", oriBlockAndTransfers.getBlock().getHash()),
                             e);
@@ -77,6 +86,9 @@ public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfe
                     } catch (WebClientResponseException e) {
                         if (e.getStatusCode() != HttpStatus.CONFLICT) {
                             throw new OriItemWriterException(String.format(
+                                    "error while writing transaction %s", transfer.getHash()), e);
+                        } else {
+                            throw new OriItemWriterException(String.format(
                                     "transaction %s already exists", transfer.getHash()), e);
                         }
                     }
@@ -86,11 +98,17 @@ public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfe
     }
 
     private void writeAccount(String hash) {
+        if (hash == null)
+            return;
+
         try {
             oriRestClient.postAccount(tokenSymbol,
                     AccountDTO.builder().hash(hash).build());
         } catch (WebClientResponseException e) {
             if (e.getStatusCode() != HttpStatus.CONFLICT) {
+                throw new OriItemWriterException(String.format(
+                        "error while writing account %s", hash), e);
+            } else {
                 throw new OriItemWriterException(String.format(
                         "account %s already exists", hash), e);
             }
