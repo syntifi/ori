@@ -1,6 +1,7 @@
 package com.syntifi.ori.repository;
 
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Account;
@@ -17,7 +18,7 @@ public class TestRepositoryAccount {
 
     @Test
     public void testGetNonExistingAccount() {
-        Assertions.assertEquals(null, accountRepository.findByHashAndTokenSymbol("ABC", "testAccount"));
+        Assertions.assertThrows(NoResultException.class, () -> accountRepository.findByHashAndTokenSymbol("ABC", "testAccount"));
     }
 
     @Test

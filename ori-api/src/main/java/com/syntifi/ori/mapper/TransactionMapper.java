@@ -50,8 +50,7 @@ public class TransactionMapper {
 
     private static Account getAccount(String tokenSymbol, String hash, AccountRepository accountRepository) {
         try {
-            Account account = accountRepository.findByHashAndTokenSymbol(tokenSymbol, hash);
-            return account;
+            return accountRepository.findByHashAndTokenSymbol(tokenSymbol, hash);
         }
         // TODO: Throw with different exception and throw this @ controller level
         catch (NoResultException e) {
@@ -63,10 +62,8 @@ public class TransactionMapper {
 
     private static Block getBlock(String tokenSymbol, String hash, BlockRepository blockRepository) {
         try {
-            Block block = blockRepository.findByHash(tokenSymbol, hash);
-            return block;
+            return blockRepository.findByHash(tokenSymbol, hash);
         }
-        // TODO: Throw with different exception and throw this @ controller level
         // TODO: Throw with different exception and throw this @ controller level
         catch (NoResultException e) {
             throw new ORIException("Block not found", 404);

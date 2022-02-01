@@ -3,6 +3,7 @@ package com.syntifi.ori.repository;
 import java.util.Date;
 
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Account;
@@ -21,7 +22,8 @@ public class TestRepositoryTransaction {
 
     @Test
     public void testGetNonExistingTransaction() {
-        Assertions.assertEquals(null, transactionRepository.findByHash("ABC", "testTransaction"));
+        Assertions.assertThrows(NoResultException.class,
+                () -> transactionRepository.findByHash("ABC", "testTransaction"));
     }
 
     @Test

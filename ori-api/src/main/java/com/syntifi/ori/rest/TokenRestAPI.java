@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Singleton;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.transaction.Transactional;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -60,28 +62,32 @@ public class TokenRestAPI extends AbstractBaseRestApi {
     @GET
     @Path("/{tokenSymbol}")
     public TokenDTO getTokenBySymbol(@PathParam("tokenSymbol") String symbol) {
-        Token result = tokenRepository.findBySymbol(symbol);
-        if (result == null) {
+        try {
+            Token result = tokenRepository.findBySymbol(symbol);
+            return TokenMapper.fromModel(result);
+        } catch (NoResultException e) {
             throw new ORIException(symbol + " not found", 404);
+        } catch (NonUniqueResultException e) {
+            throw new ORIException(symbol + " found more than once", 500);
         }
-
-        return TokenMapper.fromModel(result);
     }
 
     @DELETE
     @Transactional
     @Path("/{tokenSymbol}")
     public Response deleteToken(@PathParam("tokenSymbol") String symbol) {
-        Token token = tokenRepository.findBySymbol(symbol);
-        if (token != null) {
-            tokenRepository.delete(token);
-        } else {
-            throw new ORIException(symbol + " not found", 404);
-        }
+        try {
+            Token token = tokenRepository.findBySymbol(symbol);
 
-        return Response.ok(new JsonObject()
-                .put("method", "DELETE")
-                .put("uri", "/token/" + symbol))
-                .build();
+            tokenRepository.delete(token);
+
+            return Response.ok(new JsonObject()
+                    .put("method", "DELETE")
+                    .put("uri", "/token/" + symbol)).build();
+        } catch (NoResultException e) {
+            throw new ORIException(symbol + " not found", 404);
+        } catch (NonUniqueResultException e) {
+            throw new ORIException(symbol + " found more than once", 500);
+        }
     }
 }

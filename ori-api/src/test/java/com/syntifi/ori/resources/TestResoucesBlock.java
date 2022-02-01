@@ -51,7 +51,6 @@ public class TestResoucesBlock {
         block.put("root", "root");
         block.put("timeStamp", "2099-08-05T00:00:00.000+0000");
         block.put("validator", "validator");
-        block.put("parent", "null");
         given()
                 .body(block.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)

@@ -1,6 +1,7 @@
 package com.syntifi.ori.repository;
 
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Token;
@@ -14,10 +15,10 @@ import io.quarkus.test.junit.QuarkusTest;
 public class TestRepositoryToken {
     @Inject
     TokenRepository tokenRepository;
-    
+
     @Test
     public void testGetNonExistingToken() {
-        Assertions.assertEquals(null, tokenRepository.findBySymbol("testToken"));
+        Assertions.assertThrows(NoResultException.class, () -> tokenRepository.findBySymbol("testToken"));
     }
 
     @Test

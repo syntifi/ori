@@ -24,6 +24,8 @@ import com.syntifi.ori.dto.TransactionDTO;
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.mapper.TransactionMapper;
 import com.syntifi.ori.model.Account;
+import com.syntifi.ori.model.Block;
+import com.syntifi.ori.model.Token;
 import com.syntifi.ori.model.Transaction;
 import com.syntifi.ori.repository.AccountRepository;
 import com.syntifi.ori.repository.BlockRepository;
@@ -75,23 +77,28 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
         if (exists) {
             throw new ORIException(transactionDTO.getHash() + " exists already", 400);
         }
-        var token = getTokenOr404(symbol);
+
+        Token token = getTokenOr404(symbol);
         transactionDTO.setTokenSymbol(symbol);
-        var block = blockRepository.findByHash(symbol, transactionDTO.getBlockHash());
-        if (block == null) {
+
+        try {
+            Block block = blockRepository.findByHash(symbol, transactionDTO.getBlockHash());
+            if (!block.getToken().equals(token)) {
+                throw new ORIException("Block hash " + transactionDTO.getBlockHash() + " not found for " + symbol, 404);
+            }
+
+            Transaction transaction = TransactionMapper.toModel(transactionDTO, accountRepository, blockRepository);
+
+            transactionRepository.check(transaction);
+            transactionRepository.persist(transaction);
+            return Response
+                    .created(URI.create("/transaction/" + symbol + "/hash/" + transaction.getHash()))
+                    .build();
+        } catch (NoResultException e) {
             throw new ORIException("Block not found", 404);
+        } catch (NonUniqueResultException e) {
+            throw new ORIException("Block found more than once", 500);
         }
-        if (!block.getToken().equals(token)) {
-            throw new ORIException("Block hash " + transactionDTO.getBlockHash() + " not found for " + symbol, 404);
-        }
-
-        Transaction transaction = TransactionMapper.toModel(transactionDTO, accountRepository, blockRepository);
-
-        transactionRepository.check(transaction);
-        transactionRepository.persist(transaction);
-        return Response
-                .created(URI.create("/transaction/" + symbol + "/hash/" + transaction.getHash()))
-                .build();
     }
 
     @POST
@@ -106,19 +113,24 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
                 throw new ORIException(transactionDTO.getHash() + " exists already", 400);
             }
             var token = getTokenOr404(symbol);
-            var block = blockRepository.findByHash(symbol, transactionDTO.getBlockHash());
-            if (block == null) {
+            try {
+                var block = blockRepository.findByHash(symbol, transactionDTO.getBlockHash());
+
+                if (!block.getToken().equals(token)) {
+                    throw new ORIException("Block hash " + transactionDTO.getBlockHash() + " not found for " + symbol,
+                            404);
+                }
+
+                Transaction transaction = TransactionMapper.toModel(transactionDTO, accountRepository, blockRepository);
+
+                transactionRepository.check(transaction);
+
+                transactions.add(transaction);
+            } catch (NoResultException e) {
                 throw new ORIException("Block not found", 404);
+            } catch (NonUniqueResultException e) {
+                throw new ORIException("Block found more than once", 500);
             }
-            if (!block.getToken().equals(token)) {
-                throw new ORIException("Block hash " + transactionDTO.getBlockHash() + " not found for " + symbol, 404);
-            }
-
-            Transaction transaction = TransactionMapper.toModel(transactionDTO, accountRepository, blockRepository);
-
-            transactionRepository.check(transaction);
-
-            transactions.add(transaction);
         }
 
         transactionRepository.persist(transactions);

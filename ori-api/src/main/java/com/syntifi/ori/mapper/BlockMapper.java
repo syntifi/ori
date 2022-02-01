@@ -31,7 +31,8 @@ public class BlockMapper {
     public static Block toModel(BlockDTO dto, BlockRepository blockRepository, TokenRepository tokenRepository) {
         return Block.builder()
                 .hash(dto.getHash())
-                .parent(blockRepository.findByHash(dto.getTokenSymbol(), dto.getParent()))
+                .parent(dto.getParent() != null ? blockRepository.findByHash(dto.getTokenSymbol(), dto.getParent())
+                        : null)
                 .hash(dto.getHash())
                 .timeStamp(dto.getTimeStamp())
                 .height(dto.getHeight())

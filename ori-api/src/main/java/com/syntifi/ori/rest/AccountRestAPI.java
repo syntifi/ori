@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.transaction.Transactional;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -100,12 +102,14 @@ public class AccountRestAPI extends AbstractBaseRestApi {
 
       getTokenOr404(symbol);
 
-      Account result = accountRepository.findByHashAndTokenSymbol(symbol, hash);
-      if (result == null) {
+      try {
+         Account result = accountRepository.findByHashAndTokenSymbol(symbol, hash);
+         return AccountMapper.fromModel(result);
+      } catch (NoResultException e) {
          throw new ORIException(hash + " not found", 404);
+      } catch (NonUniqueResultException e) {
+         throw new ORIException(hash + " found more than once", 500);
       }
-
-      return AccountMapper.fromModel(result);
    }
 
    /**
@@ -122,20 +126,22 @@ public class AccountRestAPI extends AbstractBaseRestApi {
    public Response deleteAccount(@PathParam("tokenSymbol") String symbol, @PathParam("hash") String hash)
          throws ORIException {
 
-      Account account = accountRepository.findByHashAndTokenSymbol(symbol, hash);
+      try {
+         Account account = accountRepository.findByHashAndTokenSymbol(symbol, hash);
+         if (account.getToken().getSymbol().equals(symbol)) {
+            accountRepository.delete(account);
 
-      if (account == null) {
+            return Response.ok(new JsonObject()
+                  .put("method", "DELETE")
+                  .put("uri", "/account/" + symbol + "/hash/" + hash))
+                  .build();
+         } else {
+            throw new ORIException("Forbidden", 403);
+         }
+      } catch (NoResultException e) {
          throw new ORIException(hash + " not found", 404);
+      } catch (NonUniqueResultException e) {
+         throw new ORIException(hash + " found more than once", 500);
       }
-      if (account.getToken().getSymbol().equals(symbol)) {
-         accountRepository.delete(account);
-      } else {
-         throw new ORIException("Forbidden", 403);
-      }
-
-      return Response.ok(new JsonObject()
-            .put("method", "DELETE")
-            .put("uri", "/account/" + symbol + "/hash/" + hash))
-            .build();
    }
 }

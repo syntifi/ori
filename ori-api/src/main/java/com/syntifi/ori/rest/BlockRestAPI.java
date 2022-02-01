@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.transaction.Transactional;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -27,6 +29,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.specimpl.ResponseBuilderImpl;
 
 import io.vertx.core.json.JsonObject;
+
 //TODO: pagination
 /**
  * REST API block endpoints
@@ -47,8 +50,12 @@ public class BlockRestAPI extends AbstractBaseRestApi {
             if (blockDTOs != null && blockDTOs.stream().anyMatch(t -> t.getHash().equals(blockDTO.getParent()))) {
                 return;
             }
-            if (blockRepository.findByHash(symbol, blockDTO.getParent()) == null) {
+            try {
+                blockRepository.findByHash(symbol, blockDTO.getParent());
+            } catch (NoResultException e) {
                 throw new ORIException("Parent block not found", 404);
+            } catch (NonUniqueResultException e) {
+                throw new ORIException("Parent block not unique", 500);
             }
         }
     }
@@ -162,12 +169,14 @@ public class BlockRestAPI extends AbstractBaseRestApi {
 
         getTokenOr404(symbol);
 
-        Block result = blockRepository.findByHash(symbol, hash);
-        if (result == null) {
+        try {
+            Block result = blockRepository.findByHash(symbol, hash);
+            return BlockMapper.fromModel(result);
+        } catch (NoResultException e) {
             throw new ORIException(hash + " not found", 404);
+        } catch (NonUniqueResultException e) {
+            throw new ORIException(hash + " not unique", 500);
         }
-
-        return BlockMapper.fromModel(result);
     }
 
     /**
@@ -185,19 +194,22 @@ public class BlockRestAPI extends AbstractBaseRestApi {
             throws ORIException {
         getTokenOr404(symbol);
 
-        Block block = blockRepository.findByHash(symbol, hash);
-        if (block == null) {
-            throw new ORIException(hash + " not found", 404);
-        }
-        if (block.getToken().getSymbol().equals(symbol)) {
-            blockRepository.delete(block);
-        } else {
-            throw new ORIException("Forbidden", 403);
-        }
+        try {
+            Block block = blockRepository.findByHash(symbol, hash);
+            if (block.getToken().getSymbol().equals(symbol)) {
+                blockRepository.delete(block);
+            } else {
+                throw new ORIException("Forbidden", 403);
+            }
 
-        return Response.ok(new JsonObject()
-                .put("method", "DELETE")
-                .put("uri", "/block/" + symbol + "/hash/" + hash))
-                .build();
+            return Response.ok(new JsonObject()
+                    .put("method", "DELETE")
+                    .put("uri", "/block/" + symbol + "/hash/" + hash))
+                    .build();
+        } catch (NoResultException e) {
+            throw new ORIException(hash + " not found", 404);
+        } catch (NonUniqueResultException e) {
+            throw new ORIException(hash + " found more than once", 500);
+        }
     }
 }

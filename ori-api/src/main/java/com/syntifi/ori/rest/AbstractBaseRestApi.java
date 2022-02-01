@@ -1,6 +1,8 @@
 package com.syntifi.ori.rest;
 
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Account;
@@ -17,18 +19,22 @@ public abstract class AbstractBaseRestApi {
     protected AccountRepository accountRepository;
 
     protected Token getTokenOr404(String symbol) {
-        Token token = tokenRepository.findBySymbol(symbol);
-        if (token == null) {
-            throw new ORIException("Token not found", 404);
+        try {
+            return tokenRepository.findBySymbol(symbol);
+        } catch (NoResultException e) {
+            throw new ORIException(symbol + " not found", 404);
+        } catch (NonUniqueResultException e) {
+            throw new ORIException(symbol + " found more than once", 500);
         }
-        return token;
     }
 
     protected Account getAccountOr404(String symbol, String hash) {
-        Account account = accountRepository.findByHashAndTokenSymbol(symbol, hash);
-        if (account == null) {
-            throw new ORIException("Account not found", 404);
+        try {
+            return accountRepository.findByHashAndTokenSymbol(symbol, hash);
+        } catch (NoResultException e) {
+            throw new ORIException(hash + " not found", 404);
+        } catch (NonUniqueResultException e) {
+            throw new ORIException(hash + " found more than once", 500);
         }
-        return account;
     }
 }
