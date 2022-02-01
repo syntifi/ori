@@ -68,7 +68,7 @@ public class TokenRestAPI extends AbstractBaseRestApi {
         } catch (NoResultException e) {
             throw new ORIException(symbol + " not found", 404);
         } catch (NonUniqueResultException e) {
-            throw new ORIException(symbol + " found more than once", 500);
+            throw new ORIException(symbol + " not unique", 500);
         }
     }
 
@@ -87,7 +87,7 @@ public class TokenRestAPI extends AbstractBaseRestApi {
         } catch (NoResultException e) {
             throw new ORIException(symbol + " not found", 404);
         } catch (NonUniqueResultException e) {
-            throw new ORIException(symbol + " found more than once", 500);
+            throw new ORIException(symbol + " not unique", 500);
         }
     }
 }

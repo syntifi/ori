@@ -24,7 +24,7 @@ public abstract class AbstractBaseRestApi {
         } catch (NoResultException e) {
             throw new ORIException(symbol + " not found", 404);
         } catch (NonUniqueResultException e) {
-            throw new ORIException(symbol + " found more than once", 500);
+            throw new ORIException(symbol + " not unique", 500);
         }
     }
 
@@ -34,7 +34,7 @@ public abstract class AbstractBaseRestApi {
         } catch (NoResultException e) {
             throw new ORIException(hash + " not found", 404);
         } catch (NonUniqueResultException e) {
-            throw new ORIException(hash + " found more than once", 500);
+            throw new ORIException(hash + " not unique", 500);
         }
     }
 }

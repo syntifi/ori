@@ -209,7 +209,7 @@ public class BlockRestAPI extends AbstractBaseRestApi {
         } catch (NoResultException e) {
             throw new ORIException(hash + " not found", 404);
         } catch (NonUniqueResultException e) {
-            throw new ORIException(hash + " found more than once", 500);
+            throw new ORIException(hash + " not unique", 500);
         }
     }
 }

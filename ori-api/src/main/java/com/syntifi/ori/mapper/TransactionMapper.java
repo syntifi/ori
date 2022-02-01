@@ -54,9 +54,9 @@ public class TransactionMapper {
         }
         // TODO: Throw with different exception and throw this @ controller level
         catch (NoResultException e) {
-            throw new ORIException("Account not found", 404);
+            throw new ORIException(hash + " not found", 404);
         } catch (NonUniqueResultException e) {
-            throw new ORIException("Account not unique", 500);
+            throw new ORIException(hash + " not unique", 500);
         }
     }
 
@@ -66,9 +66,9 @@ public class TransactionMapper {
         }
         // TODO: Throw with different exception and throw this @ controller level
         catch (NoResultException e) {
-            throw new ORIException("Block not found", 404);
+            throw new ORIException(hash + " not found", 404);
         } catch (NonUniqueResultException e) {
-            throw new ORIException("Block not unique", 500);
+            throw new ORIException(hash + " not unique", 500);
         }
 
     }

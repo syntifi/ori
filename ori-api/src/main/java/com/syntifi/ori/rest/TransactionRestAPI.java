@@ -27,9 +27,7 @@ import com.syntifi.ori.model.Account;
 import com.syntifi.ori.model.Block;
 import com.syntifi.ori.model.Token;
 import com.syntifi.ori.model.Transaction;
-import com.syntifi.ori.repository.AccountRepository;
 import com.syntifi.ori.repository.BlockRepository;
-import com.syntifi.ori.repository.TokenRepository;
 import com.syntifi.ori.repository.TransactionRepository;
 
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -53,12 +51,6 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
 
     @Inject
     BlockRepository blockRepository;
-
-    @Inject
-    TokenRepository tokenRepository;
-
-    @Inject
-    AccountRepository accountRepository;
 
     /**
      * POST method to add and index a new transactions in ES
@@ -95,9 +87,9 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
                     .created(URI.create("/transaction/" + symbol + "/hash/" + transaction.getHash()))
                     .build();
         } catch (NoResultException e) {
-            throw new ORIException("Block not found", 404);
+            throw new ORIException(transactionDTO.getBlockHash() + " not found", 404);
         } catch (NonUniqueResultException e) {
-            throw new ORIException("Block found more than once", 500);
+            throw new ORIException(transactionDTO.getBlockHash() + " not unique", 500);
         }
     }
 
@@ -127,9 +119,9 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
 
                 transactions.add(transaction);
             } catch (NoResultException e) {
-                throw new ORIException("Block not found", 404);
+                throw new ORIException(transactionDTO.getBlockHash() + " not found", 404);
             } catch (NonUniqueResultException e) {
-                throw new ORIException("Block found more than once", 500);
+                throw new ORIException(transactionDTO.getBlockHash() + " not unique", 500);
             }
         }
 
@@ -199,7 +191,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
         } catch (NoResultException nre) {
             throw new ORIException(hash + " not found", 404);
         } catch (NonUniqueResultException nure) {
-            throw new ORIException(hash + " found more than once", 500);
+            throw new ORIException(hash + " not unique", 500);
         }
     }
 
@@ -278,7 +270,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
         } catch (NoResultException nre) {
             throw new ORIException(hash + " not found", 404);
         } catch (NonUniqueResultException nure) {
-            throw new ORIException(hash + " found more than once", 500);
+            throw new ORIException(hash + " not unique", 500);
         }
     }
 }

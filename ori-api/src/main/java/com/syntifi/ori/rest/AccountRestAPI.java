@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -20,7 +19,6 @@ import com.syntifi.ori.dto.AccountDTO;
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.mapper.AccountMapper;
 import com.syntifi.ori.model.Account;
-import com.syntifi.ori.repository.AccountRepository;
 
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
@@ -36,9 +34,6 @@ import io.vertx.core.json.JsonObject;
 @Singleton
 @Tag(name = "Account", description = "Account resources")
 public class AccountRestAPI extends AbstractBaseRestApi {
-
-   @Inject
-   AccountRepository accountRepository;
 
    /**
     * POST method to add a new account and index in ES
@@ -108,7 +103,7 @@ public class AccountRestAPI extends AbstractBaseRestApi {
       } catch (NoResultException e) {
          throw new ORIException(hash + " not found", 404);
       } catch (NonUniqueResultException e) {
-         throw new ORIException(hash + " found more than once", 500);
+         throw new ORIException(hash + " not unique", 500);
       }
    }
 
@@ -141,7 +136,7 @@ public class AccountRestAPI extends AbstractBaseRestApi {
       } catch (NoResultException e) {
          throw new ORIException(hash + " not found", 404);
       } catch (NonUniqueResultException e) {
-         throw new ORIException(hash + " found more than once", 500);
+         throw new ORIException(hash + " not unique", 500);
       }
    }
 }
