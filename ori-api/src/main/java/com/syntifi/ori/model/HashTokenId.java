@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BlockId implements Serializable {
+public class HashTokenId implements Serializable {
 
     private String hash;
 

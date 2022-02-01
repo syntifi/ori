@@ -39,8 +39,7 @@ public class EthChainBlockAndTransfersReader
 
         result.setChainBlock(block);
 
-        List<TransactionResult> transactions = block.getResult().getTransactions();
-        result.setChainTransfers(transactions
+        result.setChainTransfers(block.getResult().getTransactions()
                 .stream()
                 .map(transaction -> (TransactionObject) transaction.get())
                 .collect(Collectors.toList()));

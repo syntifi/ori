@@ -35,7 +35,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@IdClass(BlockId.class)
+@IdClass(HashTokenId.class)
 public class Block extends PanacheEntityBase {
     
     @Id

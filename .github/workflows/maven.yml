@@ -15,13 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     
     services:
-      elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
-        env:
-          discovery.type: single-node
-          ES_JAVA_OPTS: -Xms512m -Xmx512m
-        ports:
-          - 9200:9200
       postgres:
         image: postgres:13.1
         env:

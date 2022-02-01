@@ -33,18 +33,18 @@ public class EthChainBlockAndTransfersProcessor
 
         // Transfer processor
         List<TransactionDTO> transfers = new LinkedList<>();
-        List<String> from = new LinkedList<>();
-        List<String> to = new LinkedList<>();
         for (TransactionObject t : item.getChainTransfers()) {
             TransactionDTO transfer = new TransactionDTO();
+            transfer.setHash(t.getHash());
+            transfer.setBlockHash(t.getBlockHash());
+            transfer.setFromHash(t.getFrom());
+            transfer.setToHash(t.getTo());
+            transfer.setAmount(t.getValue().doubleValue());
             // TODO: check this
             transfer.setTimeStamp(new Date(item.getChainBlock().getResult().getTimestamp().longValue()));
-            transfer.setAmount(t.getValue().doubleValue());
-            transfer.setHash(t.getHash());
             transfers.add(transfer);
-            from.add(t.getFrom());
-            to.add(t.getTo());
         }
+        result.setTransfers(transfers);
 
         return result;
     }

@@ -7,13 +7,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.AllArgsConstructor;
@@ -23,36 +20,30 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Indexed
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@IdClass(HashTokenId.class)
 public class Account extends PanacheEntityBase {
-    
+
     @Id
-    @NotNull
-    @Column(nullable = false)
-    @FullTextField(analyzer = "standard")
     private String hash;
 
-    @NotNull
+    @Id
+    @MapsId("symbol")
     @ManyToOne
     private Token token;
 
     @Column(name = "public_key")
-    @FullTextField(analyzer = "standard")
     private String publicKey;
 
-    @FullTextField(analyzer = "standard")
     private String label;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true, mappedBy = "fromAccount")
-    @IndexedEmbedded
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "fromAccount")
     private Set<Transaction> out;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true, mappedBy = "toAccount")
-    @IndexedEmbedded
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "toAccount")
     private Set<Transaction> in;
 }
