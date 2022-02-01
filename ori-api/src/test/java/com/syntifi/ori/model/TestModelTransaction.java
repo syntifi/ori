@@ -48,6 +48,7 @@ public class TestModelTransaction {
         block.setParent(null);
         transaction.setTimeStamp(new Date());
         transaction.setHash("mockTransaction");
+        transaction.setToken(token);
         transaction.setFromAccount(from);
         transaction.setToAccount(to);
         transaction.setAmount(1234.);

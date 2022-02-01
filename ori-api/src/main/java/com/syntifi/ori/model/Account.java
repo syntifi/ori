@@ -30,6 +30,7 @@ import lombok.Setter;
 public class Account extends PanacheEntityBase {
 
     @Id
+    @NotNull
     private String hash;
 
     @Id

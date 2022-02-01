@@ -35,9 +35,11 @@ import lombok.Setter;
 public class Transaction extends PanacheEntityBase {
 
     @Id
+    @NotNull
     private String hash;
 
     @Id
+    @NotNull
     @MapsId("symbol")
     @ManyToOne
     private Token token;

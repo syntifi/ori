@@ -39,9 +39,11 @@ import lombok.Setter;
 public class Block extends PanacheEntityBase {
     
     @Id
+    @NotNull
     private String hash;
 
     @Id
+    @NotNull
     @MapsId("symbol")
     @ManyToOne
     private Token token;

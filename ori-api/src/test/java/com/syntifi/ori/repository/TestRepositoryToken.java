@@ -1,5 +1,8 @@
 package com.syntifi.ori.repository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolationException;
@@ -28,7 +31,8 @@ public class TestRepositoryToken {
         token.setName("name");
         var e = Assertions.assertThrowsExactly(ConstraintViolationException.class, () -> tokenRepository.check(token));
         Assertions.assertEquals(1, e.getConstraintViolations().size());
-        Assertions.assertEquals("protocol",
-                e.getConstraintViolations().iterator().next().getPropertyPath().iterator().next().getName());
+        List<String> violatedFields = e.getConstraintViolations().stream()
+                .map(v -> v.getPropertyPath().iterator().next().getName()).collect(Collectors.toList());
+        Assertions.assertTrue(violatedFields.contains("protocol"));
     }
 }
