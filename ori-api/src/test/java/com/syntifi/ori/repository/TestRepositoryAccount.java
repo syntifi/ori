@@ -2,8 +2,8 @@ package com.syntifi.ori.repository;
 
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
+import javax.validation.ConstraintViolationException;
 
-import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Account;
 
 import org.junit.jupiter.api.Assertions;
@@ -18,7 +18,8 @@ public class TestRepositoryAccount {
 
     @Test
     public void testGetNonExistingAccount() {
-        Assertions.assertThrows(NoResultException.class, () -> accountRepository.findByTokenSymbolAndHash("ABC", "testAccount"));
+        Assertions.assertThrows(NoResultException.class,
+                () -> accountRepository.findByTokenSymbolAndHash("ABC", "testAccount"));
     }
 
     @Test
@@ -27,8 +28,10 @@ public class TestRepositoryAccount {
         account.setHash("hash");
         account.setLabel("label");
         account.setPublicKey("key");
-        var e = Assertions.assertThrowsExactly(ORIException.class, () -> accountRepository.check(account));
-        Assertions.assertEquals("token must not be null", e.getMessage());
-        Assertions.assertEquals(400, e.getStatus().getStatusCode());
+        var e = Assertions.assertThrowsExactly(ConstraintViolationException.class,
+                () -> accountRepository.check(account));
+        Assertions.assertEquals(1, e.getConstraintViolations().size());
+        Assertions.assertEquals("token",
+                e.getConstraintViolations().iterator().next().getPropertyPath().iterator().next().getName());
     }
 }

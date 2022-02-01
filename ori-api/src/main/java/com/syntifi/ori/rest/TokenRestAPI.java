@@ -14,6 +14,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.syntifi.ori.dto.TokenDTO;
 import com.syntifi.ori.exception.ORIException;
@@ -42,7 +43,7 @@ public class TokenRestAPI extends AbstractBaseRestApi {
 
         boolean exists = tokenRepository.existsAlready(token);
         if (exists) {
-            throw new ORIException(token.getSymbol() + " exists already", 400);
+            throw new ORIException(token.getSymbol() + " exists already", Status.CONFLICT);
         }
 
         tokenRepository.check(token);
@@ -66,9 +67,9 @@ public class TokenRestAPI extends AbstractBaseRestApi {
             Token result = tokenRepository.findBySymbol(symbol);
             return TokenMapper.fromModel(result);
         } catch (NoResultException e) {
-            throw new ORIException(symbol + " not found", 404);
+            throw new ORIException(symbol + " not found", Status.NOT_FOUND);
         } catch (NonUniqueResultException e) {
-            throw new ORIException(symbol + " not unique", 500);
+            throw new ORIException(symbol + " not unique", Status.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -85,9 +86,9 @@ public class TokenRestAPI extends AbstractBaseRestApi {
                     .put("method", "DELETE")
                     .put("uri", "/token/" + symbol)).build();
         } catch (NoResultException e) {
-            throw new ORIException(symbol + " not found", 404);
+            throw new ORIException(symbol + " not found", Status.NOT_FOUND);
         } catch (NonUniqueResultException e) {
-            throw new ORIException(symbol + " not unique", 500);
+            throw new ORIException(symbol + " not unique", Status.INTERNAL_SERVER_ERROR);
         }
     }
 }

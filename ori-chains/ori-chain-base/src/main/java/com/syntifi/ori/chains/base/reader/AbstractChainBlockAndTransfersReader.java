@@ -2,6 +2,7 @@ package com.syntifi.ori.chains.base.reader;
 
 import java.io.IOException;
 
+import com.syntifi.ori.chains.base.AbstractChainConfig;
 import com.syntifi.ori.chains.base.model.ChainBlockAndTransfers;
 import com.syntifi.ori.client.OriRestClient;
 
@@ -25,25 +26,25 @@ public abstract class AbstractChainBlockAndTransfersReader<S, T extends ChainBlo
         implements ItemReader<T> {
 
     private Long blockHeight;
-    private String tokenSymbol;
     private S chainService;
     private OriRestClient oriRestClient;
+    private AbstractChainConfig<S> chainConfig;
 
     protected AbstractChainBlockAndTransfersReader(S chainService,
             OriRestClient oriRestClient,
-            String tokenSymbol) {
+            AbstractChainConfig<S> chainConfig) {
         this.chainService = chainService;
         this.oriRestClient = oriRestClient;
-        this.tokenSymbol = tokenSymbol;
+        this.chainConfig = chainConfig;
         initialize();
     }
 
     private void initialize() {
         try {
-            blockHeight = oriRestClient.getLastBlock(tokenSymbol).getHeight() + 1;
+            blockHeight = oriRestClient.getLastBlock(chainConfig.getTokenSymbol()).getHeight() + 1;
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
-                blockHeight = 0L;
+                blockHeight = chainConfig.getBlockZeroHeight() + 1;
             }
         }
     }

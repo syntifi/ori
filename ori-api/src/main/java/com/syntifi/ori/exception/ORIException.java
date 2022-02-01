@@ -13,15 +13,11 @@ import javax.ws.rs.core.Response.Status;
  */
 public class ORIException extends WebApplicationException {
 
-    private static final long serialVersionUID = 1L;
-    private Status status = Status.BAD_REQUEST;
+    private final Status status;
 
-    public ORIException() {
-        super();
-    }
-
-    public ORIException(String msg) {
+    public ORIException(String msg, Status httpStatus) {
         super(msg);
+        this.status = httpStatus;
     }
 
     public ORIException(String msg, int httpStatusCode) {
@@ -31,6 +27,7 @@ public class ORIException extends WebApplicationException {
 
     public ORIException(String msg, Exception e) {
         super(msg, e);
+        this.status = Status.INTERNAL_SERVER_ERROR;
     }
 
     public ORIException(String msg, Exception e, int httpStatusCode) {

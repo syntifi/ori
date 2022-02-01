@@ -34,6 +34,7 @@ public class CsprChainBlockAndTransfersProcessor
 
         // Transfer processor
         List<TransactionDTO> transfers = new LinkedList<>();
+        result.setTransfers(transfers);
         for (Transfer chainTransfer : item.getChainTransfers()) {
             TransactionDTO oriTransfer = new TransactionDTO();
             oriTransfer.setBlockHash(block.getHash());

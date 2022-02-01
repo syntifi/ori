@@ -3,6 +3,7 @@ package com.syntifi.ori.chains.base;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import com.syntifi.ori.chains.base.exception.OriChainCrawlerException;
 import com.syntifi.ori.chains.base.listeners.ChainItemProcessListener;
 import com.syntifi.ori.chains.base.listeners.ChainItemReadListener;
 import com.syntifi.ori.chains.base.listeners.OriChunkListener;
@@ -77,11 +78,10 @@ public abstract class AbstractChainCrawlerApplication<S, T extends ChainBlockAnd
             if (e.getRawStatusCode() == 404) {
                 final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
                 BlockDTO block = new BlockDTO();
-                // TODO: fix this
                 try {
                     block.setTimeStamp(dateFormatter.parse("1970-01-01T00:00:00.000+0000"));
                 } catch (ParseException pe) {
-                    throw new RuntimeException("Invalid timestamp for block zero");
+                    throw new OriChainCrawlerException("Invalid timestamp for block zero", pe);
                 }
                 block.setHash(getChainConfig().getBlockZeroHash());
                 block.setHeight(getChainConfig().getBlockZeroHeight());

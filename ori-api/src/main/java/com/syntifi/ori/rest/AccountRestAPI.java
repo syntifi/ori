@@ -14,6 +14,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.syntifi.ori.dto.AccountDTO;
 import com.syntifi.ori.exception.ORIException;
@@ -52,7 +53,7 @@ public class AccountRestAPI extends AbstractBaseRestApi {
 
       boolean exists = accountRepository.existsAlready(symbol, accountDTO.getHash());
       if (exists) {
-         throw new ORIException(accountDTO.getHash() + " exists already", 400);
+         throw new ORIException(accountDTO.getHash() + " exists already", Status.CONFLICT);
       }
 
       accountDTO.setTokenSymbol(symbol);
@@ -101,9 +102,9 @@ public class AccountRestAPI extends AbstractBaseRestApi {
          Account result = accountRepository.findByTokenSymbolAndHash(symbol, hash);
          return AccountMapper.fromModel(result);
       } catch (NoResultException e) {
-         throw new ORIException(hash + " not found", 404);
+         throw new ORIException(hash + " not found", Status.NOT_FOUND);
       } catch (NonUniqueResultException e) {
-         throw new ORIException(hash + " not unique", 500);
+         throw new ORIException(hash + " not unique", Status.INTERNAL_SERVER_ERROR);
       }
    }
 
@@ -134,9 +135,9 @@ public class AccountRestAPI extends AbstractBaseRestApi {
             throw new ORIException("Forbidden", 403);
          }
       } catch (NoResultException e) {
-         throw new ORIException(hash + " not found", 404);
+         throw new ORIException(hash + " not found", Status.NOT_FOUND);
       } catch (NonUniqueResultException e) {
-         throw new ORIException(hash + " not unique", 500);
+         throw new ORIException(hash + " not unique", Status.INTERNAL_SERVER_ERROR);
       }
    }
 }

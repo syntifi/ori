@@ -2,8 +2,8 @@ package com.syntifi.ori.repository;
 
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
+import javax.validation.ConstraintViolationException;
 
-import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Token;
 
 import org.junit.jupiter.api.Assertions;
@@ -26,8 +26,9 @@ public class TestRepositoryToken {
         var token = new Token();
         token.setSymbol("SYM");
         token.setName("name");
-        var e = Assertions.assertThrowsExactly(ORIException.class, () -> tokenRepository.check(token));
-        Assertions.assertEquals("protocol must not be null", e.getMessage());
-        Assertions.assertEquals(400, e.getStatus().getStatusCode());
+        var e = Assertions.assertThrowsExactly(ConstraintViolationException.class, () -> tokenRepository.check(token));
+        Assertions.assertEquals(1, e.getConstraintViolations().size());
+        Assertions.assertEquals("protocol",
+                e.getConstraintViolations().iterator().next().getPropertyPath().iterator().next().getName());
     }
 }

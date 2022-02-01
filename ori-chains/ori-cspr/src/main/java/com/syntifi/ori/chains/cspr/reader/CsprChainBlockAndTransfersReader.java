@@ -7,13 +7,16 @@ import com.syntifi.casper.sdk.model.block.JsonBlockData;
 import com.syntifi.casper.sdk.model.transfer.TransferData;
 import com.syntifi.casper.sdk.service.CasperService;
 import com.syntifi.ori.chains.base.reader.AbstractChainBlockAndTransfersReader;
+import com.syntifi.ori.chains.cspr.CsprChainConfig;
 import com.syntifi.ori.chains.cspr.model.CsprChainBlockAndTransfers;
 import com.syntifi.ori.client.OriRestClient;
 
-public class CsprChainBlockAndTransfersReader extends AbstractChainBlockAndTransfersReader<CasperService, CsprChainBlockAndTransfers> {
+public class CsprChainBlockAndTransfersReader
+        extends AbstractChainBlockAndTransfersReader<CasperService, CsprChainBlockAndTransfers> {
 
-    public CsprChainBlockAndTransfersReader(CasperService chainService, OriRestClient oriRestClient, String tokenSymbol) {
-        super(chainService, oriRestClient, tokenSymbol);
+    public CsprChainBlockAndTransfersReader(CasperService chainService, OriRestClient oriRestClient,
+            CsprChainConfig chainConfig) {
+        super(chainService, oriRestClient, chainConfig);
     }
 
     @Override

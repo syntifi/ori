@@ -63,6 +63,6 @@ public class EthChainConfig extends AbstractChainConfig<Web3j> {
     @Bean(name = "ethBlockAndTransferReader")
     public EthChainBlockAndTransfersReader blockAndTransferReader(@Autowired Web3j ethService,
             @Autowired OriRestClient oriRestClient, @Autowired EthChainConfig chainConfig) {
-        return new EthChainBlockAndTransfersReader(ethService, oriRestClient, chainConfig.getTokenSymbol());
+        return new EthChainBlockAndTransfersReader(ethService, oriRestClient, chainConfig);
     }
 }

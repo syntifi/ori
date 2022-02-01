@@ -62,6 +62,6 @@ public class CsprChainConfig extends AbstractChainConfig<CasperService> {
     @Bean(name = "casperBlockAndTransferReader")
     public CsprChainBlockAndTransfersReader blockAndTransferReader(@Autowired CasperService casperService,
             @Autowired OriRestClient oriRestClient, @Autowired CsprChainConfig chainConfig) {
-        return new CsprChainBlockAndTransfersReader(casperService, oriRestClient, chainConfig.getTokenSymbol());
+        return new CsprChainBlockAndTransfersReader(casperService, oriRestClient, chainConfig);
     }
 }

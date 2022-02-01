@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.syntifi.ori.chains.base.reader.AbstractChainBlockAndTransfersReader;
+import com.syntifi.ori.chains.eth.EthChainConfig;
 import com.syntifi.ori.chains.eth.model.EthChainBlockAndTransfers;
 import com.syntifi.ori.client.OriRestClient;
 
@@ -18,8 +19,9 @@ import org.web3j.protocol.core.methods.response.EthBlock.TransactionResult;
 public class EthChainBlockAndTransfersReader
         extends AbstractChainBlockAndTransfersReader<Web3j, EthChainBlockAndTransfers> {
 
-    public EthChainBlockAndTransfersReader(Web3j chainService, OriRestClient oriRestClient, String tokenSymbol) {
-        super(chainService, oriRestClient, tokenSymbol);
+    public EthChainBlockAndTransfersReader(Web3j chainService, OriRestClient oriRestClient,
+            EthChainConfig chainConfig) {
+        super(chainService, oriRestClient, chainConfig);
     }
 
     // READ should return null if next item is not found

@@ -67,7 +67,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
             throws ORIException {
         boolean exists = transactionRepository.existsAlready(symbol, transactionDTO.getHash());
         if (exists) {
-            throw new ORIException(transactionDTO.getHash() + " exists already", 400);
+            throw new ORIException(transactionDTO.getHash() + " exists already", Status.CONFLICT);
         }
 
         Token token = getTokenOr404(symbol);
@@ -76,7 +76,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
         try {
             Block block = blockRepository.findByTokenSymbolAndHash(symbol, transactionDTO.getBlockHash());
             if (!block.getToken().equals(token)) {
-                throw new ORIException("Block hash " + transactionDTO.getBlockHash() + " not found for " + symbol, 404);
+                throw new ORIException("Block hash " + transactionDTO.getBlockHash() + " not found for " + symbol, Status.NOT_FOUND);
             }
 
             Transaction transaction = TransactionMapper.toModel(transactionDTO);
@@ -87,9 +87,9 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
                     .created(URI.create("/transaction/" + symbol + "/hash/" + transaction.getHash()))
                     .build();
         } catch (NoResultException e) {
-            throw new ORIException(transactionDTO.getBlockHash() + " not found", 404);
+            throw new ORIException(transactionDTO.getBlockHash() + " not found", Status.NOT_FOUND);
         } catch (NonUniqueResultException e) {
-            throw new ORIException(transactionDTO.getBlockHash() + " not unique", 500);
+            throw new ORIException(transactionDTO.getBlockHash() + " not unique", Status.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -102,7 +102,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
         for (TransactionDTO transactionDTO : transactionDTOs) {
             boolean exists = transactionRepository.existsAlready(symbol, transactionDTO.getHash());
             if (exists) {
-                throw new ORIException(transactionDTO.getHash() + " exists already", 400);
+                throw new ORIException(transactionDTO.getHash() + " exists already", Status.CONFLICT);
             }
             var token = getTokenOr404(symbol);
             try {
@@ -119,9 +119,9 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
                 transactionRepository.persist(transaction);
                 response.link(URI.create(String.format("/transaction/%s/hash/%s", symbol, transaction.getHash())), "self");
             } catch (NoResultException e) {
-                throw new ORIException(transactionDTO.getBlockHash() + " not found", 404);
+                throw new ORIException(transactionDTO.getBlockHash() + " not found", Status.NOT_FOUND);
             } catch (NonUniqueResultException e) {
-                throw new ORIException(transactionDTO.getBlockHash() + " not unique", 500);
+                throw new ORIException(transactionDTO.getBlockHash() + " not unique", Status.INTERNAL_SERVER_ERROR);
             }
         }
 
@@ -183,9 +183,9 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
             Transaction out = transactionRepository.findByTokenSymbolAndHash(symbol, hash);
             return TransactionMapper.fromModel(out);
         } catch (NoResultException nre) {
-            throw new ORIException(hash + " not found", 404);
+            throw new ORIException(hash + " not found", Status.NOT_FOUND);
         } catch (NonUniqueResultException nure) {
-            throw new ORIException(hash + " not unique", 500);
+            throw new ORIException(hash + " not unique", Status.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -263,9 +263,9 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
                     .put("uri", "/transaction/" + symbol + "/hash/" + hash))
                     .build();
         } catch (NoResultException nre) {
-            throw new ORIException(hash + " not found", 404);
+            throw new ORIException(hash + " not found", Status.NOT_FOUND);
         } catch (NonUniqueResultException nure) {
-            throw new ORIException(hash + " not unique", 500);
+            throw new ORIException(hash + " not unique", Status.INTERNAL_SERVER_ERROR);
         }
     }
 }

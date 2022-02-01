@@ -1,13 +1,14 @@
 package com.syntifi.ori.converter;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ParamConverter;
 
 import com.syntifi.ori.exception.ORIException;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.ZoneId;
 
 
 /**
@@ -49,7 +50,7 @@ public class LocalDateTimeConverter implements ParamConverter<LocalDateTime> {
             try {
                 date = LocalDateTime.parse(value, formatter);
             } catch (DateTimeParseException e) {
-                throw new ORIException("Wrong DateTime format, please follow " + DATE_FORMAT, 400);
+                throw new ORIException("Wrong DateTime format, please follow " + DATE_FORMAT, Status.BAD_REQUEST.getStatusCode());
             }
         }
         return date;

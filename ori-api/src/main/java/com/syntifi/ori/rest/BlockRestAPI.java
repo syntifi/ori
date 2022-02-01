@@ -44,7 +44,7 @@ public class BlockRestAPI extends AbstractBaseRestApi {
     BlockRepository blockRepository;
 
     private void checkParent(String symbol, BlockDTO blockDTO, List<BlockDTO> blockDTOs) {
-        boolean isFirstBlock = blockRepository.getBlocks(symbol).isEmpty() || blockRepository.existsAnyByToken(symbol);
+        boolean isFirstBlock = blockRepository.getBlocks(symbol).isEmpty() || !blockRepository.existsAnyByToken(symbol);
         if (!isFirstBlock) {
             if (blockDTOs != null && blockDTOs.stream().anyMatch(t -> t.getHash().equals(blockDTO.getParent()))) {
                 return;
@@ -52,9 +52,9 @@ public class BlockRestAPI extends AbstractBaseRestApi {
             try {
                 blockRepository.findByTokenSymbolAndHash(symbol, blockDTO.getParent());
             } catch (NoResultException e) {
-                throw new ORIException("Parent block not found", 404);
+                throw new ORIException("Parent block not found", Status.BAD_REQUEST);
             } catch (NonUniqueResultException e) {
-                throw new ORIException("Parent block not unique", 500);
+                throw new ORIException("Parent block not unique", Status.INTERNAL_SERVER_ERROR);
             }
         }
     }
@@ -78,7 +78,7 @@ public class BlockRestAPI extends AbstractBaseRestApi {
 
         boolean exists = blockRepository.existsAlready(symbol, blockDTO.getHash());
         if (exists) {
-            throw new ORIException(blockDTO.getHash() + " exists already", 400);
+            throw new ORIException(blockDTO.getHash() + " exists already", Status.CONFLICT);
         }
 
         blockDTO.setTokenSymbol(symbol);
@@ -105,7 +105,7 @@ public class BlockRestAPI extends AbstractBaseRestApi {
         for (BlockDTO blockDTO : blockDTOs) {
             boolean exists = blockRepository.existsAlready(symbol, blockDTO.getHash());
             if (exists) {
-                throw new ORIException(blockDTO.getHash() + " exists already", 400);
+                throw new ORIException(blockDTO.getHash() + " exists already", Status.CONFLICT);
             }
 
             blockDTO.setTokenSymbol(symbol);
@@ -144,7 +144,13 @@ public class BlockRestAPI extends AbstractBaseRestApi {
     public BlockDTO getLastBlock(@PathParam("tokenSymbol") String symbol) throws ORIException {
         getTokenOr404(symbol);
 
-        return BlockMapper.fromModel(blockRepository.getLastBlock(symbol));
+        Block lastBlock = blockRepository.getLastBlock(symbol);
+
+        if (lastBlock == null) {
+            throw new ORIException("Parent block not found", Status.NOT_FOUND);
+        }
+
+        return BlockMapper.fromModel(lastBlock);
     }
 
     /**
@@ -165,9 +171,9 @@ public class BlockRestAPI extends AbstractBaseRestApi {
             Block result = blockRepository.findByTokenSymbolAndHash(symbol, hash);
             return BlockMapper.fromModel(result);
         } catch (NoResultException e) {
-            throw new ORIException(hash + " not found", 404);
+            throw new ORIException(hash + " not found", Status.NOT_FOUND);
         } catch (NonUniqueResultException e) {
-            throw new ORIException(hash + " not unique", 500);
+            throw new ORIException(hash + " not unique", Status.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -199,9 +205,9 @@ public class BlockRestAPI extends AbstractBaseRestApi {
                     .put("uri", "/block/" + symbol + "/hash/" + hash))
                     .build();
         } catch (NoResultException e) {
-            throw new ORIException(hash + " not found", 404);
+            throw new ORIException(hash + " not found", Status.NOT_FOUND);
         } catch (NonUniqueResultException e) {
-            throw new ORIException(hash + " not unique", 500);
+            throw new ORIException(hash + " not unique", Status.INTERNAL_SERVER_ERROR);
         }
     }
 }

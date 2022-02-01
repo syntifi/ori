@@ -4,8 +4,8 @@ import java.util.Date;
 
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
+import javax.validation.ConstraintViolationException;
 
-import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Account;
 import com.syntifi.ori.model.Block;
 import com.syntifi.ori.model.Transaction;
@@ -34,8 +34,10 @@ public class TestRepositoryTransaction {
         transaction.setFromAccount(new Account());
         transaction.setToAccount(new Account());
         transaction.setTimeStamp(new Date());
-        var e = Assertions.assertThrowsExactly(ORIException.class, () -> transactionRepository.check(transaction));
-        Assertions.assertEquals("hash must not be null", e.getMessage());
-        Assertions.assertEquals(400, e.getStatus().getStatusCode());
+        var e = Assertions.assertThrowsExactly(ConstraintViolationException.class,
+                () -> transactionRepository.check(transaction));
+        Assertions.assertEquals(1, e.getConstraintViolations().size());
+        Assertions.assertEquals("hash",
+                e.getConstraintViolations().iterator().next().getPropertyPath().iterator().next().getName());
     }
 }
