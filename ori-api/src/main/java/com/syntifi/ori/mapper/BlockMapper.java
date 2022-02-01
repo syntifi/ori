@@ -3,8 +3,6 @@ package com.syntifi.ori.mapper;
 import com.syntifi.ori.dto.BlockDTO;
 import com.syntifi.ori.model.Block;
 import com.syntifi.ori.model.Token;
-import com.syntifi.ori.repository.BlockRepository;
-import com.syntifi.ori.repository.TokenRepository;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -36,7 +34,7 @@ public class BlockMapper {
                 Token token = Token.builder().symbol(dto.getTokenSymbol()).build();
                 Block parentBlock = dto.getParent() != null ? Block.builder()
                                 .hash(dto.getParent())
-                                .token(Token.builder().symbol(dto.getTokenSymbol()).build())
+                                .token(token)
                                 .build()
                                 : null;
 

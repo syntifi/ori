@@ -98,7 +98,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
     @Path("/{tokenSymbol}/multiple")
     public Response addTransactions(@PathParam("tokenSymbol") String symbol, List<TransactionDTO> transactionDTOs)
             throws ORIException {
-        List<Transaction> transactions = new ArrayList<>();
+        ResponseBuilder response = new ResponseBuilderImpl().status(Status.CREATED);
         for (TransactionDTO transactionDTO : transactionDTOs) {
             boolean exists = transactionRepository.existsAlready(symbol, transactionDTO.getHash());
             if (exists) {
@@ -116,22 +116,13 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
                 Transaction transaction = TransactionMapper.toModel(transactionDTO);
 
                 transactionRepository.check(transaction);
-
-                transactions.add(transaction);
+                transactionRepository.persist(transaction);
+                response.link(URI.create(String.format("/transaction/%s/hash/%s", symbol, transaction.getHash())), "self");
             } catch (NoResultException e) {
                 throw new ORIException(transactionDTO.getBlockHash() + " not found", 404);
             } catch (NonUniqueResultException e) {
                 throw new ORIException(transactionDTO.getBlockHash() + " not unique", 500);
             }
-        }
-
-        for (Transaction transaction : transactions) {
-            transactionRepository.persistAndFlush(transaction);
-        }
-
-        ResponseBuilder response = new ResponseBuilderImpl().status(Status.CREATED);
-        for (Transaction transaction : transactions) {
-            response.link(URI.create(String.format("/transaction/%s/hash/%s", symbol, transaction.getHash())), "self");
         }
 
         return response.build();
@@ -163,7 +154,8 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
         } else if ((from == null) && (to != null)) {
             transactions = transactionRepository.getIncomingTransactions(symbol, to.getHash());
         } else if ((from != null) && (to != null)) {
-            transactions = transactionRepository.getTransactionsByTokenSymbolAndFromAccountAndToAccount(symbol, from.getHash(),
+            transactions = transactionRepository.getTransactionsByTokenSymbolAndFromAccountAndToAccount(symbol,
+                    from.getHash(),
                     to.getHash());
         } else {
             transactions = transactionRepository.getAllTransactions();
@@ -211,7 +203,8 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
     public List<TransactionDTO> getTransactionsByAccount(@PathParam("tokenSymbol") String symbol,
             @PathParam("account") String hash) throws ORIException {
         Account account = getAccountOr404(symbol, hash);
-        List<Transaction> transactions = transactionRepository.getTransactionsByTokenSymbolAndAccount(symbol, account.getHash());
+        List<Transaction> transactions = transactionRepository.getTransactionsByTokenSymbolAndAccount(symbol,
+                account.getHash());
         return transactions
                 .stream()
                 .map(TransactionMapper::fromModel)

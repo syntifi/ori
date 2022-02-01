@@ -1,7 +1,6 @@
 package com.syntifi.ori.rest;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -102,7 +101,7 @@ public class BlockRestAPI extends AbstractBaseRestApi {
 
         getTokenOr404(symbol);
 
-        List<Block> blocks = new ArrayList<>();
+        ResponseBuilder response = new ResponseBuilderImpl().status(Status.CREATED);
         for (BlockDTO blockDTO : blockDTOs) {
             boolean exists = blockRepository.existsAlready(symbol, blockDTO.getHash());
             if (exists) {
@@ -116,16 +115,7 @@ public class BlockRestAPI extends AbstractBaseRestApi {
             Block block = BlockMapper.toModel(blockDTO);
 
             blockRepository.check(block);
-
-            blocks.add(block);
-        }
-
-        for (Block block : blocks) {
-            blockRepository.persistAndFlush(block);
-        }
-
-        ResponseBuilder response = new ResponseBuilderImpl().status(Status.CREATED);
-        for (Block block : blocks) {
+            blockRepository.persist(block);
             response.link(URI.create(String.format("/block/%s/hash/%s", symbol, block.getHash())), "self");
         }
 
