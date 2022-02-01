@@ -9,22 +9,22 @@ import org.springframework.batch.core.annotation.BeforeJob;
 
 public class OriJobExecutionListener {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(OriJobExecutionListener.class);
 
     @BeforeJob
     public void beforeJob(JobExecution jobExecution) {
-        logger.info("OriJobExecutionListener - beforeJob");
+        LOGGER.info("Before Job");
     }
 
     @AfterJob
     public void afterJob(JobExecution jobExecution) {
-        logger.info("OriJobExecutionListener - afterJob");
+        LOGGER.info("After Job");
         if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
             // job success
-            logger.info("Success");
+            LOGGER.info("Success");
         } else if (jobExecution.getStatus() == BatchStatus.FAILED) {
             // job failure
-            logger.info("Failure");
+            LOGGER.info("Failure");
         }
     }
 }

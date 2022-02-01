@@ -146,7 +146,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
     public List<TransactionDTO> getAllTransactions(@PathParam("tokenSymbol") String symbol,
             @QueryParam("fromAccount") String fromHash, @QueryParam("toAccount") String toHash,
             @QueryParam("blockHash") String block) throws ORIException {
-        List<Transaction> transactions = new ArrayList<>();
+        List<Transaction> transactions;
         Account from = fromHash == null ? null : getAccountOr404(symbol, fromHash);
         Account to = toHash == null ? null : getAccountOr404(symbol, toHash);
         if ((from != null) && (to == null)) {

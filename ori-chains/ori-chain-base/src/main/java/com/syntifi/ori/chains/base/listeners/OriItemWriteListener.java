@@ -12,21 +12,20 @@ import org.springframework.batch.core.annotation.OnWriteError;
 
 public class OriItemWriteListener {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(OriItemWriteListener.class);
 
     @BeforeWrite
     public void beforeWrite(List<OriBlockAndTransfers> items) {
-        logger.debug("[{}] Writing next blocks (count: {})", items.get(0).getClass().getSimpleName(), items.size());
+        LOGGER.debug("Writing next blocks");
     }
 
     @AfterWrite
     public void afterWrite(List<OriBlockAndTransfers> items) {
-        logger.debug("[{}] Next blocks read (count: {})", items.get(0).getClass().getSimpleName(), items.size());
+        LOGGER.debug("Next blocks written");
     }
 
     @OnWriteError
     public void onWriteError(Exception e, List<OriBlockAndTransfers> items) {
-        logger.error("[{}] Error reading next blocks (count: {}): {}", items.get(0).getClass().getSimpleName(),
-                items.size(), e.getMessage());
+        LOGGER.error("Error writing next blocks: {}", e.getMessage());
     }
 }

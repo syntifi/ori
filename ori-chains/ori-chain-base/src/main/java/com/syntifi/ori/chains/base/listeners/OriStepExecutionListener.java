@@ -9,16 +9,16 @@ import org.springframework.batch.core.annotation.BeforeStep;
 
 public class OriStepExecutionListener {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(OriStepExecutionListener.class);
 
     @BeforeStep
     public void beforeStep(StepExecution stepExecution) {
-        logger.info("OriStepExecutionListener - beforeStep");
+        LOGGER.info("Before Step");
     }
 
     @AfterStep
     public ExitStatus afterStep(StepExecution stepExecution) {
-        logger.info("OriStepExecutionListener - afterStep");
+        LOGGER.info("After Step");
 
         return stepExecution.getExitStatus();
     }

@@ -10,20 +10,20 @@ import org.springframework.batch.core.annotation.OnReadError;
 
 public class ChainItemReadListener<T extends ChainBlockAndTransfers<?, ?>> {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChainItemReadListener.class);
 
     @BeforeRead
     public void beforeRead() {
-        logger.debug("Reading next block");
+        LOGGER.debug("Reading next block");
     }
 
     @AfterRead
     public void afterRead(T item) {
-        logger.debug("[{}] Next block read", item.getChainBlock().getClass().getSimpleName());
+        LOGGER.debug("Next block read");
     }
 
     @OnReadError
     public void onReadError(Exception e) {
-        logger.error("Error reading next block {}", e.getMessage());
+        LOGGER.error("Error reading next block {}", e.getMessage());
     }
 }

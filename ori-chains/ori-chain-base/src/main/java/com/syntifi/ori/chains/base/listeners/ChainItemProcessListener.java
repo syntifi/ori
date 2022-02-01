@@ -11,25 +11,22 @@ import org.springframework.batch.core.annotation.OnProcessError;
 
 public class ChainItemProcessListener<T extends ChainBlockAndTransfers<?, ?>> {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChainItemProcessListener.class);
 
     @BeforeProcess
     public void beforeProcess(T item) {
-        logger.debug("[{}] Starting processing of block with {} transfers.",
-                item.getChainBlock().getClass().getSimpleName(),
+        LOGGER.debug("Starting processing of block with {} transfers.",
                 item.getChainTransfers() != null ? item.getChainTransfers().size() : 0);
     }
 
     @AfterProcess
     public void afterProcess(T item, OriBlockAndTransfers result) {
-        logger.debug("[{}] Finished processing of block with {} transfers.",
-                item.getChainBlock().getClass().getSimpleName(),
+        LOGGER.debug("Finished processing of block with {} transfers.",
                 result.getTransfers() != null ? result.getTransfers().size() : 0);
     }
 
     @OnProcessError
     public void onProcessError(T item, Exception e) {
-        logger.error("[{}] Error processing block: {}", item.getChainBlock().getClass().getSimpleName(),
-                e.getMessage());
+        LOGGER.error("Error processing block: {}", e.getMessage());
     }
 }

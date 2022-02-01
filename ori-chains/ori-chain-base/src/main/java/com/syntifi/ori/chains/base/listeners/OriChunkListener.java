@@ -9,20 +9,20 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 
 public class OriChunkListener {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(OriChunkListener.class);
 
     @BeforeChunk
     public void beforeChunk(ChunkContext context) {
-        logger.debug("Processing next chunk");
+        LOGGER.debug("Processing next chunk");
     }
 
     @AfterChunk
     public void afterChunk(ChunkContext context) {
-        logger.debug("Chunk processed.");
+        LOGGER.debug("Chunk processed.");
     }
 
     @AfterChunkError
     public void afterChunkError(ChunkContext context) {
-        logger.error("Chunk error!");
+        LOGGER.error("Chunk error!");
     }
 }
