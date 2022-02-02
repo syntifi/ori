@@ -51,6 +51,8 @@ public class TransactionMonitorAPI extends AbstractBaseRestApi {
     @Path("{tokenSymbol}/score/{account}")
     public AMLRules scoreAccount(@PathParam("tokenSymbol") String symbol, @PathParam("account") String account,
             @QueryParam("date") @LocalDateTimeFormat LocalDateTime dateTime) throws ORIException {
+        getTokenOr404(symbol);
+        getAccountOr404(symbol, account);
         OffsetDateTime date = dateTime == null ? OffsetDateTime.now() : dateTime.atOffset(ZoneOffset.of("Z"));
         OffsetDateTime from = date.minusDays(ConfigProvider.getConfig().getValue("ori.aml.long-window", int.class));
         List<Transaction> in = transactionRepository.getIncomingTransactions(symbol, account, from, date);
@@ -77,6 +79,8 @@ public class TransactionMonitorAPI extends AbstractBaseRestApi {
             @PathParam("account") String account,
             @QueryParam("fromDate") @LocalDateTimeFormat LocalDateTime fromDate,
             @QueryParam("toDate") @LocalDateTimeFormat LocalDateTime toDate) throws ORIException {
+        getTokenOr404(symbol);
+        getAccountOr404(symbol, account);
         OffsetDateTime to = toDate == null ? OffsetDateTime.now() : toDate.atOffset(ZoneOffset.of("Z"));
         OffsetDateTime from = fromDate == null
                 ? to.minusDays(ConfigProvider.getConfig().getValue("ori.aml.long-window", int.class))
@@ -103,6 +107,8 @@ public class TransactionMonitorAPI extends AbstractBaseRestApi {
             @PathParam("account") String account,
             @QueryParam("fromDate") @LocalDateTimeFormat LocalDateTime fromDate,
             @QueryParam("toDate") @LocalDateTimeFormat LocalDateTime toDate) throws ORIException {
+        getTokenOr404(symbol);
+        getAccountOr404(symbol, account);
         OffsetDateTime to = toDate == null ? OffsetDateTime.now() : toDate.atOffset(ZoneOffset.of("Z"));
         OffsetDateTime from = fromDate == null
                 ? to.minusDays(ConfigProvider.getConfig().getValue("ori.aml.long-window", int.class))

@@ -75,7 +75,8 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
         try {
             Block block = blockRepository.findByTokenSymbolAndHash(symbol, transactionDTO.getBlockHash());
             if (!block.getToken().equals(token)) {
-                throw new ORIException("Block hash " + transactionDTO.getBlockHash() + " not found for " + symbol, Status.NOT_FOUND);
+                throw new ORIException("Block hash " + transactionDTO.getBlockHash() + " not found for " + symbol,
+                        Status.NOT_FOUND);
             }
 
             Transaction transaction = TransactionMapper.toModel(transactionDTO);
@@ -97,31 +98,30 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
     @Path("/{tokenSymbol}/multiple")
     public Response addTransactions(@PathParam("tokenSymbol") String symbol, List<TransactionDTO> transactionDTOs)
             throws ORIException {
+
         ResponseBuilder response = new ResponseBuilderImpl().status(Status.CREATED);
         for (TransactionDTO transactionDTO : transactionDTOs) {
             boolean exists = transactionRepository.existsAlready(symbol, transactionDTO.getHash());
+
             if (exists) {
                 throw new ORIException(transactionDTO.getHash() + " exists already", Status.CONFLICT);
             }
+
             var token = getTokenOr404(symbol);
-            try {
-                var block = blockRepository.findByTokenSymbolAndHash(symbol, transactionDTO.getBlockHash());
+            transactionDTO.setTokenSymbol(symbol);
 
-                if (!block.getToken().equals(token)) {
-                    throw new ORIException("Block hash " + transactionDTO.getBlockHash() + " not found for " + symbol,
-                            404);
-                }
+            var block = blockRepository.findByTokenSymbolAndHash(symbol, transactionDTO.getBlockHash());
 
-                Transaction transaction = TransactionMapper.toModel(transactionDTO);
-
-                transactionRepository.check(transaction);
-                transactionRepository.persist(transaction);
-                response.link(URI.create(String.format("/transaction/%s/hash/%s", symbol, transaction.getHash())), "self");
-            } catch (NoResultException e) {
-                throw new ORIException(transactionDTO.getBlockHash() + " not found", Status.NOT_FOUND);
-            } catch (NonUniqueResultException e) {
-                throw new ORIException(transactionDTO.getBlockHash() + " not unique", Status.INTERNAL_SERVER_ERROR);
+            if (!block.getToken().equals(token)) {
+                throw new ORIException("Block hash " + transactionDTO.getBlockHash() + " not found for " + symbol,
+                        404);
             }
+
+            Transaction transaction = TransactionMapper.toModel(transactionDTO);
+
+            transactionRepository.check(transaction);
+            transactionRepository.persist(transaction);
+            response.link(URI.create(String.format("/transaction/%s/hash/%s", symbol, transaction.getHash())), "self");
         }
 
         return response.build();
@@ -145,6 +145,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
     public List<TransactionDTO> getAllTransactions(@PathParam("tokenSymbol") String symbol,
             @QueryParam("fromAccount") String fromHash, @QueryParam("toAccount") String toHash,
             @QueryParam("blockHash") String block) throws ORIException {
+        getTokenOr404(symbol);
         List<Transaction> transactions;
         Account from = fromHash == null ? null : getAccountOr404(symbol, fromHash);
         Account to = toHash == null ? null : getAccountOr404(symbol, toHash);
@@ -157,7 +158,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
                     from.getHash(),
                     to.getHash());
         } else {
-            transactions = transactionRepository.getAllTransactions();
+            transactions = transactionRepository.getTransactions(symbol);
         }
         // TODO: PAGINATION HERE
         return transactions

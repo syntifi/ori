@@ -3,6 +3,9 @@ package com.syntifi.ori.resources;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
@@ -49,10 +52,11 @@ public class TestResourcesTransaction {
         acc.put("publicKey", "key");
         acc.put("label", "label");
         given()
+                .pathParam("token", "ABC")
                 .body(acc.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when()
-                .post("/api/v2/account/ABC")
+                .post("/api/v2/account/{token}")
                 .then()
                 .statusCode(200)
                 .body("created", equalTo("/account/ABC/fromacc"));
@@ -69,10 +73,11 @@ public class TestResourcesTransaction {
         acc.put("publicKey", "key");
         acc.put("label", "label");
         given()
+                .pathParam("token", "ABC")
                 .body(acc.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when()
-                .post("/api/v2/account/ABC")
+                .post("/api/v2/account/{token}")
                 .then()
                 .statusCode(200)
                 .body("created", equalTo("/account/ABC/toacc"));
@@ -92,10 +97,11 @@ public class TestResourcesTransaction {
         block.put("timeStamp", "2099-08-05T00:00:00.000+0000");
         block.put("validator", "validator");
         given()
+                .pathParam("token", "ABC")
                 .body(block.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when()
-                .post("/api/v2/block/ABC")
+                .post("/api/v2/block/{token}")
                 .then()
                 .statusCode(201);
         synchronized (LOCK) {
@@ -114,11 +120,12 @@ public class TestResourcesTransaction {
         transaction.put("fromHash", "fromacc");
         transaction.put("toHash", "toacc");
         given()
+                .pathParam("token", "ABC")
                 .body(transaction.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
                 .when()
-                .post("/api/v2/transaction/ABC")
+                .post("/api/v2/transaction/{token}")
                 .then()
                 .statusCode(201);
         synchronized (LOCK) {
@@ -130,8 +137,10 @@ public class TestResourcesTransaction {
     @Order(6)
     public void testGetTransaction() {
         given()
+                .pathParam("token", "ABC")
+                .pathParam("hash", "mockTransaction")
                 .when()
-                .get("/api/v2/transaction/ABC/hash/mockTransaction")
+                .get("/api/v2/transaction/{token}/hash/{hash}")
                 .then()
                 .statusCode(200)
                 .body("amount", equalTo(1234F))
@@ -146,8 +155,10 @@ public class TestResourcesTransaction {
     @Order(7)
     public void testGetIncomingTransactionToAccount() {
         given()
+                .pathParam("token", "ABC")
+                .pathParam("account", "toacc")
                 .when()
-                .get("/api/v2/transaction/ABC/incoming/account/toacc")
+                .get("/api/v2/transaction/{token}/incoming/account/{account}")
                 .then()
                 .statusCode(200)
                 .body("size()", equalTo(1))
@@ -163,8 +174,10 @@ public class TestResourcesTransaction {
     @Order(8)
     public void testGetOutgoingTransactionFromAccount() {
         given()
+                .pathParam("token", "ABC")
+                .pathParam("account", "fromacc")
                 .when()
-                .get("/api/v2/transaction/ABC/outgoing/account/fromacc")
+                .get("/api/v2/transaction/{token}/outgoing/account/{account}")
                 .then()
                 .statusCode(200)
                 .body("size()", equalTo(1))
@@ -177,11 +190,12 @@ public class TestResourcesTransaction {
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     public void testGetTransactions() {
         given()
+                .pathParam("token", "ABC")
                 .when()
-                .get("/api/v2/transaction/ABC")
+                .get("/api/v2/transaction/{token}")
                 .then()
                 .statusCode(200)
                 .body("size()", equalTo(1))
@@ -194,23 +208,54 @@ public class TestResourcesTransaction {
     }
 
     @Test
-    @Order(8)
+    @Order(10)
     public void testGetNonExistingTransaction() {
         given()
+                .pathParam("token", "ABC")
+                .pathParam("hash", "testTransaction")
                 .when()
-                .get("/api/v2/transaction/ABC/hash/testTransaction")
+                .get("/api/v2/transaction/{token}/hash/{hash}")
                 .then()
                 .statusCode(404)
                 .body("error", equalTo("testTransaction not found"));
     }
 
     @Test
-    @Order(9)
+    @Order(11)
+    public void testPostMultipleTransactions() throws Exception {
+        List<JsonObject> transactions = new LinkedList<>();
+        for (int i = 0; i < 10; i++) {
+            var transaction = new JsonObject();
+            transaction.put("amount", 1234);
+            transaction.put("hash", "mockTransaction" + ("" + i));
+            transaction.put("timeStamp", "2099-08-05T0" + ("" + i) + ":00:00.000+0000");
+            transaction.put("blockHash", "transactionBlock");
+            transaction.put("fromHash", "fromacc");
+            transaction.put("toHash", "toacc");
+            transactions.add(transaction);
+        }
+        given()
+                .pathParam("token", "ABC")
+                .body(transactions.toString())
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .when()
+                .post("/api/v2/transaction/{token}/multiple")
+                .then()
+                .statusCode(201);
+        synchronized (LOCK) {
+            LOCK.wait(5000);
+        }
+    }
+
+    @Test
+    @Order(12)
     public void testDeleteTransaction() {
         given()
+                .pathParam("token", "ABC")
+                .pathParam("hash", "mockTransaction")
                 .when()
                 .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
-                .delete("/api/v2/transaction/ABC/hash/mockTransaction")
+                .delete("/api/v2/transaction/{token}/hash/{hash}")
                 .then()
                 .statusCode(200)
                 .body("method", equalTo("DELETE"))
@@ -218,7 +263,7 @@ public class TestResourcesTransaction {
     }
 
     @Test
-    @Order(10)
+    @Order(13)
     public void testDeleteFromAccount() throws InterruptedException {
         given()
                 .when()
@@ -234,7 +279,7 @@ public class TestResourcesTransaction {
     }
 
     @Test
-    @Order(11)
+    @Order(14)
     public void testDeleteToAccount() throws InterruptedException {
         given()
                 .when()
@@ -250,7 +295,7 @@ public class TestResourcesTransaction {
     }
 
     @Test
-    @Order(12)
+    @Order(15)
     public void testDeleteBlock() throws InterruptedException {
         given()
                 .when()
@@ -263,7 +308,7 @@ public class TestResourcesTransaction {
     }
 
     @Test
-    @Order(13)
+    @Order(16)
     public void testDeleteToken() throws InterruptedException {
         given()
                 .when()

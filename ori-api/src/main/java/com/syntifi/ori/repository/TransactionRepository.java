@@ -75,8 +75,8 @@ public class TransactionRepository implements Repository<Transaction> {
 
     }
 
-    public List<Transaction> getAllTransactions() {
-        return listAll();
+    public List<Transaction> getTransactions(String tokenSymbol) {
+        return list("token_symbol", Sort.descending("time_stamp"), tokenSymbol);
     }
 
     public List<Transaction> getAllTransactionsFromDateToDate(OffsetDateTime fromDate, OffsetDateTime toDate, Sort sort,
