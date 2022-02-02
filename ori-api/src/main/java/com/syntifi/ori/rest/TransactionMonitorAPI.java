@@ -1,6 +1,8 @@
 package com.syntifi.ori.rest;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,8 +36,6 @@ import io.vertx.core.cli.annotations.Description;
 @Tag(name = "Transaction monitor", description = "Monitor accounts, trace transactions and calculate risk scores")
 public class TransactionMonitorAPI extends AbstractBaseRestApi {
 
-    public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ";
-
     @Inject
     TransactionRepository transactionRepository;
 
@@ -50,9 +50,9 @@ public class TransactionMonitorAPI extends AbstractBaseRestApi {
     @GET
     @Path("{tokenSymbol}/score/{account}")
     public AMLRules scoreAccount(@PathParam("tokenSymbol") String symbol, @PathParam("account") String account,
-            @QueryParam("date") @LocalDateTimeFormat(DATE_FORMAT) LocalDateTime dateTime) throws ORIException {
-        LocalDateTime date = dateTime == null ? LocalDateTime.now() : dateTime;
-        LocalDateTime from = date.minusDays(ConfigProvider.getConfig().getValue("ori.aml.long-window", int.class));
+            @QueryParam("date") @LocalDateTimeFormat LocalDateTime dateTime) throws ORIException {
+        OffsetDateTime date = dateTime == null ? OffsetDateTime.now() : dateTime.atOffset(ZoneOffset.of("Z"));
+        OffsetDateTime from = date.minusDays(ConfigProvider.getConfig().getValue("ori.aml.long-window", int.class));
         List<Transaction> in = transactionRepository.getIncomingTransactions(symbol, account, from, date);
         List<Transaction> out = transactionRepository.getOutgoingTransactions(symbol, account, from, date);
         AMLRules rules = new AMLRules(in, out);
@@ -75,12 +75,12 @@ public class TransactionMonitorAPI extends AbstractBaseRestApi {
     @Description("Traces")
     public List<TransactionDTO> reverseGraphWalk(@PathParam("tokenSymbol") String symbol,
             @PathParam("account") String account,
-            @QueryParam("fromDate") @LocalDateTimeFormat(DATE_FORMAT) LocalDateTime fromDate,
-            @QueryParam("toDate") @LocalDateTimeFormat(DATE_FORMAT) LocalDateTime toDate) throws ORIException {
-        LocalDateTime to = toDate == null ? LocalDateTime.now() : toDate;
-        LocalDateTime from = fromDate == null
+            @QueryParam("fromDate") @LocalDateTimeFormat LocalDateTime fromDate,
+            @QueryParam("toDate") @LocalDateTimeFormat LocalDateTime toDate) throws ORIException {
+        OffsetDateTime to = toDate == null ? OffsetDateTime.now() : toDate.atOffset(ZoneOffset.of("Z"));
+        OffsetDateTime from = fromDate == null
                 ? to.minusDays(ConfigProvider.getConfig().getValue("ori.aml.long-window", int.class))
-                : fromDate;
+                : fromDate.atOffset(ZoneOffset.of("Z"));
         return transactionRepository.reverseGraphWalk(account, from, to)
                 .stream()
                 .map(TransactionMapper::fromModel)
@@ -101,12 +101,12 @@ public class TransactionMonitorAPI extends AbstractBaseRestApi {
     @Path("{tokenSymbol}/traceCoin/forward/{account}")
     public List<TransactionDTO> forwardGraphWalk(@PathParam("tokenSymbol") String symbol,
             @PathParam("account") String account,
-            @QueryParam("fromDate") @LocalDateTimeFormat(DATE_FORMAT) LocalDateTime fromDate,
-            @QueryParam("toDate") @LocalDateTimeFormat(DATE_FORMAT) LocalDateTime toDate) throws ORIException {
-        LocalDateTime to = toDate == null ? LocalDateTime.now() : toDate;
-        LocalDateTime from = fromDate == null
+            @QueryParam("fromDate") @LocalDateTimeFormat LocalDateTime fromDate,
+            @QueryParam("toDate") @LocalDateTimeFormat LocalDateTime toDate) throws ORIException {
+        OffsetDateTime to = toDate == null ? OffsetDateTime.now() : toDate.atOffset(ZoneOffset.of("Z"));
+        OffsetDateTime from = fromDate == null
                 ? to.minusDays(ConfigProvider.getConfig().getValue("ori.aml.long-window", int.class))
-                : fromDate;
+                : fromDate.atOffset(ZoneOffset.of("Z"));
         return transactionRepository.forwardGraphWalk(account, from, to)
                 .stream()
                 .map(TransactionMapper::fromModel)

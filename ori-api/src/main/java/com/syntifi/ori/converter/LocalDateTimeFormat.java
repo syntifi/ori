@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 
 /**
- * The actual LocalDateTimeFormat decorator. By detault the format is "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ"
+ * The actual LocalDateTimeFormat decorator. By detault the format is "yyyy-MM-dd'T'HH:mm:ss.SSS"
  * 
  * @author Andre Bertolace 
  * @since 0.1.0
@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target({ FIELD, PARAMETER })
 public @interface LocalDateTimeFormat {
-    public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ";
+    public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     String value() default DATE_FORMAT;
 }

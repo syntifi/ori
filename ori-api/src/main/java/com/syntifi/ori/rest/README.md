@@ -25,7 +25,7 @@ a better experience when interacting with the REST API.
 | /transaction | DELETE | Remove all transactions stored in the database | - | - | - | - |
 | /transaction/{hash} | GET | Get a transaction given the hash | *hash*: String | Transaction hash in Hex | - | - | 
 | /transaction/{hash} | DELETE | Remove a transaction given a hash | *hash*: String | Transaction hash in Hex | - | - | 
-| /transaction/account/{account} | GET | Get all incoming and outgoing transaction for an account | *account*: String | Account hash in Hex preceded by *account-hash* string | - | - | 
+| /transaction/{tokenSymbol}/account/{account} | GET | Get all incoming and outgoing transaction for an account | *account*: String | Account hash in Hex preceded by *account-hash* string | - | - | 
 
 ### Transaction monitor resources
 | Endpoint | Http method | Description | Path Parameters | Path parameters description | Query Parameters | Query parameters description |
@@ -40,22 +40,22 @@ a better experience when interacting with the REST API.
 
 | Endpoint | Http method | Curl example |
 | --- | --- | --- |
-| /block | GET | ```curl 'http://localhost:8080/block' -H 'accept: application/json'``` |
-| /block | POST | ```curl -X 'POST' 'http://localhost:8080/block' -H 'accept: */*' -H 'Content-Type: application/json' -d '{ "era": 0, "hash": "string", "height": 0, "parent": "string", "root": "string", "timeStamp": "2021-09-07T00:00:00.000+0000", "validator": "string"}' ``` |
-| /block | DELETE | ```curl -X 'DELETE' 'http://localhost:8080/block' -H 'accept: */*' ```| 
-| /block/{hash} | GET | ```curl -X 'GET' 'http://localhost:8080/block/3bf2647edb5743ef449c3523b37c0124f61093222d0efcfeeca0a70255aec038' -H 'accept: application/json'``` |
-| /block/{hash} | DELETE | ``` curl -X 'DELETE' 'http://localhost:8080/block/string' -H 'accept: */*' ```|
+| /block/{tokenSymbol} | GET | ```curl 'http://localhost:8080/block/[tokenSymbol]' -H 'accept: application/json'``` |
+| /block/{tokenSymbol} | POST | ```curl -X 'POST' 'http://localhost:8080/block/[tokenSymbol]' -H 'accept: */*' -H 'Content-Type: application/json' -d '{ "hash": "string", "timeStamp": "2022-02-02T16:57:57.454Z", "height": 0, "era": 0, "root": "string", "validator": "string", "parent": "string", "tokenSymbol": "string" }' ``` |
+| /block/{tokenSymbol} | DELETE | ```curl -X 'DELETE' 'http://localhost:8080/block/[tokenSymbol]' -H 'accept: */*' ```| 
+| /block/{tokenSymbol}/hash/{hash} | GET | ```curl -X 'GET' 'http://localhost:8080/block/[tokenSymbol]/hash/[hash]' -H 'accept: application/json'``` |
+| /block/{tokenSymbol}/hash/{hash} | DELETE | ``` curl -X 'DELETE' 'http://localhost:8080/[tokenSymbol]/hash/[hash]' -H 'accept: */*' ```|
 
 ### Transaction resources
 
 | Endpoint | Http method | Curl example |
 | --- | --- | --- |
-| /transaction | GET | ```curl -X 'GET' 'http://localhost:8080/transaction' -H 'accept: application/json' ``` |
-| /transaction | POST | ``` curl -X 'POST' 'http://localhost:8080/transaction' -H 'accept: */*' -H 'Content-Type: application/json'  -d '{"amount": 0, "blockHash": "string", "from": "string", "hash": "string", "timeStamp": "2021-09-07T00:00:00.000+0000", "to": "string"}' ```|
-| /transaction | DELETE | ```curl -X 'DELETE' 'http://localhost:8080/transaction' -H 'accept: */*' ```| 
-| /transaction/{hash} | GET | ```curl -X 'GET' 'http://localhost:8080/transaction/<HERE>' -H 'accept: application/json'``` |
-| /transaction/{hash} | DELETE | ``` curl -X 'DELETE' 'http://localhost:8080/transaction/string' -H 'accept: */*' ```|
-| /transaction/account/{account} | GET | ```curl -X 'GET' 'http://localhost:8080/transaction/account/<HERE>' -H 'accept: application/json'```  |
+| /transaction/{tokenSymbol} | GET | ```curl -X 'GET' 'http://localhost:8080/transaction/<tokenSymbol>' -H 'accept: application/json' ``` |
+| /transaction/{tokenSymbol} | POST | ``` curl -X 'POST' 'http://localhost:8080/transaction/<tokenSymbol>' -H 'accept: */*' -H 'Content-Type: application/json'  -d '{ "hash": "string", "timeStamp": "2022-02-02T16:58:56.218Z", "amount": 0, "fromHash": "string", "toHash": "string", "blockHash": "string", "tokenSymbol": "string" }' ```|
+| /transaction/{tokenSymbol} | DELETE | ```curl -X 'DELETE' 'http://localhost:8080/transaction/<tokenSymbol>' -H 'accept: */*' ```| 
+| /transaction/{tokenSymbol}/hash/{hash} | GET | ```curl -X 'GET' 'http://localhost:8080/transaction/<tokenSymbol>/hash/<HERE>' -H 'accept: application/json'``` |
+| /transaction/{tokenSymbol}/hash/{hash} | DELETE | ``` curl -X 'DELETE' 'http://localhost:8080/transaction/<tokenSymbol>/hash/string' -H 'accept: */*' ```|
+| /transaction/{tokenSymbol}/account/{account} | GET | ```curl -X 'GET' 'http://localhost:8080/transaction/<tokenSymbol>/account/<account>' -H 'accept: application/json'```  |
 
 ### Transaction monitor resources
 

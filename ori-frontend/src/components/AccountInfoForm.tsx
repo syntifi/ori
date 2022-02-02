@@ -13,7 +13,7 @@ const validationSchema = yup.object({
     account: yup
         .string()
         .required('The account is required'),
-    dateTime: yup
+    timeStamp: yup
         .string()
 });
 
@@ -27,7 +27,7 @@ const AccountInfoForm: FC<any> = ({ onSubmit, submit, date }): ReactElement => {
     const formik = useFormik({
         initialValues: {
             account: '',
-            dateTime: new Date(),
+            timeStamp: new Date(),
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -51,17 +51,17 @@ const AccountInfoForm: FC<any> = ({ onSubmit, submit, date }): ReactElement => {
                 />
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDateTimePicker
-                        id="dateTime"
-                        name="dateTime"
+                        id="timeStamp"
+                        name="timeStamp"
                         label={date}
-                        value={formik.values.dateTime}
+                        value={formik.values.timeStamp}
                         inputVariant="standard"
                         format="yyyy-MM-dd HH:mm:ss"
                         onChange={(date) => {
-                            formik.setFieldValue("dateTime", date);
+                            formik.setFieldValue("timeStamp", date);
                         }}
-                        error={formik.touched.dateTime && Boolean(formik.errors.dateTime)}
-                        helperText={formik.touched.dateTime && formik.errors.dateTime}
+                        error={formik.touched.timeStamp && Boolean(formik.errors.timeStamp)}
+                        helperText={formik.touched.timeStamp && formik.errors.timeStamp}
                         margin="dense"
                         fullWidth
                     />

@@ -19,11 +19,7 @@ const NavBar : FC<any> = ({title}): ReactElement => {
       {
         label: "Swagger UI",
         link: "/q/swagger-ui",
-      },
-      {
-        label: "GraphQL UI",
-        link: "/q/graphql-ui",
-      },
+      }
     ],
     external: [
       {

@@ -12,10 +12,10 @@ import axios from "axios";
  */
 const AccountList: FC<any> = ({ date, submit }): ReactElement => {
     const cols = [
-        { field: 'dateTime', headerName: 'DateTime', width: 200 },
+        { field: 'timeStamp', headerName: 'Date', width: 200 },
         { field: 'id', headerName: 'Hash', width: 300 },
-        { field: 'from', headerName: 'From', width: 300 },
-        { field: 'to', headerName: 'To', width: 300 },
+        { field: 'fromHash', headerName: 'From', width: 300 },
+        { field: 'toHash', headerName: 'To', width: 300 },
         { field: 'amount', headerName: 'Amount', width: 200 }
     ]
 
@@ -24,14 +24,14 @@ const AccountList: FC<any> = ({ date, submit }): ReactElement => {
     const loadData = (values: any) => {
         axios({
             method: "GET",
-            url: `${process.env.REACT_APP_API_URL}/transaction/account/` + values.account,
+            url: `${process.env.REACT_APP_API_URL}/transaction/ETH/account/` + values.account,
         }).then(response => {
             console.log(response)
             setRows(response.data.map((item: any) =>
             ({
-                dateTime: item.timeStamp,
-                from: item.from,
-                to: item.to,
+                timeStamp: item.timeStamp,
+                fromHash: item.fromHash,
+                toHash: item.toHash,
                 amount: item.amount,
                 id: item.hash
             })))

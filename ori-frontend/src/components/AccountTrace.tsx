@@ -29,32 +29,32 @@ const AccountTrace: FC<any> = ({ date, submit, direction }): ReactElement => {
     const [hierarchical, setHierarchical] = useState<boolean>(false)
 
     const loadData = (values: any) => {
-        const params = { [direction === "forward" ? "fromDate" : "toDate"]: values.dateTime.toISOString().replace('Z', '') }
+        const params = { [direction === "forward" ? "fromDate" : "toDate"]: values.timeStamp.toISOString().replace('Z', '') }
         axios({
             method: "GET",
-            url: `${process.env.REACT_APP_API_URL}/traceCoin/` + direction + '/' + values.account,
+            url: `${process.env.REACT_APP_API_URL}/ETH/traceCoin/` + direction + '/' + values.account,
             params: params
         }).then(response => {
             const uniqueIds: any[] = [];
             const accountIdMap: any = {};
             var i = 0;
             response.data.forEach((item: any) => {
-                if (uniqueIds.indexOf(item.to) === -1) {
-                    uniqueIds.push(item.to)
-                    accountIdMap[item.to] = i
+                if (uniqueIds.indexOf(item.toHash) === -1) {
+                    uniqueIds.push(item.toHash)
+                    accountIdMap[item.toHash] = i
                     i = i + 1
                 }
-                if (uniqueIds.indexOf(item.from) === -1) {
-                    uniqueIds.push(item.from)
-                    accountIdMap[item.from] = i
+                if (uniqueIds.indexOf(item.fromHash) === -1) {
+                    uniqueIds.push(item.fromHash)
+                    accountIdMap[item.fromHash] = i
                     i = i + 1
                 }
                 
             })
             const newEdges: any[] = response.data.map((item: any) =>
             ({
-                from: accountIdMap[item.from],
-                to: accountIdMap[item.to],
+                from: accountIdMap[item.fromHash],
+                to: accountIdMap[item.toHash],
                 value: item.amount,
                 title: item.amount / 1000000
             }))
