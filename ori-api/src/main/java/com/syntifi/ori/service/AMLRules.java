@@ -1,8 +1,7 @@
 package com.syntifi.ori.service;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -101,20 +100,29 @@ public class AMLRules {
             return 0.0;
         }
         int window = ConfigProvider.getConfig().getValue("ori.aml.short-window", int.class);
-        LocalDate lastDate = out.get(0).getTimeStamp()
-                .toInstant()
-                .atZone(ZoneId.of("GMT"))
-                .plusDays(1)
-                .toLocalDate();
-        Date[] dates = { java.sql.Date.valueOf(lastDate.minusDays(2L * window)),
-                java.sql.Date.valueOf(lastDate.minusDays(window)),
-                java.sql.Date.valueOf(lastDate) };
+
+        OffsetDateTime lastDate = out.get(0).getTimeStamp().plusDays(1);
+
+        // LocalDate lastDate = out.get(0).getTimeStamp()
+        // .toInstant()
+        // .atZone(ZoneId.of("GMT"))
+        // .plusDays(1)
+        // .toLocalDate();
+        // Date[] dates = { java.sql.Date.valueOf(lastDate.minusDays(2L * window)),
+        // java.sql.Date.valueOf(lastDate.minusDays(window)),
+        // java.sql.Date.valueOf(lastDate) };
+        OffsetDateTime[] dates = {
+                lastDate.minusDays(2L * window),
+                lastDate.minusDays(window),
+                lastDate
+        };
+
         int[] NoutWindow = { 0, 0 };
         for (Transaction transaction : out) {
-            if ((transaction.getTimeStamp().after(dates[0])) && (transaction.getTimeStamp().before(dates[1]))) {
+            if ((transaction.getTimeStamp().isAfter(dates[0])) && (transaction.getTimeStamp().isBefore(dates[1]))) {
                 NoutWindow[0] = NoutWindow[0] + 1;
             }
-            if ((transaction.getTimeStamp().after(dates[1])) && (transaction.getTimeStamp().before(dates[2]))) {
+            if ((transaction.getTimeStamp().isAfter(dates[1])) && (transaction.getTimeStamp().isBefore(dates[2]))) {
                 NoutWindow[1] = NoutWindow[1] + 1;
             }
         }
@@ -130,12 +138,13 @@ public class AMLRules {
      */
     private double calculateUnusualBehaviourScore() {
         int window = ConfigProvider.getConfig().getValue("ori.aml.short-window", int.class);
-        Date fromDate = java.sql.Date.valueOf(out.get(0).getTimeStamp().toInstant()
-                .atZone(ZoneId.of("GMT"))
-                .minusDays(window)
-                .toLocalDate());
+        // Date fromDate = java.sql.Date.valueOf(out.get(0).getTimeStamp().toInstant()
+        // .atZone(ZoneId.of("GMT"))
+        // .minusDays(window)
+        // .toLocalDate());
+        OffsetDateTime fromDate = out.get(0).getTimeStamp().minusDays(window);
         double windowAvg = out.stream()
-                .filter(x -> x.getTimeStamp().after(fromDate))
+                .filter(x -> x.getTimeStamp().isAfter(fromDate))
                 .collect(Collectors.summingDouble(x -> x.getAmount()));
         double avg = out.stream()
                 .collect(Collectors.summingDouble(x -> x.getAmount()));
@@ -156,18 +165,24 @@ public class AMLRules {
      */
     private double calculateFlowThroughScore() {
         int window = ConfigProvider.getConfig().getValue("ori.aml.mid-window", int.class);
-        Date lastDate = out.get(0).getTimeStamp().after(in.get(0).getTimeStamp())
+
+        // Date lastDate = out.get(0).getTimeStamp().after(in.get(0).getTimeStamp())
+        // ? out.get(0).getTimeStamp()
+        // : in.get(0).getTimeStamp();
+        // Date fromDate = java.sql.Date.valueOf(lastDate.toInstant()
+        // .atZone(ZoneId.of("GMT"))
+        // .minusDays(window)
+        // .toLocalDate());
+
+        OffsetDateTime lastDate = out.get(0).getTimeStamp().isAfter(in.get(0).getTimeStamp())
                 ? out.get(0).getTimeStamp()
                 : in.get(0).getTimeStamp();
-        Date fromDate = java.sql.Date.valueOf(lastDate.toInstant()
-                .atZone(ZoneId.of("GMT"))
-                .minusDays(window)
-                .toLocalDate());
+        OffsetDateTime fromDate = lastDate.minus(window, ChronoUnit.DAYS);
         double inValue = in.stream()
-                .filter(x -> x.getTimeStamp().after(fromDate))
+                .filter(x -> x.getTimeStamp().isAfter(fromDate))
                 .collect(Collectors.summingDouble(x -> x.getAmount()));
         double outValue = out.stream()
-                .filter(x -> x.getTimeStamp().after(fromDate))
+                .filter(x -> x.getTimeStamp().isAfter(fromDate))
                 .collect(Collectors.summingDouble(x -> x.getAmount()));
         return Math.exp(-Math.pow(outValue / inValue, 2) / 0.01);
     }

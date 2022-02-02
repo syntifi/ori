@@ -1,6 +1,6 @@
 package com.syntifi.ori.repository;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +35,7 @@ public class TestRepositoryTransaction {
                 transaction.setBlock(new Block());
                 transaction.setFromAccount(new Account());
                 transaction.setToAccount(new Account());
-                transaction.setTimeStamp(new Date());
+                transaction.setTimeStamp(OffsetDateTime.now());
                 var e = Assertions.assertThrowsExactly(ConstraintViolationException.class,
                                 () -> transactionRepository.check(transaction));
                 Assertions.assertEquals(2, e.getConstraintViolations().size());

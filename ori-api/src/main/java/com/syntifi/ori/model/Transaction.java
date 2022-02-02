@@ -1,6 +1,6 @@
 package com.syntifi.ori.model;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,7 +49,7 @@ public class Transaction extends PanacheEntityBase {
 
     @NotNull
     @Column(name = "time_stamp")
-    private Date timeStamp;
+    private OffsetDateTime timeStamp;
 
     @ManyToOne
     private Account fromAccount;

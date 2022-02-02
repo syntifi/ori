@@ -1,6 +1,6 @@
 package com.syntifi.ori.model;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -31,7 +31,7 @@ public class TestModelBlock {
         block.setHash("mockBlock0");
         block.setHeight(0L);
         block.setRoot("root");
-        block.setTimeStamp(new Date());
+        block.setTimeStamp(OffsetDateTime.now());
         block.setValidator("validator");
         block.setParent(null);
         block.setToken(token);
@@ -48,7 +48,7 @@ public class TestModelBlock {
         parent.setHash("mockBlock0");
         parent.setHeight(0L);
         parent.setRoot("root");
-        parent.setTimeStamp(new Date());
+        parent.setTimeStamp(OffsetDateTime.now());
         parent.setValidator("validator");
         parent.setParent(null);
         parent.setToken(token);
@@ -56,7 +56,7 @@ public class TestModelBlock {
         child.setHash("mockBlock1");
         child.setHeight(1L);
         child.setRoot("root");
-        child.setTimeStamp(new Date());
+        child.setTimeStamp(OffsetDateTime.now());
         child.setValidator("validator");
         child.setParent(parent);
         child.setToken(token);

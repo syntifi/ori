@@ -1,6 +1,6 @@
 package com.syntifi.ori.model;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -37,7 +37,7 @@ import lombok.Setter;
 @Builder
 @IdClass(HashTokenId.class)
 public class Block extends PanacheEntityBase {
-    
+
     @Id
     @NotNull
     private String hash;
@@ -50,7 +50,7 @@ public class Block extends PanacheEntityBase {
 
     @NotNull
     @Column(name = "time_stamp")
-    private Date timeStamp;
+    private OffsetDateTime timeStamp;
 
     @NotNull
     @Min(-1)

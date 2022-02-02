@@ -1,6 +1,6 @@
 package com.syntifi.ori.dto;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -19,8 +19,8 @@ public class BlockDTO {
 
     private String hash;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ")
-    private Date timeStamp;
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")    
+    private OffsetDateTime timeStamp;
 
     private Long height;
 

@@ -1,6 +1,8 @@
 package com.syntifi.ori.chains.cspr.processor;
 
 import java.math.BigInteger;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,8 +30,8 @@ public class CsprChainBlockAndTransfersProcessor
         block.setHeight(casperBlock.getHeader().getHeight());
         block.setRoot(casperBlock.getHeader().getStateRootHash());
         block.setValidator(new BigInteger(casperBlock.getBody().getProposer().getKey()).toString(16));
-        block.setTimeStamp(casperBlock.getHeader().getTimeStamp());
-
+        block.setTimeStamp(
+                OffsetDateTime.ofInstant(casperBlock.getHeader().getTimeStamp().toInstant(), ZoneId.of("UTC")));
         result.setBlock(block);
 
         // Transfer processor
@@ -40,7 +42,8 @@ public class CsprChainBlockAndTransfersProcessor
             oriTransfer.setBlockHash(block.getHash());
             oriTransfer.setFromHash(chainTransfer.getFrom());
             oriTransfer.setToHash(chainTransfer.getTo());
-            oriTransfer.setTimeStamp(casperBlock.getHeader().getTimeStamp());
+            oriTransfer.setTimeStamp(
+                    OffsetDateTime.ofInstant(casperBlock.getHeader().getTimeStamp().toInstant(), ZoneId.of("UTC")));
             oriTransfer.setAmount(chainTransfer.getAmount().doubleValue());
             oriTransfer.setHash(chainTransfer.getDeployHash());
             transfers.add(oriTransfer);

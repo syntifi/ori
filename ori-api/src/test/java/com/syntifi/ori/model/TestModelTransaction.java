@@ -1,6 +1,6 @@
 package com.syntifi.ori.model;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -43,10 +43,10 @@ public class TestModelTransaction {
         block.setHash("mockBlock");
         block.setHeight(0L);
         block.setRoot("root");
-        block.setTimeStamp(new Date());
+        block.setTimeStamp(OffsetDateTime.now());
         block.setValidator("validator");
         block.setParent(null);
-        transaction.setTimeStamp(new Date());
+        transaction.setTimeStamp(OffsetDateTime.now());
         transaction.setHash("mockTransaction");
         transaction.setToken(token);
         transaction.setFromAccount(from);

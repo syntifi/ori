@@ -1,9 +1,9 @@
 package com.syntifi.ori.chains.base;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
-import com.syntifi.ori.chains.base.exception.OriChainCrawlerException;
 import com.syntifi.ori.chains.base.listeners.ChainItemProcessListener;
 import com.syntifi.ori.chains.base.listeners.ChainItemReadListener;
 import com.syntifi.ori.chains.base.listeners.OriChunkListener;
@@ -76,13 +76,8 @@ public abstract class AbstractChainCrawlerApplication<S, T extends ChainBlockAnd
             oriRestClient.getBlock(getChainConfig().getTokenSymbol(), getChainConfig().getBlockZeroHash());
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
-                final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
                 BlockDTO block = new BlockDTO();
-                try {
-                    block.setTimeStamp(dateFormatter.parse("1970-01-01T00:00:00.000+0000"));
-                } catch (ParseException pe) {
-                    throw new OriChainCrawlerException("Invalid timestamp for block zero", pe);
-                }
+                block.setTimeStamp(OffsetDateTime.ofInstant(Instant.ofEpochMilli(0), ZoneId.of("GMT")));
                 block.setHash(getChainConfig().getBlockZeroHash());
                 block.setHeight(getChainConfig().getBlockZeroHeight());
                 block.setEra(-1L);

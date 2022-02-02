@@ -1,6 +1,9 @@
 package com.syntifi.ori.chains.eth.processor;
 
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,7 +31,8 @@ public class EthChainBlockAndTransfersProcessor
         block.setEra(0L);
         block.setValidator(item.getChainBlock().getResult().getMiner());
         // TODO: check this
-        block.setTimeStamp(new Date(item.getChainBlock().getResult().getTimestamp().longValue()));
+        Instant timestamp = Instant.ofEpochSecond(item.getChainBlock().getResult().getTimestamp().longValue());
+        block.setTimeStamp(OffsetDateTime.ofInstant(timestamp, ZoneId.of("UTC")));
         result.setBlock(block);
 
         // Transfer processor
@@ -41,7 +45,9 @@ public class EthChainBlockAndTransfersProcessor
             transfer.setToHash(t.getTo());
             transfer.setAmount(t.getValue().doubleValue());
             // TODO: check this
-            transfer.setTimeStamp(new Date(item.getChainBlock().getResult().getTimestamp().longValue()));
+            Instant timestampTransaction = Instant
+                    .ofEpochSecond(item.getChainBlock().getResult().getTimestamp().longValue());
+            transfer.setTimeStamp(OffsetDateTime.ofInstant(timestampTransaction, ZoneId.of("UTC")));
             transfers.add(transfer);
         }
         result.setTransfers(transfers);

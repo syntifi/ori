@@ -29,9 +29,11 @@ public class TransactionMapper {
 
     public static Transaction toModel(TransactionDTO dto) {
         Token token = Token.builder().symbol(dto.getTokenSymbol()).build();
-        Account fromAccount = dto.getFromHash() != null ? Account.builder().token(token).hash(dto.getFromHash()).build()
+        Account fromAccount = dto.getFromHash() != null
+                ? Account.builder().token(token).hash(dto.getFromHash()).build()
                 : null;
-        Account toAccount = dto.getToHash() != null ? Account.builder().token(token).hash(dto.getToHash()).build()
+        Account toAccount = dto.getToHash() != null
+                ? Account.builder().token(token).hash(dto.getToHash()).build()
                 : null;
         Block block = Block.builder().hash(dto.getBlockHash()).token(token).build();
 

@@ -51,13 +51,12 @@ public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfe
                                 .collect(Collectors.toList()));
             } catch (WebClientResponseException e) {
                 if (e.getStatusCode() != HttpStatus.CONFLICT) {
-                    throw new OriItemWriterException(String.format(
-                            "error while writing blocks (or blocks) - (% blocks)", blockAndTransfersResults.size()),
+                    throw new OriItemWriterException(
+                            String.format("error while writing blocks - (%s[%s])", e.getMessage(),
+                                    getExceptionCause(e)),
                             e);
                 } else {
-                    throw new OriItemWriterException(String.format(
-                            "blocks (or some blocks) already exists (% blocks)", blockAndTransfersResults.size()),
-                            e);
+                    LOGGER.warn("blocks (or some blocks) already exists ({} blocks)", blockAndTransfersResults.size());
                 }
             }
         } else {
@@ -67,11 +66,10 @@ public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfe
             } catch (WebClientResponseException e) {
                 if (e.getStatusCode() != HttpStatus.CONFLICT) {
                     throw new OriItemWriterException(String.format(
-                            "error while writing block %s", oriBlockAndTransfers.getBlock().getHash()), e);
+                            "error while writing block %s - (%s[%s])", oriBlockAndTransfers.getBlock().getHash(),
+                            e.getMessage(), getExceptionCause(e)), e);
                 } else {
-                    throw new OriItemWriterException(String.format(
-                            "block %s already exists", oriBlockAndTransfers.getBlock().getHash()),
-                            e);
+                    LOGGER.warn("block {} already exists", oriBlockAndTransfers.getBlock().getHash());
                 }
             }
         }
@@ -88,10 +86,10 @@ public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfe
                     } catch (WebClientResponseException e) {
                         if (e.getStatusCode() != HttpStatus.CONFLICT) {
                             throw new OriItemWriterException(String.format(
-                                    "error while writing transaction %s", transfer.getHash()), e);
+                                    "error while writing transaction %s: (%s[%s])", transfer.getHash(), e.getMessage(),
+                                    getExceptionCause(e)), e);
                         } else {
-                            throw new OriItemWriterException(String.format(
-                                    "transaction %s already exists", transfer.getHash()), e);
+                            LOGGER.warn("transaction {} already exists", transfer.getHash());
                         }
                     }
                 }
@@ -100,8 +98,9 @@ public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfe
     }
 
     private void writeAccount(String hash) {
-        if (hash == null)
+        if (hash == null) {
             return;
+        }
 
         try {
             oriRestClient.postAccount(tokenSymbol,
@@ -109,10 +108,15 @@ public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfe
         } catch (WebClientResponseException e) {
             if (e.getStatusCode() != HttpStatus.CONFLICT) {
                 throw new OriItemWriterException(String.format(
-                        "error while writing account %s", hash), e);
+                        "error while writing account %s - (%s[%s])", hash, e.getMessage(),
+                        getExceptionCause(e)), e);
             } else {
                 LOGGER.warn("account {} already exists", hash);
             }
         }
+    }
+
+    private Object getExceptionCause(WebClientResponseException e) {
+        return e.getCause() != null ? e.getCause().getMessage() : "no cause";
     }
 }
