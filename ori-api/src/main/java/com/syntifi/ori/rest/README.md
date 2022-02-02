@@ -10,29 +10,29 @@ a better experience when interacting with the REST API.
 
 | Endpoint | Http method | Description | Path Parameters | Path parameters description | Query Parameters | Query parameters description |
 | --- | --- | --- | --- | --- | --- | --- |
-| /block | GET | Get all blocks in descending chronological order | - | - | - | - |
-| /block | POST | Add and index a new block in the database | - | - | - | -| 
-| /block | DELETE | Remove all blocks stored in the database | - | - | - | - |
-| /block/{hash} | GET | Get a block given the hash | *hash*: String | Block hash in Hex | - | - | 
-| /block/{hash} | DELETE | Remove a block given a hash | *hash*: String | Block hash in Hex | - | - | 
+| /block/{tokenSymbol} | GET | Get all blocks in descending chronological order | - | - | - | - |
+| /block/{tokenSymbol} | POST | Add and index a new block in the database | - | - | - | -| 
+| /block/{tokenSymbol} | DELETE | Remove all blocks stored in the database | - | - | - | - |
+| /block/{tokenSymbol}/hash/{hash} | GET | Get a block given the hash | *hash*: String | Block hash in Hex | - | - | 
+| /block/{tokenSymbol}/hash/{hash} | DELETE | Remove a block given a hash | *hash*: String | Block hash in Hex | - | - | 
 
 ### Transaction resources
 
 | Endpoint | Http method | Description | Path Parameters | Path parameters description | Query Parameters | Query parameters description |
 | --- | --- | --- | --- | --- | --- | --- |
-| /transaction | GET | Get all transactions in descending chronological order | - | - | *fromAccount*: String / *toAccount*: String | Optional parameters to filter transactions outgoing *fromAccount* or incomig *toAccount*  |
-| /transaction | POST | Add and index a new transaction in the database | - | - | - | -| 
-| /transaction | DELETE | Remove all transactions stored in the database | - | - | - | - |
-| /transaction/{hash} | GET | Get a transaction given the hash | *hash*: String | Transaction hash in Hex | - | - | 
-| /transaction/{hash} | DELETE | Remove a transaction given a hash | *hash*: String | Transaction hash in Hex | - | - | 
+| /transaction/{tokenSymbol} | GET | Get all transactions in descending chronological order | - | - | *fromAccount*: String / *toAccount*: String | Optional parameters to filter transactions outgoing *fromAccount* or incomig *toAccount*  |
+| /transaction/{tokenSymbol} | POST | Add and index a new transaction in the database | - | - | - | -| 
+| /transaction/{tokenSymbol} | DELETE | Remove all transactions stored in the database | - | - | - | - |
+| /transaction/{tokenSymbol}/hash/{hash} | GET | Get a transaction given the hash | *hash*: String | Transaction hash in Hex | - | - | 
+| /transaction/{tokenSymbol}/hash/{hash} | DELETE | Remove a transaction given a hash | *hash*: String | Transaction hash in Hex | - | - | 
 | /transaction/{tokenSymbol}/account/{account} | GET | Get all incoming and outgoing transaction for an account | *account*: String | Account hash in Hex preceded by *account-hash* string | - | - | 
 
 ### Transaction monitor resources
 | Endpoint | Http method | Description | Path Parameters | Path parameters description | Query Parameters | Query parameters description |
 | --- | --- | --- | --- | --- | --- | --- |
-| /score/{account} | GET | Calculate and return AML scores for a given account  | *account*: String | Account hash in Hex preceded by *account-hash* string | *date*: date format yyyy-MM-dd'T'HH:mm:ss.SSS | Optional date parameter specifying an asof date for the analysis |
-| /traceCoin/back/{account} | GET | Trace back the coin origin before reaching the account | *account*: String | Account hash in Hex preceded by *account-hash* string | *fromDate*/*toDate*: date format yyyy-MM-dd'T'HH:mm:ss.SSS | Optional date parameters specifying the time period to run the analysis |
-| /traceCoin/forward/{account} | GET | Trace forward the coin destination after leaving the account | *account*: String | Account hash in Hex preceded by *account-hash* string | *fromDate*/*toDate*: date format yyyy-MM-dd'T'HH:mm:ss.SSS | Optional date parameters specifying the time period to run the analysis |
+| /{tokenSymbol}/score/{account} | GET | Calculate and return AML scores for a given account  | *account*: String | Account hash in Hex preceded by *account-hash* string | *date*: date format yyyy-MM-dd'T'HH:mm:ss.SSS | Optional date parameter specifying an asof date for the analysis |
+| /{tokenSymbol}/traceCoin/back/{account} | GET | Trace back the coin origin before reaching the account | *account*: String | Account hash in Hex preceded by *account-hash* string | *fromDate*/*toDate*: date format yyyy-MM-dd'T'HH:mm:ss.SSS | Optional date parameters specifying the time period to run the analysis |
+| /{tokenSymbol}/traceCoin/forward/{account} | GET | Trace forward the coin destination after leaving the account | *account*: String | Account hash in Hex preceded by *account-hash* string | *fromDate*/*toDate*: date format yyyy-MM-dd'T'HH:mm:ss.SSS | Optional date parameters specifying the time period to run the analysis |
 
 ## Examples
 
