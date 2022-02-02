@@ -19,7 +19,7 @@ public class TransactionDTO {
 
     private String hash;
 
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
     private OffsetDateTime timeStamp;
 
     private Double amount;
