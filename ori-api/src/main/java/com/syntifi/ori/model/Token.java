@@ -25,6 +25,7 @@ import lombok.Setter;
 public class Token extends PanacheEntityBase {
 
     @Id
+    @NotNull
     private String symbol;
 
     @NotNull

@@ -32,7 +32,7 @@ const AccountTrace: FC<any> = ({ date, submit, direction }): ReactElement => {
         const params = { [direction === "forward" ? "fromDate" : "toDate"]: values.timeStamp.toISOString().replace('Z', '') }
         axios({
             method: "GET",
-            url: `${process.env.REACT_APP_API_URL}/ETH/traceCoin/` + direction + '/' + values.account,
+            url: `${process.env.REACT_APP_API_URL}/monitor/ETH/traceCoin/` + direction + '/' + values.account,
             params: params
         }).then(response => {
             const uniqueIds: any[] = [];

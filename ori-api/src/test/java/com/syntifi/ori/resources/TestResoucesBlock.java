@@ -3,6 +3,9 @@ package com.syntifi.ori.resources;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
@@ -155,6 +158,33 @@ public class TestResoucesBlock {
 
     @Test
     @Order(8)
+    public void testPostMultipleBlocks() throws Exception {
+        List<JsonObject> blocks = new LinkedList<>();
+        for (int i = 0; i < 10; i++) {
+            var block = new JsonObject();
+            block.put("era", 0);
+            block.put("hash", "multipleBlocks" + ("" + i));
+            block.put("height", i);
+            block.put("root", "root");
+            block.put("timeStamp", "2099-01-01T0" + ("" + i)+ ":00:00.000+0000");
+            block.put("parent", i==0 ? "mockBlock2" : "multipleBlocks" + ("" + (i-1)));
+            block.put("validator", "validator");
+            blocks.add(block);
+        }
+        given()
+                .body(blocks.toString())
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .when()
+                .post("/api/v2/block/ABC/multiple")
+                .then()
+                .statusCode(201);
+        synchronized (LOCK) {
+            LOCK.wait(5000);
+        }
+    }
+
+    @Test
+    @Order(9)
     public void testDeleteBlock() throws InterruptedException {
         given()
                 .when()
@@ -167,7 +197,7 @@ public class TestResoucesBlock {
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     public void testDeleteBlock2() throws InterruptedException {
         given()
                 .when()
@@ -180,7 +210,7 @@ public class TestResoucesBlock {
     }
 
     @Test
-    @Order(10)
+    @Order(11)
     public void testDeleteToken() throws InterruptedException {
         given()
                 .when()

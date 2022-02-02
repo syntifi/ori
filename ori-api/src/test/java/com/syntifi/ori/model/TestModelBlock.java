@@ -24,6 +24,39 @@ public class TestModelBlock {
     }
 
     @Test
+    public void testNullHash() {
+        var block = new Block();
+        var dad = new Block();
+        var token = new Token();
+        block.setEra(0L);
+        block.setHash(null);
+        block.setHeight(0L);
+        block.setRoot("root");
+        block.setTimeStamp(OffsetDateTime.now());
+        block.setValidator("validator");
+        block.setParent(dad);
+        block.setToken(token);
+        Set<ConstraintViolation<Block>> constraintViolations = validator.validate(block);
+        Assertions.assertEquals(1, constraintViolations.size());
+    }
+
+    @Test
+    public void testNullToken() {
+        var block = new Block();
+        var dad = new Block();
+        block.setEra(0L);
+        block.setHash("hash");
+        block.setHeight(0L);
+        block.setRoot("root");
+        block.setTimeStamp(OffsetDateTime.now());
+        block.setValidator("validator");
+        block.setParent(dad);
+        block.setToken(null);
+        Set<ConstraintViolation<Block>> constraintViolations = validator.validate(block);
+        Assertions.assertEquals(1, constraintViolations.size());
+    }
+
+    @Test
     public void testNullParent() {
         var block = new Block();
         var token = new Token();

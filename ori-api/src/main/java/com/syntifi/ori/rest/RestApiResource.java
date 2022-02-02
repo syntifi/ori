@@ -45,7 +45,7 @@ public class RestApiResource {
         return tokenAPI;
     }
 
-    @Path("/")
+    @Path("/monitor")
     public TransactionMonitorAPI getMonitorResource() {
         return monitorAPI;
     }   
