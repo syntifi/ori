@@ -1,7 +1,6 @@
 package com.syntifi.ori.repository;
 
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -14,9 +13,6 @@ import io.quarkus.panache.common.Sort;
 
 @ApplicationScoped
 public class TransactionRepository implements Repository<Transaction> {
-    static final String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-    static final String dateFormatDB = "YYYY-MM-DD'T'HH24:MI:SS.MS+TZHTZM";
-    static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
 
     public Transaction findByTokenSymbolAndHash(String tokenSymbol, String hash) {
         return find("block_token_symbol = ?1 AND hash = ?2", tokenSymbol, hash).singleResult();
@@ -37,8 +33,8 @@ public class TransactionRepository implements Repository<Transaction> {
     public List<Transaction> getOutgoingTransactions(String tokenSymbol, String account,
             OffsetDateTime fromDate, OffsetDateTime toDate) {
         return list(
-                "block_token_symbol = ?1 AND fromaccount_hash = ?2 AND (time_stamp BETWEEN TO_TIMESTAMP(?3, ?5) AND TO_TIMESTAMP(?4, ?5))",
-                tokenSymbol, account, fromDate.format(formatter), toDate.format(formatter), dateFormatDB);
+                "block_token_symbol = ?1 AND fromaccount_hash = ?2 AND (time_stamp BETWEEN ?3 AND ?4)",
+                tokenSymbol, account, fromDate, toDate);
     }
 
     public List<Transaction> getIncomingTransactions(String tokenSymbol, String account) {
@@ -48,8 +44,8 @@ public class TransactionRepository implements Repository<Transaction> {
     public List<Transaction> getIncomingTransactions(String tokenSymbol, String account,
             OffsetDateTime fromDate, OffsetDateTime toDate) {
         return list(
-                "block_token_symbol = ?1 AND toaccount_hash = ?2 AND (time_stamp BETWEEN TO_TIMESTAMP(?3, ?5) AND TO_TIMESTAMP(?4, ?5))",
-                tokenSymbol, account, fromDate.format(formatter), toDate.format(formatter), dateFormatDB);
+                "block_token_symbol = ?1 AND toaccount_hash = ?2 AND (time_stamp BETWEEN ?3 AND ?4)",
+                tokenSymbol, account, fromDate, toDate);
     }
 
     public List<Transaction> getTransactionsByTokenSymbolAndFromAccountAndToAccount(String tokenSymbol,
@@ -66,9 +62,8 @@ public class TransactionRepository implements Repository<Transaction> {
             OffsetDateTime fromDate,
             OffsetDateTime toDate) {
         return list(
-                "block_token_symbol = ?1 AND fromaccount_hash = ?2 AND toaccount_hash = ?3 AND (time_stamp BETWEEN TO_TIMESTAMP(?4, ?6) AND TO_TIMESTAMP(?5, ?6))",
-                tokenSymbol, fromAccount, toAccount, fromDate.format(formatter), toDate.format(formatter),
-                dateFormatDB);
+                "block_token_symbol = ?1 AND fromaccount_hash = ?2 AND toaccount_hash = ?3 AND (time_stamp BETWEEN ?4 AND ?5)",
+                tokenSymbol, fromAccount, toAccount, fromDate, toDate);
     }
 
     public List<Transaction> getTransactionsByTokenSymbolAndAccount(String tokenSymbol, String account) {
@@ -83,8 +78,8 @@ public class TransactionRepository implements Repository<Transaction> {
             OffsetDateTime fromDate,
             OffsetDateTime toDate, Sort sort,
             int pageSize) {
-        return find("block_token_symbol = ?1 AND time_stamp BETWEEN TO_TIMESTAMP(?2, ?4) AND TO_TIMESTAMP(?3, ?4)",
-                sort, tokenSymbol, fromDate.format(formatter), toDate.format(formatter), dateFormatDB)
+        return find("block_token_symbol = ?1 AND time_stamp BETWEEN ?2 AND ?3",
+                sort, tokenSymbol, fromDate, toDate)
                         .page(Page.ofSize(pageSize));
     }
 
