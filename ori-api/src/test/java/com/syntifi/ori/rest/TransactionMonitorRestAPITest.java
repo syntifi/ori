@@ -1,4 +1,4 @@
-package com.syntifi.ori.resources;
+package com.syntifi.ori.rest;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -19,7 +19,7 @@ import io.vertx.core.json.JsonObject;
 
 @QuarkusTest
 @TestMethodOrder(OrderAnnotation.class)
-public class TestResourcesTransactionMonitor {
+public class TransactionMonitorRestAPITest {
 
     private static Object LOCK = new Object();
 
@@ -139,7 +139,7 @@ public class TestResourcesTransactionMonitor {
         given()
                 .pathParam("symbol", "ABC")
                 .pathParam("account", "B")
-                .queryParam("toDate", "2099-08-05T04:00:00.000")
+                .queryParam("toDate", "2099-08-05T04:00:00.000+0000")
                 .when()
                 .get("/api/v2/monitor/{symbol}/traceCoin/back/{account}")
                 .then()
@@ -153,8 +153,8 @@ public class TestResourcesTransactionMonitor {
         given()
                 .pathParam("symbol", "ABC")
                 .pathParam("account", "B")
-                .queryParam("toDate", "2099-08-05T04:00:00.000")
-                .queryParam("fromDate", "2099-08-05T00:30:00.000")
+                .queryParam("toDate", "2099-08-05T04:00:00.000+0000")
+                .queryParam("fromDate", "2099-08-05T00:30:00.000+0000")
                 .when()
                 .get("/api/v2/monitor/{symbol}/traceCoin/back/{account}")
                 .then()
@@ -164,6 +164,48 @@ public class TestResourcesTransactionMonitor {
 
     @Test
     @Order(9)
+    public void testForwardTraceTheCoin() {
+        given()
+                .pathParam("symbol", "ABC")
+                .pathParam("account", "B")
+                .when()
+                .get("/api/v2/monitor/{symbol}/traceCoin/forward/{account}")
+                .then()
+                .statusCode(200)
+                .body("size()", equalTo(0));
+    }
+
+    @Test
+    @Order(10)
+    public void testForwardTraceTheCoinFilterToDate() {
+        given()
+                .pathParam("symbol", "ABC")
+                .pathParam("account", "B")
+                .queryParam("fromDate", "2099-08-05T00:00:00.000+0000")
+                .when()
+                .get("/api/v2/monitor/{symbol}/traceCoin/forward/{account}")
+                .then()
+                .statusCode(200)
+                .body("size()", equalTo(2));
+    }
+
+    @Test
+    @Order(11)
+    public void testForwardTraceTheCoinFilterFromAndToDate() {
+        given()
+                .pathParam("symbol", "ABC")
+                .pathParam("account", "B")
+                .queryParam("fromDate", "2099-08-05T04:00:00.000+0000")
+                .queryParam("toDate", "2099-08-06T00:00:00.000+0000")
+                .when()
+                .get("/api/v2/monitor/{symbol}/traceCoin/forward/{account}")
+                .then()
+                .statusCode(200)
+                .body("size()", equalTo(1));
+    }
+
+    @Test
+    @Order(12)
     public void testDeleteToken() throws InterruptedException {
         given()
                 .pathParam("symbol", "ABC")

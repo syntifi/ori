@@ -158,7 +158,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
                     from.getHash(),
                     to.getHash());
         } else {
-            transactions = transactionRepository.getTransactions(symbol);
+            transactions = transactionRepository.getAllTransactions(symbol);
         }
         // TODO: PAGINATION HERE
         return transactions

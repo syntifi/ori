@@ -20,7 +20,7 @@ import org.eclipse.microprofile.config.ConfigProvider;
  * @author Andre Bertolace
  * @since 0.1.0
  */
-public class AMLRules {
+public class AMLService {
 
     @JsonAlias("StructuringOverTimeScore")
     public double structuringOverTimeScore;
@@ -40,7 +40,7 @@ public class AMLRules {
     @JsonIgnore
     private List<Transaction> out;
 
-    public AMLRules(List<Transaction> in, List<Transaction> out) {
+    public AMLService(List<Transaction> in, List<Transaction> out) {
         this.in = in;
         this.out = out;
     }
@@ -54,8 +54,8 @@ public class AMLRules {
     }
 
     private void sanityCheck() throws ORIException {
-        int N = (in == null ? 0 : in.size()) + (out == null ? 0 : out.size());
-        if (N == 0) {
+        int n = (in == null ? 0 : in.size()) + (out == null ? 0 : out.size());
+        if (n == 0) {
             throw new ORIException(
                     "Unable to calculate scores because the given account does not contain any transaction",
                     Status.NOT_FOUND.getStatusCode());
@@ -73,14 +73,14 @@ public class AMLRules {
     private double calculateStructuringOverTimeScore() {
         double threshold = ConfigProvider.getConfig().getValue("ori.aml.reporting-threshold", double.class);
         double[] interval = { 0.9 * threshold, 1.0 * threshold };
-        int N = in.size() + out.size();
-        Long Nin = in.stream()
+        int n = in.size() + out.size();
+        Long nIn = in.stream()
                 .filter(x -> (x.getAmount() < interval[1]) && (x.getAmount() >= interval[0]))
                 .collect(Collectors.counting());
-        Long Nout = in.stream()
+        Long nOut = in.stream()
                 .filter(x -> (x.getAmount() < interval[1]) && (x.getAmount() >= interval[0]))
                 .collect(Collectors.counting());
-        return (Nout + Nin) * 1.0 / N;
+        return (nOut + nIn) * 1.0 / n;
     }
 
     /***
@@ -117,16 +117,16 @@ public class AMLRules {
                 lastDate
         };
 
-        int[] NoutWindow = { 0, 0 };
+        int[] nOutWindow = { 0, 0 };
         for (Transaction transaction : out) {
             if ((transaction.getTimeStamp().isAfter(dates[0])) && (transaction.getTimeStamp().isBefore(dates[1]))) {
-                NoutWindow[0] = NoutWindow[0] + 1;
+                nOutWindow[0] = nOutWindow[0] + 1;
             }
             if ((transaction.getTimeStamp().isAfter(dates[1])) && (transaction.getTimeStamp().isBefore(dates[2]))) {
-                NoutWindow[1] = NoutWindow[1] + 1;
+                nOutWindow[1] = nOutWindow[1] + 1;
             }
         }
-        return Math.atan(Math.max(NoutWindow[1] * 1.0 / NoutWindow[0], 0.0)) / Math.PI / 2.0;
+        return Math.atan(Math.max(nOutWindow[1] * 1.0 / nOutWindow[0], 0.0)) / Math.PI / 2.0;
     }
 
     /****

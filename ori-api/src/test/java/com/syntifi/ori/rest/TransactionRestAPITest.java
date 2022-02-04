@@ -1,4 +1,4 @@
-package com.syntifi.ori.resources;
+package com.syntifi.ori.rest;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -19,7 +19,7 @@ import io.vertx.core.json.JsonObject;
 
 @QuarkusTest
 @TestMethodOrder(OrderAnnotation.class)
-public class TestResourcesTransaction {
+public class TransactionRestAPITest {
 
     private static Object LOCK = new Object();
 

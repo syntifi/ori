@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import io.vertx.core.json.JsonObject;
 
-public class TestBlockDTO {
+public class BlockDTOTest {
 
     @Test
     public void testSerializeWrongDateType() {

@@ -41,7 +41,7 @@ public class TokenRestAPI extends AbstractBaseRestApi {
     public Response addToken(TokenDTO tokenDTO) {
         Token token = TokenMapper.toModel(tokenDTO);
 
-        boolean exists = tokenRepository.existsAlready(token);
+        boolean exists = tokenRepository.existsAlready(token.getSymbol());
         if (exists) {
             throw new ORIException(token.getSymbol() + " exists already", Status.CONFLICT);
         }

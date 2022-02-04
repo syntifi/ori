@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import io.vertx.core.json.JsonObject;
 
-public class TestTokenDTO {
+public class TokenDTOTest {
     @Test
     public void testSerialize() {
         ObjectMapper mapper = new ObjectMapper();

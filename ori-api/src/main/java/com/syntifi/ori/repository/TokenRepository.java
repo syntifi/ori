@@ -15,7 +15,7 @@ public class TokenRepository implements Repository<Token> {
         return count("symbol", symbol);
     }
 
-    public boolean existsAlready(Token token) {
-        return countBySymbol(token.getSymbol()) > 0;
+    public boolean existsAlready(String tokenSymbol) {
+        return countBySymbol(tokenSymbol) > 0;
     }
 }

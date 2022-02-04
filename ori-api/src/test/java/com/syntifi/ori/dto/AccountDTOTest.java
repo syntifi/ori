@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import io.vertx.core.json.JsonObject;
 
-public class TestAccountDTO {
+public class AccountDTOTest {
 
     @Test
     public void testSerializer() {
