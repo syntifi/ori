@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 public class LocalDateTimeConverterProvider implements ParamConverterProvider {
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType,
             Annotation[] annotations) {
         if (rawType.equals(LocalDateTime.class)) {
@@ -30,7 +31,7 @@ public class LocalDateTimeConverterProvider implements ParamConverterProvider {
                           converter.setCustomDateFormat(((LocalDateTimeFormat) annotation).value());
                     }
                 }
-            }
+            }            
             return (ParamConverter<T>) converter;
         }
         return null;
