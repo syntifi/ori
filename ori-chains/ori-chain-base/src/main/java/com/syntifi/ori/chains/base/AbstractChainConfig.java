@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Bean;
  * 
  * @since 0.1.0
  */
-public abstract class AbstractChainConfig<S> {
+public interface AbstractChainConfig<S> {
 
     public abstract int getChunkSize();
 
@@ -32,7 +32,7 @@ public abstract class AbstractChainConfig<S> {
     public abstract long getBlockZeroHeight();
 
     @Bean
-    public OriRestClient oriRestClient() {
+    public default OriRestClient oriRestClient() {
         return new OriRestClient(getOriHost());
     }
 

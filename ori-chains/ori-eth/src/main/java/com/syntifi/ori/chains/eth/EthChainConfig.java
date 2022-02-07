@@ -20,7 +20,7 @@ import lombok.Getter;
 @Configuration
 @ComponentScan
 @Getter
-public class EthChainConfig extends AbstractChainConfig<Web3j> {
+public class EthChainConfig implements AbstractChainConfig<Web3j> {
 
     @Value("${ori.host}")
     private String oriHost;

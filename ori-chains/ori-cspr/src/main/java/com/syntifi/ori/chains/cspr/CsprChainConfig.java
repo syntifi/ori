@@ -19,7 +19,7 @@ import lombok.Getter;
 @Configuration
 @ComponentScan
 @Getter
-public class CsprChainConfig extends AbstractChainConfig<CasperService> {
+public class CsprChainConfig implements AbstractChainConfig<CasperService> {
 
     @Value("${ori.host}")
     private String oriHost;
