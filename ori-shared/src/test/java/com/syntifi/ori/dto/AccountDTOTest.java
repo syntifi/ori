@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import io.vertx.core.json.JsonObject;
+import org.vertx.java.core.json.JsonObject;
 
 public class AccountDTOTest {
 
@@ -13,10 +12,10 @@ public class AccountDTOTest {
     public void testSerializer() {
         ObjectMapper mapper = new ObjectMapper();
         var account = new JsonObject();
-        account.put("tokenSymbol", "TKN");
-        account.put("hash", "from");
-        account.put("publicKey", "key");
-        account.put("label", "from");
+        account.putString("tokenSymbol", "TKN");
+        account.putString("hash", "from");
+        account.putString("publicKey", "key");
+        account.putString("label", "from");
         Assertions.assertDoesNotThrow(() -> mapper.readValue(account.toString(), AccountDTO.class));
     }
 }
