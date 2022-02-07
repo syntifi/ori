@@ -5,10 +5,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.Response.Status;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.syntifi.ori.dto.AMLRulesDTO;
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Transaction;
 
@@ -20,40 +20,23 @@ import org.eclipse.microprofile.config.ConfigProvider;
  * @author Andre Bertolace
  * @since 0.1.0
  */
+@Singleton
 public class AMLService {
 
-    @JsonAlias("StructuringOverTimeScore")
-    public double structuringOverTimeScore;
+    public AMLRulesDTO calculateScores(List<Transaction> in, List<Transaction> out) throws ORIException {
+        sanityCheck(in, out);
+        AMLRulesDTO scores = AMLRulesDTO.builder().build();
 
-    @JsonAlias("UnusualOutgoingVolumeScore")
-    public double unusualOutgoingVolumeScore;
+        scores.setFlowThroughScore(calculateFlowThroughScore(in, out));
+        scores.setStructuringOverTimeScore(calculateStructuringOverTimeScore(in, out));
+        scores.setUnusualBehaviorScore(calculateUnusualBehaviourScore(in, out));
+        scores.setUnusualOutgoingVolumeScore(calculateUnusualOutgoingVolumeScore(in, out));
 
-    @JsonAlias("UnusualBehaviorScore")
-    public double unusualBehaviorScore;
-
-    @JsonAlias("FlowThroughScore")
-    public double flowThroughScore;
-
-    @JsonIgnore
-    private List<Transaction> in;
-
-    @JsonIgnore
-    private List<Transaction> out;
-
-    public AMLService(List<Transaction> in, List<Transaction> out) {
-        this.in = in;
-        this.out = out;
+        return scores;
     }
 
-    public void calculateScores() throws ORIException {
-        sanityCheck();
-        this.structuringOverTimeScore = this.calculateStructuringOverTimeScore();
-        this.unusualOutgoingVolumeScore = this.calculateUnusualOutgoingVolumeScore();
-        this.unusualBehaviorScore = this.calculateUnusualBehaviourScore();
-        this.flowThroughScore = this.calculateFlowThroughScore();
-    }
-
-    private void sanityCheck() throws ORIException {
+    //TODO: Throw an ORIException in a service? Does it make sense?
+    private void sanityCheck(List<Transaction> in, List<Transaction> out) throws ORIException {
         int n = (in == null ? 0 : in.size()) + (out == null ? 0 : out.size());
         if (n == 0) {
             throw new ORIException(
@@ -70,7 +53,7 @@ public class AMLService {
      * 
      * @return double between [0,1]
      */
-    private double calculateStructuringOverTimeScore() {
+    private double calculateStructuringOverTimeScore(List<Transaction> in, List<Transaction> out) {
         double threshold = ConfigProvider.getConfig().getValue("ori.aml.reporting-threshold", double.class);
         double[] interval = { 0.9 * threshold, 1.0 * threshold };
         int n = in.size() + out.size();
@@ -95,7 +78,7 @@ public class AMLService {
      * 
      * @return double between [0,1]
      */
-    private double calculateUnusualOutgoingVolumeScore() {
+    private double calculateUnusualOutgoingVolumeScore(List<Transaction> in, List<Transaction> out) {
         if (out.size() < 10) {
             return 0.0;
         }
@@ -136,7 +119,7 @@ public class AMLService {
      * 
      * @return double between [0,1]
      */
-    private double calculateUnusualBehaviourScore() {
+    private double calculateUnusualBehaviourScore(List<Transaction> in, List<Transaction> out) {
         int window = ConfigProvider.getConfig().getValue("ori.aml.short-window", int.class);
         // Date fromDate = java.sql.Date.valueOf(out.get(0).getTimeStamp().toInstant()
         // .atZone(ZoneId.of("GMT"))
@@ -163,7 +146,7 @@ public class AMLService {
      * 
      * @return double between [0,1]
      */
-    private double calculateFlowThroughScore() {
+    private double calculateFlowThroughScore(List<Transaction> in, List<Transaction> out) {
         int window = ConfigProvider.getConfig().getValue("ori.aml.mid-window", int.class);
 
         // Date lastDate = out.get(0).getTimeStamp().after(in.get(0).getTimeStamp())

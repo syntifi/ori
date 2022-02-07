@@ -14,6 +14,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
 import com.syntifi.ori.converter.LocalDateTimeFormat;
+import com.syntifi.ori.dto.AMLRulesDTO;
 import com.syntifi.ori.dto.TransactionDTO;
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.mapper.TransactionMapper;
@@ -43,6 +44,9 @@ public class TransactionMonitorAPI extends AbstractBaseRestApi {
     @Inject
     TransactionService transactionService;
 
+    @Inject
+    AMLService amlService;
+
     /**
      * GET method to return the different AML scores in [0,1]
      * 
@@ -53,7 +57,7 @@ public class TransactionMonitorAPI extends AbstractBaseRestApi {
      */
     @GET
     @Path("{tokenSymbol}/score/{account}")
-    public AMLService scoreAccount(@PathParam("tokenSymbol") String symbol, @PathParam("account") String account,
+    public AMLRulesDTO scoreAccount(@PathParam("tokenSymbol") String symbol, @PathParam("account") String account,
             @QueryParam("date") @LocalDateTimeFormat LocalDateTime dateTime,
             @QueryParam("window") Integer w) throws ORIException {
         getTokenOr404(symbol);
@@ -64,9 +68,7 @@ public class TransactionMonitorAPI extends AbstractBaseRestApi {
         OffsetDateTime from = date.minusDays(window);
         List<Transaction> in = transactionRepository.getIncomingTransactions(symbol, account, from, date);
         List<Transaction> out = transactionRepository.getOutgoingTransactions(symbol, account, from, date);
-        AMLService rules = new AMLService(in, out);
-        rules.calculateScores();
-        return rules;
+        return amlService.calculateScores(in, out);
     }
 
     /**
