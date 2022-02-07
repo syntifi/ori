@@ -19,4 +19,3 @@ public class AccountDTOTest {
         Assertions.assertDoesNotThrow(() -> mapper.readValue(account.toString(), AccountDTO.class));
     }
 }
-
