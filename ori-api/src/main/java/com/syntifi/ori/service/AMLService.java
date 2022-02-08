@@ -23,19 +23,21 @@ import org.eclipse.microprofile.config.ConfigProvider;
 @Singleton
 public class AMLService {
 
-    public AMLRulesDTO calculateScores(List<Transaction> in, List<Transaction> out) throws ORIException {
+    public AMLRulesDTO calculateScores(List<Transaction> in, List<Transaction> out, Double threshold,
+            Integer shortWindow, Integer longWindow)
+            throws ORIException {
         sanityCheck(in, out);
         AMLRulesDTO scores = AMLRulesDTO.builder().build();
 
-        scores.setFlowThroughScore(calculateFlowThroughScore(in, out));
-        scores.setStructuringOverTimeScore(calculateStructuringOverTimeScore(in, out));
-        scores.setUnusualBehaviorScore(calculateUnusualBehaviourScore(in, out));
-        scores.setUnusualOutgoingVolumeScore(calculateUnusualOutgoingVolumeScore(in, out));
+        scores.setFlowThroughScore(calculateFlowThroughScore(in, out, longWindow));
+        scores.setStructuringOverTimeScore(calculateStructuringOverTimeScore(in, out, threshold));
+        scores.setUnusualBehaviorScore(calculateUnusualBehaviourScore(in, out, shortWindow));
+        scores.setUnusualOutgoingVolumeScore(calculateUnusualOutgoingVolumeScore(in, out, shortWindow));
 
         return scores;
     }
 
-    //TODO: Throw an ORIException in a service? Does it make sense?
+    // TODO: Throw an ORIException in a service? Does it make sense?
     private void sanityCheck(List<Transaction> in, List<Transaction> out) throws ORIException {
         int n = (in == null ? 0 : in.size()) + (out == null ? 0 : out.size());
         if (n == 0) {
@@ -53,8 +55,10 @@ public class AMLService {
      * 
      * @return double between [0,1]
      */
-    private double calculateStructuringOverTimeScore(List<Transaction> in, List<Transaction> out) {
-        double threshold = ConfigProvider.getConfig().getValue("ori.aml.reporting-threshold", double.class);
+    private double calculateStructuringOverTimeScore(List<Transaction> in, List<Transaction> out, Double thresh) {
+        double threshold = thresh == null
+                ? ConfigProvider.getConfig().getValue("ori.aml.reporting-threshold", double.class)
+                : thresh;
         double[] interval = { 0.9 * threshold, 1.0 * threshold };
         int n = in.size() + out.size();
         Long nIn = in.stream()
@@ -78,11 +82,14 @@ public class AMLService {
      * 
      * @return double between [0,1]
      */
-    private double calculateUnusualOutgoingVolumeScore(List<Transaction> in, List<Transaction> out) {
+    private double calculateUnusualOutgoingVolumeScore(List<Transaction> in, List<Transaction> out,
+            Integer shortWindow) {
         if (out.size() < 10) {
             return 0.0;
         }
-        int window = ConfigProvider.getConfig().getValue("ori.aml.short-window", int.class);
+        int window = shortWindow == null
+                ? ConfigProvider.getConfig().getValue("ori.aml.short-window", int.class)
+                : shortWindow;
 
         OffsetDateTime lastDate = out.get(0).getTimeStamp().plusDays(1);
 
@@ -119,8 +126,10 @@ public class AMLService {
      * 
      * @return double between [0,1]
      */
-    private double calculateUnusualBehaviourScore(List<Transaction> in, List<Transaction> out) {
-        int window = ConfigProvider.getConfig().getValue("ori.aml.short-window", int.class);
+    private double calculateUnusualBehaviourScore(List<Transaction> in, List<Transaction> out, Integer shortWindow) {
+        int window = shortWindow == null
+                ? ConfigProvider.getConfig().getValue("ori.aml.short-window", int.class)
+                : shortWindow;
         // Date fromDate = java.sql.Date.valueOf(out.get(0).getTimeStamp().toInstant()
         // .atZone(ZoneId.of("GMT"))
         // .minusDays(window)
@@ -146,8 +155,10 @@ public class AMLService {
      * 
      * @return double between [0,1]
      */
-    private double calculateFlowThroughScore(List<Transaction> in, List<Transaction> out) {
-        int window = ConfigProvider.getConfig().getValue("ori.aml.mid-window", int.class);
+    private double calculateFlowThroughScore(List<Transaction> in, List<Transaction> out, Integer midWindow) {
+        int window = midWindow == null
+                ? ConfigProvider.getConfig().getValue("ori.aml.mid-window", int.class)
+                : midWindow;
 
         // Date lastDate = out.get(0).getTimeStamp().after(in.get(0).getTimeStamp())
         // ? out.get(0).getTimeStamp()
