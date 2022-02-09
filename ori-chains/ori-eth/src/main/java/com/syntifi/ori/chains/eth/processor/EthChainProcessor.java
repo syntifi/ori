@@ -12,9 +12,8 @@ import com.syntifi.ori.chains.eth.model.EthChainData;
 import com.syntifi.ori.dto.BlockDTO;
 import com.syntifi.ori.dto.TransactionDTO;
 
-import org.web3j.protocol.core.methods.response.EthBlock.TransactionObject;
-
 import org.springframework.stereotype.Component;
+import org.web3j.protocol.core.methods.response.EthBlock.TransactionObject;
 
 @Component
 public class EthChainProcessor

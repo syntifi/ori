@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.stream.Collectors;
 
+import com.syntifi.ori.chains.base.OriChainConfigProperties;
 import com.syntifi.ori.chains.base.reader.AbstractChainReader;
-import com.syntifi.ori.chains.eth.EthChainConfig;
 import com.syntifi.ori.chains.eth.model.EthChainData;
 import com.syntifi.ori.client.OriClient;
 
@@ -20,8 +20,8 @@ public class EthChainReader
         extends AbstractChainReader<Web3j, EthChainData> {
 
     public EthChainReader(Web3j chainService, OriClient oriClient,
-            EthChainConfig chainConfig) {
-        super(chainService, oriClient, chainConfig);
+            OriChainConfigProperties oriChainConfigProperties) {
+        super(chainService, oriClient, oriChainConfigProperties);
     }
 
     // READ should return null if next item is not found

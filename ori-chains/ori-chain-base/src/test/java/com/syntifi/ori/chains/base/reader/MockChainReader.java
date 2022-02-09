@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.syntifi.ori.chains.base.MockChainConfig;
+import com.syntifi.ori.chains.base.OriChainConfigProperties;
 import com.syntifi.ori.chains.base.client.MockChainService;
 import com.syntifi.ori.chains.base.model.MockChainBlock;
 import com.syntifi.ori.chains.base.model.MockChainData;
@@ -18,8 +18,8 @@ public class MockChainReader
         extends AbstractChainReader<MockChainService, MockChainData> {
 
     public MockChainReader(MockChainService chainService, OriClient oriClient,
-            MockChainConfig chainConfig) {
-        super(chainService, oriClient, chainConfig);
+            OriChainConfigProperties oriChainConfigProperties) {
+        super(chainService, oriClient, oriChainConfigProperties);
     }
 
     @Override

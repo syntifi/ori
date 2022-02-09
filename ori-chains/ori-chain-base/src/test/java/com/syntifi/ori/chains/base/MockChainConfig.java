@@ -8,60 +8,34 @@ import com.syntifi.ori.chains.base.client.MockChainService;
 import com.syntifi.ori.client.OriClient;
 import com.syntifi.ori.client.mock.MockOriClient;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.batch.BatchDataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
 
-import lombok.Getter;
-
-@Getter
-@Component
-public class MockChainConfig implements AbstractChainConfig<MockChainService> {
-
-    @Value("${ori.host}")
-    private String oriHost;
-
-    @Value("${mock.node}")
-    private String chainNode;
-
-    @Value("${mock.port}")
-    private int chainNodePort;
-
-    @Value("${mock.token}")
-    private String tokenSymbol;
-
-    @Value("${mock.token.name}")
-    private String tokenName;
-
-    @Value("${mock.token.protocol}")
-    private String tokenProtocol;
-
-    @Value("${mock.block.zero.hash}")
-    private String blockZeroHash;
-
-    @Value("${mock.block.zero.height}")
-    private long blockZeroHeight;
-
-    @Value("${mock.batch.chunk.size}")
-    private int chunkSize;
+@Configuration
+@PropertySource("classpath:application.properties")
+public class MockChainConfig {
 
     @Bean
-    @Override
-    public OriClient oriClient() {
+    @Primary
+    protected OriClient getOriClient() {
         return new MockOriClient();
     }
 
     @Bean
-    @Override
-    public MockChainService service() throws IOException {
+    protected MockChainService getServiceInstance() throws IOException {
         return new MockChainService();
     }
 
-    // @Bean
-    // @ConfigurationProperties("batch.datasource")
-    // public DataSource batchDataSource() {
-    //     return DataSourceBuilder.create().build();
-    // }
+    @Bean
+    @BatchDataSource
+    @ConfigurationProperties(prefix = "ori.batch.datasource")
+    public DataSource dataSource() {
+        DataSource ds = DataSourceBuilder.create().build();
+        return ds;
+    }
 }

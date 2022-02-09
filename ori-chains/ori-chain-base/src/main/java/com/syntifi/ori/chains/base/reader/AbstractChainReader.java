@@ -2,7 +2,7 @@ package com.syntifi.ori.chains.base.reader;
 
 import java.io.IOException;
 
-import com.syntifi.ori.chains.base.AbstractChainConfig;
+import com.syntifi.ori.chains.base.OriChainConfigProperties;
 import com.syntifi.ori.chains.base.model.ChainData;
 import com.syntifi.ori.client.OriClient;
 
@@ -27,24 +27,24 @@ public abstract class AbstractChainReader<S, T extends ChainData<?, ?>>
 
     private Long blockHeight;
     private S chainService;
-    private OriClient oriRestClient;
-    private AbstractChainConfig<S> chainConfig;
+    private OriClient oriClient;
+    private OriChainConfigProperties oriChainConfigProperties;
 
     protected AbstractChainReader(S chainService,
             OriClient oriClient,
-            AbstractChainConfig<S> chainConfig) {
+            OriChainConfigProperties oriChainConfigProperties) {
         this.chainService = chainService;
-        this.oriRestClient = oriClient;
-        this.chainConfig = chainConfig;
+        this.oriClient = oriClient;
+        this.oriChainConfigProperties = oriChainConfigProperties;
         initialize();
     }
 
     private void initialize() {
         try {
-            blockHeight = oriRestClient.getLastBlock(chainConfig.getTokenSymbol()).getHeight() + 1;
+            blockHeight = oriClient.getLastBlock(oriChainConfigProperties.getChainTokenSymbol()).getHeight() + 1;
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
-                blockHeight = chainConfig.getBlockZeroHeight() + 1;
+                blockHeight = oriChainConfigProperties.getChainBlockZeroHeight() + 1;
             }
         }
     }

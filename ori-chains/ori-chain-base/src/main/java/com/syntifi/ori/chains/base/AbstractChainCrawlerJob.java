@@ -25,9 +25,12 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 
 /**
@@ -39,15 +42,21 @@ import lombok.Getter;
  * 
  * @since 0.1.0
  */
+@Import(OriChainConfig.class)
+@EnableConfigurationProperties(OriChainConfigProperties.class)
 public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
-
-    protected abstract AbstractChainConfig<S> getChainConfig();
 
     protected abstract AbstractChainProcessor<T> getChainProcessor();
 
     protected abstract AbstractChainReader<S, T> getChainReader();
 
-    @Getter
+    protected abstract S getChainService();
+
+    @Getter(value = AccessLevel.PROTECTED)
+    @Autowired
+    private OriChainConfigProperties oriChainConfigProperties;
+
+    @Getter(value = AccessLevel.PROTECTED)
     @Autowired
     private OriClient oriClient;
 
@@ -59,13 +68,13 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
 
     private void createTokenIfNeeded() {
         try {
-            oriClient.getToken(getChainConfig().getTokenSymbol());
+            oriClient.getToken(oriChainConfigProperties.getChainTokenSymbol());
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
                 TokenDTO token = new TokenDTO();
-                token.setSymbol(getChainConfig().getTokenSymbol());
-                token.setName(getChainConfig().getTokenName());
-                token.setProtocol(getChainConfig().getTokenProtocol());
+                token.setSymbol(oriChainConfigProperties.getChainTokenSymbol());
+                token.setName(oriChainConfigProperties.getChainTokenName());
+                token.setProtocol(oriChainConfigProperties.getChainTokenProtocol());
                 oriClient.postToken(token);
             }
         }
@@ -73,27 +82,27 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
 
     private void addBlockZeroIfNeeded() {
         try {
-            oriClient.getBlock(getChainConfig().getTokenSymbol(), getChainConfig().getBlockZeroHash());
+            oriClient.getBlock(oriChainConfigProperties.getChainTokenSymbol(), oriChainConfigProperties.getChainBlockZeroHash());
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
                 BlockDTO block = new BlockDTO();
                 block.setTimeStamp(OffsetDateTime.ofInstant(Instant.ofEpochMilli(0), ZoneId.of("GMT")));
-                block.setHash(getChainConfig().getBlockZeroHash());
-                block.setHeight(getChainConfig().getBlockZeroHeight());
+                block.setHash(oriChainConfigProperties.getChainBlockZeroHash());
+                block.setHeight(oriChainConfigProperties.getChainBlockZeroHeight());
                 block.setEra(-1L);
-                block.setRoot(getChainConfig().getBlockZeroHash());
-                block.setValidator(getChainConfig().getBlockZeroHash());
-                oriClient.postBlock(getChainConfig().getTokenSymbol(), block);
+                block.setRoot(oriChainConfigProperties.getChainBlockZeroHash());
+                block.setValidator(oriChainConfigProperties.getChainBlockZeroHash());
+                oriClient.postBlock(oriChainConfigProperties.getChainTokenSymbol(), block);
             }
         }
     }
 
     @Bean
     public Step step1() {
-        return stepBuilderFactory.get("step1").<T, OriData>chunk(getChainConfig().getChunkSize())
+        return stepBuilderFactory.get("step1").<T, OriData>chunk(oriChainConfigProperties.getBatchChunkSize())
                 .reader(getChainReader())
                 .processor(getChainProcessor())
-                .writer(new OriWriter(oriClient, getChainConfig().getTokenSymbol()))
+                .writer(new OriWriter(oriClient, oriChainConfigProperties.getChainTokenSymbol()))
                 .listener(new OriStepExecutionListener())
                 .listener(new OriChunkListener())
                 .listener(new ChainItemReadListener<T>())
