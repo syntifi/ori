@@ -12,7 +12,7 @@
   </parent>
 
   <properties>
-    <web3j.version>4.8.7</web3j.version>
+    <web3j.version>5.0.0</web3j.version>
   </properties>
 
   <dependencies>
@@ -24,6 +24,12 @@
       <groupId>org.web3j</groupId>
       <artifactId>core</artifactId>
       <version>${web3j.version}</version>
+    </dependency>
+    <dependency> <!-- fixing version that works -->
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>4.3.1</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.syntifi.ori.chains</groupId>
