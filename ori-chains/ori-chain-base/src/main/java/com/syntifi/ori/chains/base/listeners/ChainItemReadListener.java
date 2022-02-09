@@ -1,6 +1,6 @@
 package com.syntifi.ori.chains.base.listeners;
 
-import com.syntifi.ori.chains.base.model.ChainBlockAndTransfers;
+import com.syntifi.ori.chains.base.model.ChainData;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +8,7 @@ import org.springframework.batch.core.annotation.AfterRead;
 import org.springframework.batch.core.annotation.BeforeRead;
 import org.springframework.batch.core.annotation.OnReadError;
 
-public class ChainItemReadListener<T extends ChainBlockAndTransfers<?, ?>> {
+public class ChainItemReadListener<T extends ChainData<?, ?>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChainItemReadListener.class);
 

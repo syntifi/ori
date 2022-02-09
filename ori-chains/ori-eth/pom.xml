@@ -13,7 +13,6 @@
 
   <properties>
     <web3j.version>4.8.7</web3j.version>
-    <ori-chain-base.version>0.1.0-SNAPSHOT</ori-chain-base.version>
   </properties>
 
   <dependencies>

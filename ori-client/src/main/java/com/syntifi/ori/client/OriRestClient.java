@@ -16,7 +16,10 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import reactor.core.publisher.Mono;
 
-public class OriRestClient {
+/**
+ * 
+ */
+public class OriRestClient implements OriClient {
 
     private WebClient client;
     private String apiPrefix;
@@ -26,18 +29,14 @@ public class OriRestClient {
     }
 
     public OriRestClient(String host, String apiEndpoint, String apiVersion) {
-        try {
-            WebClient test = WebClient
-                    .builder()
-                    .baseUrl(host)
-                    .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                    .build();
-            client = test;
-        } catch (Exception e) {
-            int x = 0;
-        }
-        apiPrefix = apiEndpoint + "/" + apiVersion;
+        WebClient test = WebClient
+                .builder()
+                .baseUrl(host)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
+        client = test;
 
+        apiPrefix = apiEndpoint + "/" + apiVersion;
     }
 
     public TokenDTO getToken(String tokenSymbol) throws WebClientResponseException {

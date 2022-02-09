@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.syntifi.ori.chains.base.exception.OriItemWriterException;
-import com.syntifi.ori.chains.base.model.OriBlockAndTransfers;
-import com.syntifi.ori.client.OriRestClient;
+import com.syntifi.ori.chains.base.model.OriData;
+import com.syntifi.ori.client.OriClient;
 import com.syntifi.ori.dto.AccountDTO;
 import com.syntifi.ori.dto.TransactionDTO;
 
@@ -16,38 +16,38 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 /**
- * The default ORI block and transfer writer
+ * The default ORI data writer
  * 
  * @author Alexandre Carvalho <adcarvalho@gmail.com>
  * @author Andre Bertolace <andre@syntifi.com>
  * 
  * @since 0.1.0
  */
-public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfers> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(OriBlockAndTransfersWriter.class);
+public class OriWriter implements ItemWriter<OriData> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OriWriter.class);
 
     private String tokenSymbol;
-    private OriRestClient oriRestClient;
+    private OriClient oriClient;
 
-    public OriBlockAndTransfersWriter(OriRestClient oriClient, String token) {
-        oriRestClient = oriClient;
-        tokenSymbol = token;
+    public OriWriter(OriClient oriClient, String token) {
+        this.oriClient = oriClient;
+        this.tokenSymbol = token;
     }
 
     @Override
-    public void write(List<? extends OriBlockAndTransfers> blockAndTransfersResults) {
+    public void write(List<? extends OriData> oriDataList) {
         // Write Block
-        writeBlock(blockAndTransfersResults);
+        writeBlock(oriDataList);
 
         // Write transactions
-        writeTransactions(blockAndTransfersResults);
+        writeTransactions(oriDataList);
     }
 
-    private void writeBlock(List<? extends OriBlockAndTransfers> blockAndTransfersResults) {
-        if (blockAndTransfersResults.size() > 1) {
+    private void writeBlock(List<? extends OriData> oriDataList) {
+        if (oriDataList.size() > 1) {
             try {
-                oriRestClient.postBlocks(tokenSymbol,
-                        blockAndTransfersResults.stream().map(OriBlockAndTransfers::getBlock)
+                oriClient.postBlocks(tokenSymbol,
+                        oriDataList.stream().map(OriData::getBlock)
                                 .collect(Collectors.toList()));
             } catch (WebClientResponseException e) {
                 if (e.getStatusCode() != HttpStatus.CONFLICT) {
@@ -56,33 +56,33 @@ public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfe
                                     getExceptionCause(e)),
                             e);
                 } else {
-                    LOGGER.warn("blocks (or some blocks) already exists ({} blocks)", blockAndTransfersResults.size());
+                    LOGGER.warn("blocks (or some blocks) already exists ({} blocks)", oriDataList.size());
                 }
             }
         } else {
-            OriBlockAndTransfers oriBlockAndTransfers = blockAndTransfersResults.get(0);
+            OriData oriData = oriDataList.get(0);
             try {
-                oriRestClient.postBlock(tokenSymbol, oriBlockAndTransfers.getBlock());
+                oriClient.postBlock(tokenSymbol, oriData.getBlock());
             } catch (WebClientResponseException e) {
                 if (e.getStatusCode() != HttpStatus.CONFLICT) {
                     throw new OriItemWriterException(String.format(
-                            "error while writing block %s - (%s[%s])", oriBlockAndTransfers.getBlock().getHash(),
+                            "error while writing block %s - (%s[%s])", oriData.getBlock().getHash(),
                             e.getMessage(), getExceptionCause(e)), e);
                 } else {
-                    LOGGER.warn("block {} already exists", oriBlockAndTransfers.getBlock().getHash());
+                    LOGGER.warn("block {} already exists", oriData.getBlock().getHash());
                 }
             }
         }
     }
 
-    private void writeTransactions(List<? extends OriBlockAndTransfers> blockAndTransfersResults) {
-        for (OriBlockAndTransfers oriBlockAndTransfers : blockAndTransfersResults) {
-            if (oriBlockAndTransfers.getTransfers() != null) {
-                for (TransactionDTO transfer : oriBlockAndTransfers.getTransfers()) {
+    private void writeTransactions(List<? extends OriData> oriDataList) {
+        for (OriData oriDataItem : oriDataList) {
+            if (oriDataItem.getTransfers() != null) {
+                for (TransactionDTO transfer : oriDataItem.getTransfers()) {
                     writeAccount(transfer.getFromHash());
                     writeAccount(transfer.getToHash());
                     try {
-                        oriRestClient.postTransfer(tokenSymbol, transfer);
+                        oriClient.postTransfer(tokenSymbol, transfer);
                     } catch (WebClientResponseException e) {
                         if (e.getStatusCode() != HttpStatus.CONFLICT) {
                             throw new OriItemWriterException(String.format(
@@ -103,7 +103,7 @@ public class OriBlockAndTransfersWriter implements ItemWriter<OriBlockAndTransfe
         }
 
         try {
-            oriRestClient.postAccount(tokenSymbol,
+            oriClient.postAccount(tokenSymbol,
                     AccountDTO.builder().hash(hash).build());
         } catch (WebClientResponseException e) {
             if (e.getStatusCode() != HttpStatus.CONFLICT) {

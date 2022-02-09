@@ -6,20 +6,23 @@ import java.time.ZoneId;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.syntifi.ori.chains.base.model.OriBlockAndTransfers;
-import com.syntifi.ori.chains.base.processor.AbstractChainBlockAndTransfersProcessor;
-import com.syntifi.ori.chains.eth.model.EthChainBlockAndTransfers;
+import com.syntifi.ori.chains.base.model.OriData;
+import com.syntifi.ori.chains.base.processor.AbstractChainProcessor;
+import com.syntifi.ori.chains.eth.model.EthChainData;
 import com.syntifi.ori.dto.BlockDTO;
 import com.syntifi.ori.dto.TransactionDTO;
 
 import org.web3j.protocol.core.methods.response.EthBlock.TransactionObject;
 
-public class EthChainBlockAndTransfersProcessor
-        extends AbstractChainBlockAndTransfersProcessor<EthChainBlockAndTransfers> {
+import org.springframework.stereotype.Component;
+
+@Component
+public class EthChainProcessor
+        extends AbstractChainProcessor<EthChainData> {
 
     @Override
-    public OriBlockAndTransfers process(EthChainBlockAndTransfers item) throws Exception {
-        final OriBlockAndTransfers result = new OriBlockAndTransfers();
+    public OriData process(EthChainData item) throws Exception {
+        final OriData result = new OriData();
 
         // Block processor
         BlockDTO block = new BlockDTO();

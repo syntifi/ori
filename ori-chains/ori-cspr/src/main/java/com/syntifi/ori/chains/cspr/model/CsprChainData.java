@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.syntifi.casper.sdk.model.block.JsonBlock;
 import com.syntifi.casper.sdk.model.transfer.Transfer;
-import com.syntifi.ori.chains.base.model.ChainBlockAndTransfers;
+import com.syntifi.ori.chains.base.model.ChainData;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CsprChainBlockAndTransfers implements ChainBlockAndTransfers<JsonBlock, Transfer> {
+public class CsprChainData implements ChainData<JsonBlock, Transfer> {
 
     private JsonBlock chainBlock;
 

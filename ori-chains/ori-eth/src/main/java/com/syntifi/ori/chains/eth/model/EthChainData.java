@@ -2,7 +2,7 @@ package com.syntifi.ori.chains.eth.model;
 
 import java.util.List;
 
-import com.syntifi.ori.chains.base.model.ChainBlockAndTransfers;
+import com.syntifi.ori.chains.base.model.ChainData;
 
 import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthBlock.TransactionObject;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EthChainBlockAndTransfers implements ChainBlockAndTransfers<EthBlock, TransactionObject> {
+public class EthChainData implements ChainData<EthBlock, TransactionObject> {
 
     private EthBlock chainBlock;
 

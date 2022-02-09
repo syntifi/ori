@@ -2,7 +2,7 @@ package com.syntifi.ori.chains.base.processor;
 
 import java.text.SimpleDateFormat;
 
-import com.syntifi.ori.chains.base.model.OriBlockAndTransfers;
+import com.syntifi.ori.chains.base.model.OriData;
 
 import org.springframework.batch.item.ItemProcessor;
 
@@ -15,7 +15,7 @@ import org.springframework.batch.item.ItemProcessor;
  * 
  * @since 0.1.0
  */
-public abstract class AbstractChainBlockAndTransfersProcessor<T> implements ItemProcessor<T, OriBlockAndTransfers> {
+public abstract class AbstractChainProcessor<T> implements ItemProcessor<T, OriData> {
 
     protected final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 

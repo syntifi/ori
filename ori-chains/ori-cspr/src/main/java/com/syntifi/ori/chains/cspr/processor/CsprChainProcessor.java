@@ -8,18 +8,21 @@ import java.util.List;
 
 import com.syntifi.casper.sdk.model.block.JsonBlock;
 import com.syntifi.casper.sdk.model.transfer.Transfer;
-import com.syntifi.ori.chains.base.model.OriBlockAndTransfers;
-import com.syntifi.ori.chains.base.processor.AbstractChainBlockAndTransfersProcessor;
-import com.syntifi.ori.chains.cspr.model.CsprChainBlockAndTransfers;
+import com.syntifi.ori.chains.base.model.OriData;
+import com.syntifi.ori.chains.base.processor.AbstractChainProcessor;
+import com.syntifi.ori.chains.cspr.model.CsprChainData;
 import com.syntifi.ori.dto.BlockDTO;
 import com.syntifi.ori.dto.TransactionDTO;
 
-public class CsprChainBlockAndTransfersProcessor
-        extends AbstractChainBlockAndTransfersProcessor<CsprChainBlockAndTransfers> {
+import org.springframework.stereotype.Component;
+
+@Component
+public class CsprChainProcessor
+        extends AbstractChainProcessor<CsprChainData> {
 
     @Override
-    public OriBlockAndTransfers process(CsprChainBlockAndTransfers item) throws Exception {
-        final OriBlockAndTransfers result = new OriBlockAndTransfers();
+    public OriData process(CsprChainData item) throws Exception {
+        final OriData result = new OriData();
 
         // Block processor
         JsonBlock casperBlock = item.getChainBlock();

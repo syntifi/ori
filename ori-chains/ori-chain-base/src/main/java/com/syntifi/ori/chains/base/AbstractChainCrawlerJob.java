@@ -10,12 +10,12 @@ import com.syntifi.ori.chains.base.listeners.OriChunkListener;
 import com.syntifi.ori.chains.base.listeners.OriItemWriteListener;
 import com.syntifi.ori.chains.base.listeners.OriJobExecutionListener;
 import com.syntifi.ori.chains.base.listeners.OriStepExecutionListener;
-import com.syntifi.ori.chains.base.model.ChainBlockAndTransfers;
-import com.syntifi.ori.chains.base.model.OriBlockAndTransfers;
-import com.syntifi.ori.chains.base.processor.AbstractChainBlockAndTransfersProcessor;
-import com.syntifi.ori.chains.base.reader.AbstractChainBlockAndTransfersReader;
-import com.syntifi.ori.chains.base.writer.OriBlockAndTransfersWriter;
-import com.syntifi.ori.client.OriRestClient;
+import com.syntifi.ori.chains.base.model.ChainData;
+import com.syntifi.ori.chains.base.model.OriData;
+import com.syntifi.ori.chains.base.processor.AbstractChainProcessor;
+import com.syntifi.ori.chains.base.reader.AbstractChainReader;
+import com.syntifi.ori.chains.base.writer.OriWriter;
+import com.syntifi.ori.client.OriClient;
 import com.syntifi.ori.dto.BlockDTO;
 import com.syntifi.ori.dto.TokenDTO;
 
@@ -39,17 +39,17 @@ import lombok.Getter;
  * 
  * @since 0.1.0
  */
-public abstract class AbstractChainCrawlerApplication<S, T extends ChainBlockAndTransfers<?, ?>> {
+public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
 
     protected abstract AbstractChainConfig<S> getChainConfig();
 
-    protected abstract AbstractChainBlockAndTransfersProcessor<T> getBlockAndTransfersProcessor();
+    protected abstract AbstractChainProcessor<T> getChainProcessor();
 
-    protected abstract AbstractChainBlockAndTransfersReader<S, T> getBlockAndTransfersReader();
+    protected abstract AbstractChainReader<S, T> getChainReader();
 
     @Getter
     @Autowired
-    private OriRestClient oriRestClient;
+    private OriClient oriClient;
 
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
@@ -59,21 +59,21 @@ public abstract class AbstractChainCrawlerApplication<S, T extends ChainBlockAnd
 
     private void createTokenIfNeeded() {
         try {
-            oriRestClient.getToken(getChainConfig().getTokenSymbol());
+            oriClient.getToken(getChainConfig().getTokenSymbol());
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
                 TokenDTO token = new TokenDTO();
                 token.setSymbol(getChainConfig().getTokenSymbol());
                 token.setName(getChainConfig().getTokenName());
                 token.setProtocol(getChainConfig().getTokenProtocol());
-                oriRestClient.postToken(token);
+                oriClient.postToken(token);
             }
         }
     }
 
     private void addBlockZeroIfNeeded() {
         try {
-            oriRestClient.getBlock(getChainConfig().getTokenSymbol(), getChainConfig().getBlockZeroHash());
+            oriClient.getBlock(getChainConfig().getTokenSymbol(), getChainConfig().getBlockZeroHash());
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
                 BlockDTO block = new BlockDTO();
@@ -83,17 +83,17 @@ public abstract class AbstractChainCrawlerApplication<S, T extends ChainBlockAnd
                 block.setEra(-1L);
                 block.setRoot(getChainConfig().getBlockZeroHash());
                 block.setValidator(getChainConfig().getBlockZeroHash());
-                oriRestClient.postBlock(getChainConfig().getTokenSymbol(), block);
+                oriClient.postBlock(getChainConfig().getTokenSymbol(), block);
             }
         }
     }
 
     @Bean
     public Step step1() {
-        return stepBuilderFactory.get("step1").<T, OriBlockAndTransfers>chunk(getChainConfig().getChunkSize())
-                .reader(getBlockAndTransfersReader())
-                .processor(getBlockAndTransfersProcessor())
-                .writer(new OriBlockAndTransfersWriter(oriRestClient, getChainConfig().getTokenSymbol()))
+        return stepBuilderFactory.get("step1").<T, OriData>chunk(getChainConfig().getChunkSize())
+                .reader(getChainReader())
+                .processor(getChainProcessor())
+                .writer(new OriWriter(oriClient, getChainConfig().getTokenSymbol()))
                 .listener(new OriStepExecutionListener())
                 .listener(new OriChunkListener())
                 .listener(new ChainItemReadListener<T>())
@@ -103,14 +103,13 @@ public abstract class AbstractChainCrawlerApplication<S, T extends ChainBlockAnd
     }
 
     @Bean
-    public Job getBlockAndTransfersAndWrite() {
+    public Job job() {
         createTokenIfNeeded();
         addBlockZeroIfNeeded();
-        return jobBuilderFactory.get("getBlockAndTransfersAndWrite")
+        return jobBuilderFactory.get("job")
                 .incrementer(new RunIdIncrementer())
                 .listener(new OriJobExecutionListener())
                 .start(step1())
-                // .next(stepTwo())
                 .build();
     }
 }

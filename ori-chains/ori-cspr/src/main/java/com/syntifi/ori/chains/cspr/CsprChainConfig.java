@@ -2,23 +2,22 @@ package com.syntifi.ori.chains.cspr;
 
 import java.io.IOException;
 
+import javax.sql.DataSource;
+
 import com.syntifi.casper.sdk.service.CasperService;
 import com.syntifi.ori.chains.base.AbstractChainConfig;
-import com.syntifi.ori.chains.cspr.processor.CsprChainBlockAndTransfersProcessor;
-import com.syntifi.ori.chains.cspr.reader.CsprChainBlockAndTransfersReader;
-import com.syntifi.ori.client.OriRestClient;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.batch.BatchDataSource;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import lombok.Getter;
 
-@Configuration
-@ComponentScan
 @Getter
+@Component
 public class CsprChainConfig implements AbstractChainConfig<CasperService> {
 
     @Value("${ori.host}")
@@ -48,20 +47,23 @@ public class CsprChainConfig implements AbstractChainConfig<CasperService> {
     @Value("${cspr.batch.chunk.size}")
     private int chunkSize;
 
-    @Bean(name = "casperService")
+    @Bean
     @Override
     public CasperService service() throws IOException {
         return CasperService.usingPeer(chainNode, chainNodePort);
     }
 
-    @Bean(name = "casperBlockAndTransferProcessor")
-    public CsprChainBlockAndTransfersProcessor blockAndTransferProcessor() {
-        return new CsprChainBlockAndTransfersProcessor();
-    }
+    // @Bean
+    // @BatchDataSource
+    // @ConfigurationProperties("batch.datasource")
+    // public DataSource batchDataSource() {
+    //     // return DataSourceBuilder.create().build();
 
-    @Bean(name = "casperBlockAndTransferReader")
-    public CsprChainBlockAndTransfersReader blockAndTransferReader(@Autowired CasperService casperService,
-            @Autowired OriRestClient oriRestClient, @Autowired CsprChainConfig chainConfig) {
-        return new CsprChainBlockAndTransfersReader(casperService, oriRestClient, chainConfig);
-    }
+    //     // batch.datasource.jdbc-url=jdbc:h2:mem:testdb
+    //     // batch.datasource.driver-class-name=org.h2.Driver
+    //     // batch.datasource.username=sa
+    //     // batch.datasource.password=password
+    //     return DataSourceBuilder.create().url("jdbc:h2:mem:testdb").driverClassName("org.h2.Driver").username("sa")
+    //             .password("password").build();
+    // }
 }

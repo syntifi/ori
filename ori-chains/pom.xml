@@ -19,15 +19,16 @@
   </modules>
 
   <properties>
-    <javax-ws-rs.version>2.1.1</javax-ws-rs.version>
+    <spring-batch.version>4.3.4</spring-batch.version>
+    <spring-framework.version>5.3.15</spring-framework.version>
     <ori-client.version>0.1.0-SNAPSHOT</ori-client.version>
+    <ori-chain-base.version>0.1.0-SNAPSHOT</ori-chain-base.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-batch</artifactId>
-      <version>${spring-boot.version}</version>
       <exclusions>
         <exclusion>
           <groupId>org.springframework.boot</groupId>
@@ -35,6 +36,12 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+        <groupId>org.hsqldb</groupId>
+        <artifactId>hsqldb</artifactId>
+        <version>2.6.1</version>
+        <scope>runtime</scope>
+    </dependency>    
     <dependency>
       <groupId>com.syntifi.ori</groupId>
       <artifactId>ori-client</artifactId>
@@ -60,6 +67,12 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.batch</groupId>
+      <artifactId>spring-batch-test</artifactId>
+      <version>${spring-batch.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <dependencyManagement>
@@ -74,7 +87,7 @@
 
 
   <build>
-    <plugins>      
+    <plugins>
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -90,7 +103,6 @@
               <enabled>true</enabled>
             </layers>
           </configuration>
-          <version>${spring-boot.version}</version>
           <executions>
             <execution>
               <phase>package</phase>

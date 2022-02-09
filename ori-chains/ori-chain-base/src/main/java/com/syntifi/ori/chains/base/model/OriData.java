@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * ORI compliant Block and Transfer class
+ * ORI compliant Data class
  * 
  * @author Alexandre Carvalho <adcarvalho@gmail.com>
  * @author Andre Bertolace <andre@syntifi.com>
@@ -18,7 +18,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class OriBlockAndTransfers {
+public class OriData {
     private BlockDTO block;
 
     private List<TransactionDTO> transfers;

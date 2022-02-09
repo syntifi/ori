@@ -1,7 +1,7 @@
 package com.syntifi.ori.chains.base.listeners;
 
-import com.syntifi.ori.chains.base.model.ChainBlockAndTransfers;
-import com.syntifi.ori.chains.base.model.OriBlockAndTransfers;
+import com.syntifi.ori.chains.base.model.ChainData;
+import com.syntifi.ori.chains.base.model.OriData;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,7 @@ import org.springframework.batch.core.annotation.AfterProcess;
 import org.springframework.batch.core.annotation.BeforeProcess;
 import org.springframework.batch.core.annotation.OnProcessError;
 
-public class ChainItemProcessListener<T extends ChainBlockAndTransfers<?, ?>> {
+public class ChainItemProcessListener<T extends ChainData<?, ?>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChainItemProcessListener.class);
 
@@ -20,7 +20,7 @@ public class ChainItemProcessListener<T extends ChainBlockAndTransfers<?, ?>> {
     }
 
     @AfterProcess
-    public void afterProcess(T item, OriBlockAndTransfers result) {
+    public void afterProcess(T item, OriData result) {
         LOGGER.debug("Finished processing of block with {} transfers.",
                 result.getTransfers() != null ? result.getTransfers().size() : 0);
     }

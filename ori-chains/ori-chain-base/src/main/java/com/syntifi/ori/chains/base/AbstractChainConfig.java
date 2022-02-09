@@ -2,6 +2,7 @@ package com.syntifi.ori.chains.base;
 
 import java.io.IOException;
 
+import com.syntifi.ori.client.OriClient;
 import com.syntifi.ori.client.OriRestClient;
 
 import org.springframework.context.annotation.Bean;
@@ -17,25 +18,25 @@ import org.springframework.context.annotation.Bean;
  */
 public interface AbstractChainConfig<S> {
 
-    public abstract int getChunkSize();
+    public int getChunkSize();
 
-    public abstract String getOriHost();
+    public String getOriHost();
 
-    public abstract String getTokenSymbol();
+    public String getTokenSymbol();
 
-    public abstract String getTokenName();
+    public String getTokenName();
 
-    public abstract String getTokenProtocol();
+    public String getTokenProtocol();
 
-    public abstract String getBlockZeroHash();
+    public String getBlockZeroHash();
 
-    public abstract long getBlockZeroHeight();
+    public long getBlockZeroHeight();
 
     @Bean
-    public default OriRestClient oriRestClient() {
+    public default OriClient oriClient() {
         return new OriRestClient(getOriHost());
     }
 
     @Bean
-    public abstract S service() throws IOException;
+    public S service() throws IOException;
 }

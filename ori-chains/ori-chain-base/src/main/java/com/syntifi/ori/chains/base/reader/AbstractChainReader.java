@@ -3,8 +3,8 @@ package com.syntifi.ori.chains.base.reader;
 import java.io.IOException;
 
 import com.syntifi.ori.chains.base.AbstractChainConfig;
-import com.syntifi.ori.chains.base.model.ChainBlockAndTransfers;
-import com.syntifi.ori.client.OriRestClient;
+import com.syntifi.ori.chains.base.model.ChainData;
+import com.syntifi.ori.client.OriClient;
 
 import org.springframework.batch.item.ItemReader;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -22,19 +22,19 @@ import lombok.Getter;
  * @since 0.1.0
  */
 @Getter(value = AccessLevel.PROTECTED)
-public abstract class AbstractChainBlockAndTransfersReader<S, T extends ChainBlockAndTransfers<?, ?>>
+public abstract class AbstractChainReader<S, T extends ChainData<?, ?>>
         implements ItemReader<T> {
 
     private Long blockHeight;
     private S chainService;
-    private OriRestClient oriRestClient;
+    private OriClient oriRestClient;
     private AbstractChainConfig<S> chainConfig;
 
-    protected AbstractChainBlockAndTransfersReader(S chainService,
-            OriRestClient oriRestClient,
+    protected AbstractChainReader(S chainService,
+            OriClient oriClient,
             AbstractChainConfig<S> chainConfig) {
         this.chainService = chainService;
-        this.oriRestClient = oriRestClient;
+        this.oriRestClient = oriClient;
         this.chainConfig = chainConfig;
         initialize();
     }
@@ -54,7 +54,7 @@ public abstract class AbstractChainBlockAndTransfersReader<S, T extends ChainBlo
         return true;
     }
 
-    // READ should return null if next item is not found
+    // read() should return null if next item is not found
     @Override
     public abstract T read() throws IOException, InterruptedException;
 }
