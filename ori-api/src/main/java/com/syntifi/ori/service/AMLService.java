@@ -1,7 +1,7 @@
 package com.syntifi.ori.service;
 
 import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,17 +23,19 @@ import org.eclipse.microprofile.config.ConfigProvider;
 @Singleton
 public class AMLService {
 
+    private static int minNumberOfTransactions = ConfigProvider.getConfig()
+            .getValue("ori.aml.min-number-transactions", int.class);
+
     public AMLRulesDTO calculateScores(List<Transaction> in, List<Transaction> out, Double threshold,
             Integer shortWindow, Integer longWindow)
             throws ORIException {
         sanityCheck(in, out);
-        AMLRulesDTO scores = AMLRulesDTO.builder().build();
+        AMLRulesDTO scores = new AMLRulesDTO();
 
         scores.setFlowThroughScore(calculateFlowThroughScore(in, out, longWindow));
         scores.setStructuringOverTimeScore(calculateStructuringOverTimeScore(in, out, threshold));
-        scores.setUnusualBehaviorScore(calculateUnusualBehaviourScore(in, out, shortWindow));
-        scores.setUnusualOutgoingVolumeScore(calculateUnusualOutgoingVolumeScore(in, out, shortWindow));
-
+        scores.setUnusualBehaviorScore(calculateUnusualBehaviourScore(out, shortWindow));
+        scores.setUnusualOutgoingVolumeScore(calculateUnusualOutgoingVolumeScore(out, shortWindow, longWindow));
         return scores;
     }
 
@@ -47,6 +49,8 @@ public class AMLService {
         }
     }
 
+    // TODO: the reporting threshold is normally expressed in FIAT currency, a
+    // conversion is needed here
     /***
      * This rule returns the proportion of transactions falling in the interval
      * [0.9, 1[
@@ -67,7 +71,7 @@ public class AMLService {
         Long nOut = in.stream()
                 .filter(x -> (x.getAmount() < interval[1]) && (x.getAmount() >= interval[0]))
                 .collect(Collectors.counting());
-        return (nOut + nIn) * 1.0 / n;
+        return n < minNumberOfTransactions ? 0.0 : (nOut + nIn) * 1.0 / n;
     }
 
     /***
@@ -82,41 +86,41 @@ public class AMLService {
      * 
      * @return double between [0,1]
      */
-    private double calculateUnusualOutgoingVolumeScore(List<Transaction> in, List<Transaction> out,
-            Integer shortWindow) {
-        if (out.size() < 10) {
-            return 0.0;
-        }
-        int window = shortWindow == null
+    private double calculateUnusualOutgoingVolumeScore(List<Transaction> out, Integer shortWindow,
+            Integer longWindow) {
+        int sWindow = shortWindow == null
                 ? ConfigProvider.getConfig().getValue("ori.aml.short-window", int.class)
                 : shortWindow;
 
-        OffsetDateTime lastDate = out.get(0).getTimeStamp().plusDays(1);
+        int lWindow = longWindow == null
+                ? ConfigProvider.getConfig().getValue("ori.aml.long-window", int.class)
+                : longWindow;
 
-        // LocalDate lastDate = out.get(0).getTimeStamp()
-        // .toInstant()
-        // .atZone(ZoneId.of("GMT"))
-        // .plusDays(1)
-        // .toLocalDate();
-        // Date[] dates = { java.sql.Date.valueOf(lastDate.minusDays(2L * window)),
-        // java.sql.Date.valueOf(lastDate.minusDays(window)),
-        // java.sql.Date.valueOf(lastDate) };
-        OffsetDateTime[] dates = {
-                lastDate.minusDays(2L * window),
-                lastDate.minusDays(window),
-                lastDate
-        };
-
-        int[] nOutWindow = { 0, 0 };
-        for (Transaction transaction : out) {
-            if ((transaction.getTimeStamp().isAfter(dates[0])) && (transaction.getTimeStamp().isBefore(dates[1]))) {
-                nOutWindow[0] = nOutWindow[0] + 1;
-            }
-            if ((transaction.getTimeStamp().isAfter(dates[1])) && (transaction.getTimeStamp().isBefore(dates[2]))) {
-                nOutWindow[1] = nOutWindow[1] + 1;
+        OffsetDateTime lastDate = out.get(0).getTimeStamp();
+        for (Transaction tx : out) {
+            if (lastDate.isBefore(tx.getTimeStamp())) {
+                lastDate = tx.getTimeStamp();
             }
         }
-        return Math.atan(Math.max(nOutWindow[1] * 1.0 / nOutWindow[0], 0.0)) / Math.PI / 2.0;
+
+        OffsetDateTime[] dates = {
+                lastDate.minusDays(lWindow),
+                lastDate.minusDays(sWindow)
+        };
+
+        double amountOutShortWindow = 0;
+        double amountOutLongWindow = 0;
+        int nOutLongWindow = 0;
+        for (Transaction transaction : out) {
+            if (transaction.getTimeStamp().isAfter(dates[1])) {
+                amountOutShortWindow = amountOutShortWindow + transaction.getAmount();
+            }
+            if (transaction.getTimeStamp().isAfter(dates[0])) {
+                amountOutLongWindow = amountOutLongWindow + transaction.getAmount();
+                nOutLongWindow = nOutLongWindow + 1;
+            }
+        }
+        return nOutLongWindow < minNumberOfTransactions ? 0.0 : amountOutShortWindow * 1.0 / amountOutLongWindow;
     }
 
     /****
@@ -126,24 +130,28 @@ public class AMLService {
      * 
      * @return double between [0,1]
      */
-    private double calculateUnusualBehaviourScore(List<Transaction> in, List<Transaction> out, Integer shortWindow) {
+    private double calculateUnusualBehaviourScore(List<Transaction> out, Integer shortWindow) {
         int window = shortWindow == null
                 ? ConfigProvider.getConfig().getValue("ori.aml.short-window", int.class)
                 : shortWindow;
-        // Date fromDate = java.sql.Date.valueOf(out.get(0).getTimeStamp().toInstant()
-        // .atZone(ZoneId.of("GMT"))
-        // .minusDays(window)
-        // .toLocalDate());
         OffsetDateTime fromDate = out.get(0).getTimeStamp().minusDays(window);
-        double windowAvg = out.stream()
+        List<Double> windowOut = out.stream()
                 .filter(x -> x.getTimeStamp().isAfter(fromDate))
-                .collect(Collectors.summingDouble(x -> x.getAmount()));
-        double avg = out.stream()
-                .collect(Collectors.summingDouble(x -> x.getAmount()));
-        double std = out.stream()
-                .collect(Collectors.summingDouble(x -> (x.getAmount() - avg) * (x.getAmount() - avg)))
-                / (out.size() - 1);
-        return Math.atan(Math.max((windowAvg - avg) / std, 0.0)) / Math.PI / 2.0;
+                .map(x -> x.getAmount())
+                .collect(Collectors.toList());
+        double windowAvg = windowOut.isEmpty()
+                ? 0.0
+                : windowOut.stream().reduce(0.0, (x, y) -> x + y)/windowOut.size();
+        List<Double> ammount = out.stream()
+                .map(x -> x.getAmount())
+                .collect(Collectors.toList());
+        Collections.sort(ammount);
+        int idx = 0;
+        int N = ammount.size();
+        while (idx < N && ammount.get(idx) < windowAvg) {
+            idx = idx + 1;
+        }
+        return N < minNumberOfTransactions ? 0.0 : idx * 1.0 / N;
     }
 
     /****
@@ -160,25 +168,26 @@ public class AMLService {
                 ? ConfigProvider.getConfig().getValue("ori.aml.mid-window", int.class)
                 : midWindow;
 
-        // Date lastDate = out.get(0).getTimeStamp().after(in.get(0).getTimeStamp())
-        // ? out.get(0).getTimeStamp()
-        // : in.get(0).getTimeStamp();
-        // Date fromDate = java.sql.Date.valueOf(lastDate.toInstant()
-        // .atZone(ZoneId.of("GMT"))
-        // .minusDays(window)
-        // .toLocalDate());
-
         OffsetDateTime lastDate = out.get(0).getTimeStamp().isAfter(in.get(0).getTimeStamp())
                 ? out.get(0).getTimeStamp()
                 : in.get(0).getTimeStamp();
-        OffsetDateTime fromDate = lastDate.minus(window, ChronoUnit.DAYS);
-        double inValue = in.stream()
+        OffsetDateTime fromDate = lastDate.minusDays(window);
+        List<Double> inValues = in.stream()
                 .filter(x -> x.getTimeStamp().isAfter(fromDate))
-                .collect(Collectors.summingDouble(x -> x.getAmount()));
-        double outValue = out.stream()
+                .map(x -> x.getAmount())
+                .collect(Collectors.toList());
+        List<Double> outValues = out.stream()
                 .filter(x -> x.getTimeStamp().isAfter(fromDate))
-                .collect(Collectors.summingDouble(x -> x.getAmount()));
-        return Math.exp(-Math.pow(outValue / inValue, 2) / 0.01);
+                .map(x -> x.getAmount())
+                .collect(Collectors.toList());
+        int N = inValues.size() + outValues.size();
+        Double outValue = outValues.stream()
+                .reduce(0.0, (x, y) -> x + y);
+        Double inValue = inValues.stream()
+                .reduce(0.0, (x, y) -> x + y);
+        return (N < minNumberOfTransactions || inValue == 0.0)
+                ? 0.0
+                : Math.max(outValue / inValue, 1.0);
     }
 
 }
