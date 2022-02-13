@@ -1,18 +1,17 @@
 import React from 'react';
-import NavBar from './components/NavBar';
-import { useStyle } from './styles';
-import { Box, Button, ButtonGroup, Grid } from "@material-ui/core";
+import Header from './components/Header'
+import { RootDiv, PaperDiv } from './styles';
+import { Box, Button, ButtonGroup, Grid } from "@mui/material";
 import AccountTrace from './components/AccountTrace';
 import { Route, BrowserRouter, Routes, Link } from "react-router-dom";
 import AccountList from './components/AccountList';
 
 function App() {
-  const classes = useStyle();
   return (
     <>
-      <NavBar title="ORI - Onchain Risk Intelligence" />
-      <div className={classes.root}>
-        <div className={classes.paper}>
+      <Header title="ORI - Onchain Risk Intelligence" />
+      <RootDiv>
+        <PaperDiv>
           <BrowserRouter>
             <Grid
               container
@@ -37,9 +36,8 @@ function App() {
               <Route path="/backtrace" element={<AccountTrace date="To" submit="Back trace" direction="back" />} />
             </Routes>
           </BrowserRouter>
-        </div>
-
-      </div>
+        </PaperDiv>
+      </RootDiv>
     </>
   );
 }

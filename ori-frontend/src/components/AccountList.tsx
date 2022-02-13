@@ -1,7 +1,7 @@
 import React, { ReactElement, FC, useState } from "react";
-import { Box, Grid, Card, CardHeader, CardContent } from "@material-ui/core";
+import { Box, Grid, Card, CardHeader, CardContent } from "@mui/material";
 import AccountInfoForm from "./AccountInfoForm";
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import axios from "axios";
 
 /**

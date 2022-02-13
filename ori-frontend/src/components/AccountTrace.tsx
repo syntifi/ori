@@ -9,7 +9,7 @@ import {
     Paper,
     FormControlLabel,
     Switch
-} from "@material-ui/core";
+} from "@mui/material";
 import AccountInfoForm from "./AccountInfoForm";
 import axios from "axios";
 
