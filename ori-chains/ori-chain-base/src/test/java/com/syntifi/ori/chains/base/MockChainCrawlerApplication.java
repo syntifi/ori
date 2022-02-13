@@ -10,5 +10,5 @@ public class MockChainCrawlerApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(MockChainCrawlerApplication.class, args);
-    }    
+    }
 }

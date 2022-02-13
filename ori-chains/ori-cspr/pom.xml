@@ -12,7 +12,7 @@
   </parent>
 
   <properties>
-    <casper-sdk.version>0.0.1-SNAPSHOT</casper-sdk.version>
+    <casper-sdk.version>0.1.0</casper-sdk.version>
   </properties>
 
   <dependencies>
