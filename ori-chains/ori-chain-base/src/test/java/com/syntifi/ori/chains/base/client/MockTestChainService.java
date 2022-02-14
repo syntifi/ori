@@ -11,8 +11,6 @@ import com.syntifi.ori.chains.base.exception.OriChainCrawlerException;
 import com.syntifi.ori.chains.base.model.MockChainBlock;
 import com.syntifi.ori.chains.base.model.MockChainTransfer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 public class MockTestChainService {
     protected static final long MIN_TRANSFER_AMOUNT = 100;
     protected static final long MAX_TRANSFER_AMOUNT = 100000000;
@@ -31,9 +29,9 @@ public class MockTestChainService {
     protected long currentHeight = 0;
     protected long lastTimestamp = 0;
 
-    public List<MockChainBlock> blocks;
+    private final List<MockChainBlock> blocks;
 
-    public List<MockChainTransfer> transfers;
+    private final List<MockChainTransfer> transfers;
 
     public MockTestChainService(OriChainConfigProperties oriChainConfigProperties) {
         this.blocks = new LinkedList<>();

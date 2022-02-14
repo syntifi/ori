@@ -4,7 +4,6 @@ import java.nio.charset.Charset;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 import com.google.gson.JsonObject;
 import com.syntifi.ori.client.OriClient;
@@ -20,13 +19,13 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
  */
 public class MockOriClient implements OriClient {
 
-    public List<TokenDTO> tokens;
+    private final List<TokenDTO> tokens;
 
-    public List<BlockDTO> blocks;
+    private final List<BlockDTO> blocks;
 
-    public List<TransactionDTO> transactions;
+    private final List<TransactionDTO> transactions;
 
-    public List<AccountDTO> accounts;
+    private final List<AccountDTO> accounts;
 
     public MockOriClient() {
         this.tokens = new LinkedList<>();
@@ -37,13 +36,9 @@ public class MockOriClient implements OriClient {
 
     @Override
     public TokenDTO getToken(String tokenSymbol) throws WebClientResponseException {
-        Optional<TokenDTO> token = this.tokens.stream().filter(t -> t.getSymbol().equals(tokenSymbol)).findFirst();
-
-        if (token.isEmpty()) {
-            throw WebClientResponseException.create(404, "Not found", null, null, Charset.defaultCharset());
-        }
-
-        return token.get();
+        return this.tokens.stream().filter(t -> t.getSymbol().equals(tokenSymbol)).findFirst()
+                .orElseThrow(() -> WebClientResponseException.create(404, "Not found", null, null,
+                        Charset.defaultCharset()));
     }
 
     @Override
@@ -55,26 +50,20 @@ public class MockOriClient implements OriClient {
 
     @Override
     public BlockDTO getBlock(String tokenSymbol, String hash) throws WebClientResponseException {
-        Optional<BlockDTO> block = this.blocks.stream()
-                .filter(t -> t.getTokenSymbol().equals(tokenSymbol) && t.getHash().equals(hash)).findFirst();
-
-        if (block.isEmpty()) {
-            throw WebClientResponseException.create(404, "Not found", null, null, Charset.defaultCharset());
-        }
-
-        return block.get();
+        return this.blocks.stream()
+                .filter(t -> t.getTokenSymbol().equals(tokenSymbol) && t.getHash().equals(hash)).findFirst()
+                .orElseThrow(() -> WebClientResponseException.create(404, "Not found", null, null,
+                        Charset.defaultCharset()));
     }
 
     @Override
     public BlockDTO getLastBlock(String tokenSymbol) throws WebClientResponseException {
-        BlockDTO block = this.blocks
+        return this.blocks
                 .stream()
                 .filter(t -> t.getTokenSymbol().equals(tokenSymbol))
                 .max(Comparator.comparing(BlockDTO::getHeight))
                 .orElseThrow(() -> WebClientResponseException.create(404, "Not found", null, null,
                         Charset.defaultCharset()));
-
-        return block;
     }
 
     @Override
@@ -97,14 +86,10 @@ public class MockOriClient implements OriClient {
 
     @Override
     public AccountDTO getAccount(String tokenSymbol, String hash) throws WebClientResponseException {
-        Optional<AccountDTO> account = this.accounts.stream()
-                .filter(t -> t.getTokenSymbol().equals(tokenSymbol) && t.getHash().equals(hash)).findFirst();
-
-        if (account.isEmpty()) {
-            throw WebClientResponseException.create(404, "Not found", null, null, Charset.defaultCharset());
-        }
-
-        return account.get();
+        return this.accounts.stream()
+                .filter(t -> t.getTokenSymbol().equals(tokenSymbol) && t.getHash().equals(hash)).findFirst()
+                .orElseThrow(() -> WebClientResponseException.create(404, "Not found", null, null,
+                        Charset.defaultCharset()));
     }
 
     @Override
@@ -117,14 +102,10 @@ public class MockOriClient implements OriClient {
 
     @Override
     public TransactionDTO getTransfer(String tokenSymbol, String hash) throws WebClientResponseException {
-        Optional<TransactionDTO> transfer = this.transactions.stream()
-                .filter(t -> t.getTokenSymbol().equals(tokenSymbol) && t.getHash().equals(hash)).findFirst();
-
-        if (transfer.isEmpty()) {
-            throw WebClientResponseException.create(404, "Not found", null, null, Charset.defaultCharset());
-        }
-
-        return transfer.get();
+        return this.transactions.stream()
+                .filter(t -> t.getTokenSymbol().equals(tokenSymbol) && t.getHash().equals(hash)).findFirst()
+                .orElseThrow(() -> WebClientResponseException.create(404, "Not found", null, null,
+                        Charset.defaultCharset()));
     }
 
     @Override
