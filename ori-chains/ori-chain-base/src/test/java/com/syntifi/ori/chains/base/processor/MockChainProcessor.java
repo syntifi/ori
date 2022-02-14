@@ -20,6 +20,7 @@ public class MockChainProcessor
 
         result.setBlock(BlockDTO.builder()
                 .hash(item.getChainBlock().getHash())
+                .height(item.getChainBlock().getHeight())
                 .build());
 
         result.setTransfers(new LinkedList<>());

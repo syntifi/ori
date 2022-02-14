@@ -8,19 +8,17 @@ import com.syntifi.ori.client.OriClient;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 @Configuration
-public class MockChainConfig {
+public class MockChainConfig extends OriChainConfig {
 
     @Bean
-    @Primary
     protected OriClient getOriClient() {
         return new MockOriClient();
     }
 
     @Bean
     protected MockTestChainService getServiceInstance() throws IOException {
-        return new MockTestChainService();
+        return new MockTestChainService(getOriChainConfigProperties());
     }
 }
