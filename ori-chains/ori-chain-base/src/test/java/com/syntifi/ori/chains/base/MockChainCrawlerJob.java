@@ -1,6 +1,6 @@
 package com.syntifi.ori.chains.base;
 
-import com.syntifi.ori.chains.base.client.MockChainService;
+import com.syntifi.ori.chains.base.client.MockTestChainService;
 import com.syntifi.ori.chains.base.model.MockChainData;
 import com.syntifi.ori.chains.base.processor.MockChainProcessor;
 import com.syntifi.ori.chains.base.reader.MockChainReader;
@@ -12,7 +12,7 @@ import lombok.Getter;
 
 @Getter
 @Component
-public class MockChainCrawlerJob extends AbstractChainCrawlerJob<MockChainService, MockChainData> {
+public class MockChainCrawlerJob extends AbstractChainCrawlerJob<MockTestChainService, MockChainData> {
 
     @Autowired
     private MockChainReader chainReader;
@@ -21,5 +21,5 @@ public class MockChainCrawlerJob extends AbstractChainCrawlerJob<MockChainServic
     private MockChainProcessor chainProcessor;
 
     @Autowired
-    private MockChainService chainService;
+    private MockTestChainService chainService;
 }

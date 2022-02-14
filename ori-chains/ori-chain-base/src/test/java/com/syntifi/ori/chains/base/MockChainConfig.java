@@ -2,9 +2,9 @@ package com.syntifi.ori.chains.base;
 
 import java.io.IOException;
 
-import com.syntifi.ori.chains.base.client.MockChainService;
+import com.syntifi.ori.chains.base.client.MockOriClient;
+import com.syntifi.ori.chains.base.client.MockTestChainService;
 import com.syntifi.ori.client.OriClient;
-import com.syntifi.ori.client.mock.MockOriClient;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ public class MockChainConfig {
     }
 
     @Bean
-    protected MockChainService getServiceInstance() throws IOException {
-        return new MockChainService();
+    protected MockTestChainService getServiceInstance() throws IOException {
+        return new MockTestChainService();
     }
 }

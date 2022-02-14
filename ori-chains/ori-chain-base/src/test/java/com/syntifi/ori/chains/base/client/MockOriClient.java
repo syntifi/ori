@@ -1,4 +1,4 @@
-package com.syntifi.ori.client.mock;
+package com.syntifi.ori.chains.base.client;
 
 import java.util.List;
 
