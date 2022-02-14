@@ -12,11 +12,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 
 @Configuration
+@PropertySource("classpath:ori-chain-default-application.properties")
 public class OriChainConfig {
 
     @Getter(value = AccessLevel.PROTECTED)
@@ -32,7 +34,7 @@ public class OriChainConfig {
     @Bean
     @BatchDataSource
     @ConfigurationProperties(prefix = "ori.batch.datasource")
-    public DataSource dataSource() {
+    protected DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }
 }

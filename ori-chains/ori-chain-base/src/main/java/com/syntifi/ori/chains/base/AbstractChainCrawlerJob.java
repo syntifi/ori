@@ -102,7 +102,7 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
         return stepBuilderFactory.get("step1").<T, OriData>chunk(oriChainConfigProperties.getBatchChunkSize())
                 .reader(getChainReader())
                 .processor(getChainProcessor())
-                .writer(new OriWriter(oriClient, oriChainConfigProperties.getChainTokenSymbol()))
+                .writer(new OriWriter(oriClient, oriChainConfigProperties))
                 .listener(new OriStepExecutionListener())
                 .listener(new OriChunkListener())
                 .listener(new ChainItemReadListener<T>())

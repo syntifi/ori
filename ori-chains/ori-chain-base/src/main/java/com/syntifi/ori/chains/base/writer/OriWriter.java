@@ -3,6 +3,7 @@ package com.syntifi.ori.chains.base.writer;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.syntifi.ori.chains.base.OriChainConfigProperties;
 import com.syntifi.ori.chains.base.exception.OriItemWriterException;
 import com.syntifi.ori.chains.base.model.OriData;
 import com.syntifi.ori.client.OriClient;
@@ -26,12 +27,12 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 public class OriWriter implements ItemWriter<OriData> {
     private static final Logger LOGGER = LoggerFactory.getLogger(OriWriter.class);
 
-    private String tokenSymbol;
     private OriClient oriClient;
+    private OriChainConfigProperties oriChainConfigProperties;
 
-    public OriWriter(OriClient oriClient, String token) {
+    public OriWriter(OriClient oriClient, OriChainConfigProperties oriChainConfigProperties) {
         this.oriClient = oriClient;
-        this.tokenSymbol = token;
+        this.oriChainConfigProperties = oriChainConfigProperties;
     }
 
     @Override
@@ -46,7 +47,7 @@ public class OriWriter implements ItemWriter<OriData> {
     private void writeBlock(List<? extends OriData> oriDataList) {
         if (oriDataList.size() > 1) {
             try {
-                oriClient.postBlocks(tokenSymbol,
+                oriClient.postBlocks(oriChainConfigProperties.getChainTokenSymbol(),
                         oriDataList.stream().map(OriData::getBlock)
                                 .collect(Collectors.toList()));
             } catch (WebClientResponseException e) {
@@ -62,7 +63,7 @@ public class OriWriter implements ItemWriter<OriData> {
         } else {
             OriData oriData = oriDataList.get(0);
             try {
-                oriClient.postBlock(tokenSymbol, oriData.getBlock());
+                oriClient.postBlock(oriChainConfigProperties.getChainTokenSymbol(), oriData.getBlock());
             } catch (WebClientResponseException e) {
                 if (e.getStatusCode() != HttpStatus.CONFLICT) {
                     throw new OriItemWriterException(String.format(
@@ -82,7 +83,7 @@ public class OriWriter implements ItemWriter<OriData> {
                     writeAccount(transfer.getFromHash());
                     writeAccount(transfer.getToHash());
                     try {
-                        oriClient.postTransfer(tokenSymbol, transfer);
+                        oriClient.postTransfer(oriChainConfigProperties.getChainTokenSymbol(), transfer);
                     } catch (WebClientResponseException e) {
                         if (e.getStatusCode() != HttpStatus.CONFLICT) {
                             throw new OriItemWriterException(String.format(
@@ -103,7 +104,7 @@ public class OriWriter implements ItemWriter<OriData> {
         }
 
         try {
-            oriClient.postAccount(tokenSymbol,
+            oriClient.postAccount(oriChainConfigProperties.getChainTokenSymbol(),
                     AccountDTO.builder().hash(hash).build());
         } catch (WebClientResponseException e) {
             if (e.getStatusCode() != HttpStatus.CONFLICT) {
