@@ -6,6 +6,7 @@ import com.syntifi.ori.client.OriClient;
 import com.syntifi.ori.client.OriRestClient;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.batch.BatchDataSource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -19,6 +20,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 @Configuration
+@EnableAutoConfiguration
 @EnableConfigurationProperties(OriChainConfigProperties.class)
 @PropertySource("classpath:ori-chain-default-application.properties")
 public class OriChainConfig {
