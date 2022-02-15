@@ -103,21 +103,26 @@ public class BlockRestAPI extends AbstractBaseRestApi {
 
         ResponseBuilder response = new ResponseBuilderImpl().status(Status.CREATED);
         for (BlockDTO blockDTO : blockDTOs) {
-            boolean exists = blockRepository.existsAlready(symbol, blockDTO.getHash());
-            // TODO: very important to check what happens here
-            if (exists) {
-                throw new ORIException(blockDTO.getHash() + " exists already", Status.CONFLICT);
-            }
-
             blockDTO.setTokenSymbol(symbol);
 
             checkParent(symbol, blockDTO, blockDTOs);
 
             Block block = BlockMapper.toModel(blockDTO);
 
-            blockRepository.check(block);
-            blockRepository.persist(block);
-            response.link(URI.create(String.format("/block/%s/hash/%s", symbol, block.getHash())), "self");
+            /*
+             * TODO: WIP what to do if an entry exists?
+             * When restarting crawler for instance, the whole last block should run again
+             * to guarantee all accounts and transactions were also processed.
+             */
+            boolean exists = blockRepository.existsAlready(symbol, blockDTO.getHash());
+            if (exists) {
+                // throw new ORIException(blockDTO.getHash() + " exists already",
+                // Status.CONFLICT);
+            } else {
+                blockRepository.check(block);
+                blockRepository.persist(block);
+                response.link(URI.create(String.format("/block/%s/hash/%s", symbol, block.getHash())), "self");
+            }
         }
 
         return response.build();

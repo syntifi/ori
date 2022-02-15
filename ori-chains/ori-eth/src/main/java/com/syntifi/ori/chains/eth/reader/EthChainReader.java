@@ -12,30 +12,32 @@ import com.syntifi.ori.client.OriClient;
 import org.springframework.stereotype.Component;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
+import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthBlock.TransactionObject;
 
 @Component
-public class EthChainReader
-        extends AbstractChainReader<Web3j, EthChainData> {
+public class EthChainReader extends AbstractChainReader<Web3j, EthChainData> {
 
     public EthChainReader(Web3j chainService, OriClient oriClient,
             OriChainConfigProperties oriChainConfigProperties) {
         super(chainService, oriClient, oriChainConfigProperties);
     }
 
-    // READ should return null if next item is not found
     @Override
     public EthChainData read() throws IOException, InterruptedException {
-        if (getBlockHeight() == null) {
-            return null;
-        }
-
         EthChainData result = new EthChainData();
 
         BigInteger height = BigInteger.valueOf(getBlockHeight());
         DefaultBlockParameter blockParam = DefaultBlockParameter.valueOf(height);
-        EthBlock block = getChainService().ethGetBlockByNumber(blockParam, true).send();
+        Request<?, EthBlock> blockRequest = getChainService().ethGetBlockByNumber(blockParam, true);
+        EthBlock block = blockRequest.send();
+
+        // Stop reading if no block data for given height
+        // TODO: Validate if whole block/getResult is null or other stop condition
+        if (block.getResult() == null) {
+            return null;
+        }
 
         result.setChainBlock(block);
 

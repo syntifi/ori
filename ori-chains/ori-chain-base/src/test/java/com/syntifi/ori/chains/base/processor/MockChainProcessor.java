@@ -11,8 +11,7 @@ import com.syntifi.ori.dto.TransactionDTO;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MockChainProcessor
-        extends AbstractChainProcessor<MockChainData> {
+public class MockChainProcessor extends AbstractChainProcessor<MockChainData> {
 
     @Override
     public OriData process(MockChainData item) throws Exception {
@@ -20,6 +19,7 @@ public class MockChainProcessor
 
         result.setBlock(BlockDTO.builder()
                 .hash(item.getChainBlock().getHash())
+                .height(item.getChainBlock().getHeight())
                 .build());
 
         result.setTransfers(new LinkedList<>());

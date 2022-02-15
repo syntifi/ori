@@ -5,7 +5,10 @@ import java.util.List;
 import com.syntifi.ori.dto.BlockDTO;
 import com.syntifi.ori.dto.TransactionDTO;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -18,6 +21,9 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class OriData {
     private BlockDTO block;
 

@@ -41,10 +41,10 @@ public abstract class AbstractChainReader<S, T extends ChainData<?, ?>>
 
     private void initialize() {
         try {
-            blockHeight = oriClient.getLastBlock(oriChainConfigProperties.getChainTokenSymbol()).getHeight() + 1;
+            blockHeight = oriClient.getLastBlock(oriChainConfigProperties.getChainTokenSymbol()).getHeight();
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
-                blockHeight = oriChainConfigProperties.getChainBlockZeroHeight() + 1;
+                blockHeight = oriChainConfigProperties.getChainBlockZeroHeight();
             }
         }
     }

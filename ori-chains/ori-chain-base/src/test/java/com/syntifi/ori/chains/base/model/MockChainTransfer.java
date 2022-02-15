@@ -11,5 +11,6 @@ public class MockChainTransfer {
     private String hash;
     private String toHash;
     private String fromHash;
+    private String blockHash;
     private long amount;
 }

@@ -17,8 +17,7 @@ import com.syntifi.ori.dto.TransactionDTO;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CsprChainProcessor
-        extends AbstractChainProcessor<CsprChainData> {
+public class CsprChainProcessor extends AbstractChainProcessor<CsprChainData> {
 
     @Override
     public OriData process(CsprChainData item) throws Exception {

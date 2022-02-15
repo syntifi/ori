@@ -50,6 +50,10 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
 
     protected abstract AbstractChainReader<S, T> getChainReader();
 
+    @Getter(value = AccessLevel.PROTECTED)
+    @Autowired
+    private OriWriter oriWriter;
+
     protected abstract S getChainService();
 
     @Getter(value = AccessLevel.PROTECTED)
@@ -82,7 +86,8 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
 
     private void addBlockZeroIfNeeded() {
         try {
-            oriClient.getBlock(oriChainConfigProperties.getChainTokenSymbol(), oriChainConfigProperties.getChainBlockZeroHash());
+            oriClient.getBlock(oriChainConfigProperties.getChainTokenSymbol(),
+                    oriChainConfigProperties.getChainBlockZeroHash());
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
                 BlockDTO block = new BlockDTO();
@@ -102,7 +107,7 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
         return stepBuilderFactory.get("step1").<T, OriData>chunk(oriChainConfigProperties.getBatchChunkSize())
                 .reader(getChainReader())
                 .processor(getChainProcessor())
-                .writer(new OriWriter(oriClient, oriChainConfigProperties.getChainTokenSymbol()))
+                .writer(oriWriter)
                 .listener(new OriStepExecutionListener())
                 .listener(new OriChunkListener())
                 .listener(new ChainItemReadListener<T>())

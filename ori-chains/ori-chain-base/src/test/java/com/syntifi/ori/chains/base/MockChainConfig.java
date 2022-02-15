@@ -2,25 +2,28 @@ package com.syntifi.ori.chains.base;
 
 import java.io.IOException;
 
-import com.syntifi.ori.chains.base.client.MockChainService;
+import com.syntifi.ori.chains.base.service.MockTestChainService;
+import com.syntifi.ori.client.MockOriRestClient;
 import com.syntifi.ori.client.OriClient;
-import com.syntifi.ori.client.mock.MockOriClient;
 
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
+@EnableBatchProcessing
 @Configuration
-public class MockChainConfig {
+@ComponentScans(value = { @ComponentScan("com.syntifi.ori.chains.base") })
+public class MockChainConfig extends OriChainConfig {
 
     @Bean
-    @Primary
     protected OriClient getOriClient() {
-        return new MockOriClient();
+        return new MockOriRestClient();
     }
 
     @Bean
-    protected MockChainService getServiceInstance() throws IOException {
-        return new MockChainService();
+    protected MockTestChainService getServiceInstance() throws IOException {
+        return new MockTestChainService(getOriChainConfigProperties());
     }
 }
