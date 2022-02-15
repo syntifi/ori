@@ -24,11 +24,17 @@ public class CsprChainReader
 
     @Override
     public CsprChainData read() throws IOException, InterruptedException {
-        if (getBlockHeight() == null)
-            return null;
         JsonBlockData blockData = getChainService().getBlock(new HeightBlockIdentifier(getBlockHeight()));
+        
+        // Stop reading if no block data for given height
+        if (blockData == null) {
+            return null;
+        }
+        
         TransferData transferData = getChainService().getBlockTransfers(new HeightBlockIdentifier(getBlockHeight()));
+
         nextItem();
+        
         return new CsprChainData(blockData.getBlock(), transferData.getTransfers());
     }
 }

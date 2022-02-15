@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.batch.BatchDataSource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 @Configuration
+@EnableConfigurationProperties(OriChainConfigProperties.class)
 @PropertySource("classpath:ori-chain-default-application.properties")
 public class OriChainConfig {
 
@@ -27,7 +29,7 @@ public class OriChainConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    protected OriClient getDefaultOriClient() {
+    protected OriClient getOriClient() {
         return new OriRestClient(oriChainConfigProperties.getHost());
     }
 

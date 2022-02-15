@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 /**
@@ -24,6 +25,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
  * 
  * @since 0.1.0
  */
+@Component
 public class OriWriter implements ItemWriter<OriData> {
     private static final Logger LOGGER = LoggerFactory.getLogger(OriWriter.class);
 
@@ -45,7 +47,9 @@ public class OriWriter implements ItemWriter<OriData> {
     }
 
     private void writeBlock(List<? extends OriData> oriDataList) {
-        if (oriDataList.size() > 1) {
+        if (oriDataList == null || oriDataList.isEmpty()) {
+            throw new OriItemWriterException("should not receive an empty list on OriWriter", null);
+        } else if (oriDataList.size() > 1) {
             try {
                 oriClient.postBlocks(oriChainConfigProperties.getChainTokenSymbol(),
                         oriDataList.stream().map(OriData::getBlock)

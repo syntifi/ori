@@ -11,8 +11,7 @@ import com.syntifi.ori.dto.TransactionDTO;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MockChainProcessor
-        extends AbstractChainProcessor<MockChainData> {
+public class MockChainProcessor extends AbstractChainProcessor<MockChainData> {
 
     @Override
     public OriData process(MockChainData item) throws Exception {

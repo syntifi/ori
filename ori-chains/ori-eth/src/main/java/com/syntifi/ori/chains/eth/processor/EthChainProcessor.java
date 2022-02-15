@@ -16,8 +16,7 @@ import org.springframework.stereotype.Component;
 import org.web3j.protocol.core.methods.response.EthBlock.TransactionObject;
 
 @Component
-public class EthChainProcessor
-        extends AbstractChainProcessor<EthChainData> {
+public class EthChainProcessor extends AbstractChainProcessor<EthChainData> {
 
     @Override
     public OriData process(EthChainData item) throws Exception {

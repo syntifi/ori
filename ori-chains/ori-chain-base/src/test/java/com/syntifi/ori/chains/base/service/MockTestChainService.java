@@ -1,4 +1,4 @@
-package com.syntifi.ori.chains.base.client;
+package com.syntifi.ori.chains.base.service;
 
 import java.time.OffsetDateTime;
 import java.util.LinkedList;
@@ -33,9 +33,18 @@ public class MockTestChainService {
 
     private final List<MockChainTransfer> transfers;
 
+    private OriChainConfigProperties oriChainConfigProperties;
+
     public MockTestChainService(OriChainConfigProperties oriChainConfigProperties) {
         this.blocks = new LinkedList<>();
         this.transfers = new LinkedList<>();
+        this.oriChainConfigProperties = oriChainConfigProperties;
+        this.reset();
+    }
+
+    public void reset() {
+        this.blocks.clear();
+        this.transfers.clear();
         this.currentHeight = oriChainConfigProperties.getChainBlockZeroHeight() + 1L;
     }
 
@@ -69,8 +78,8 @@ public class MockTestChainService {
         }
 
         MockChainBlock block = currentHeight < MAX_BLOCK_HEIGHT ? MockChainBlock.builder()
-                .hash(String.format("BLOCK-HASH-BLOCK-HEIGHT-%s", currentHeight))
-                .parentHash(String.format("BLOCK-HASH-BLOCK-HEIGHT-%s", currentHeight - 1))
+                .hash(String.format(oriChainConfigProperties.getChainBlockZeroHash(), currentHeight))
+                .parentHash(String.format(oriChainConfigProperties.getChainBlockZeroHash(), currentHeight - 1))
                 .height(currentHeight++)
                 .timestamp(timestamp)
                 .build() : null;
