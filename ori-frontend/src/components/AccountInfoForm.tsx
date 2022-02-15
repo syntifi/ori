@@ -1,5 +1,6 @@
-import React, { ReactElement, FC } from "react";
-import { useFormik, FormikProvider, Form } from 'formik';
+import React, { ReactElement, FC, useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from 'yup';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -10,19 +11,19 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import { FormControl } from "@mui/material";
+import { OriAPI } from "../OriAPI"
 
 /**
  * Yup's validation scheme used by formik
  */
 const validationSchema = yup.object({
-    token: yup
-        .string()
-        .required('Please select a token'),
-    account: yup
-        .string()
-        .required('Please enter an account hash'),
-    timeStamp: yup
-        .string()
+  token: yup
+    .string()
+    .required('Please select a token'),
+  account: yup
+    .string()
+    .required('Please enter an account hash'),
+  timeStamp: yup.date()
 });
 
 /**
@@ -32,72 +33,90 @@ const validationSchema = yup.object({
  * @returns Formik form
  */
 const AccountInfoForm: FC<any> = ({ onSubmit, submit, date }): ReactElement => {
-    const formik = useFormik({
-        initialValues: {
-            token: null,
-            account: '',
-            timeStamp: new Date(),
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values) => {
-            onSubmit(values);
-        },
-    });
+  const { register, handleSubmit, setValue, getValues, formState: { errors } } = useForm({
+    resolver: yupResolver(validationSchema)
+  });
+  const [tokens, setTokens] = useState([]);
+  const timeStamp = getValues('timeStamp') as Date;
+  const [dateTime, setDateTime] = useState<any>(null);
 
-    return (
-        <FormikProvider value={formik}>
-            <Form onSubmit={formik.handleSubmit}>
-                <FormControl variant="standard" fullWidth>
-                    <InputLabel id="token">Token</InputLabel>
-                    <Select
-                        id="token"
-                        labelId="token"
-                        value={formik.values.token}
-                        onChange={formik.handleChange}
-                    >
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                </FormControl>
+  useEffect(() => {
+    register('timeStamp');
+  }, [register]);
 
-                <TextField
-                    id="account"
-                    name="account"
-                    label="Account"
-                    value={formik.values.account}
-                    onChange={formik.handleChange}
-                    error={formik.touched.account && Boolean(formik.errors.account)}
-                    helperText={formik.touched.account && formik.errors.account}
-                    margin="dense"
-                    variant="standard"
-                    fullWidth
-                />
+  useEffect(() => {
+    setDateTime(timeStamp || null);
+  }, [setDateTime, timeStamp]);
 
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DateTimePicker
-                        renderInput={(props) => <TextField
-                            variant="standard"
-                            margin="dense"
-                            helperText={formik.touched.timeStamp && formik.errors.timeStamp}
-                            error={formik.touched.timeStamp && Boolean(formik.errors.timeStamp)}
-                            fullWidth
-                            {...props} />}
-                        label={date}
-                        value={formik.values.timeStamp}
-                        inputFormat="yyyy-MM-dd HH:mm:ss"
-                        onChange={(dt) => {
-                            formik.setFieldValue("timeStamp", dt);
-                        }}
-                    />
-                </LocalizationProvider>
-                <div> </div>
-                <Button color="primary" variant="contained" fullWidth type="submit">
-                    {submit}
-                </Button>
-            </Form>
-        </FormikProvider>
-    );
+
+  useEffect(() => {
+    setDateTime(new Date())
+    OriAPI.get('token').then(response => {
+      const symbols = response.data.map((obj: any) => obj.symbol);
+      setTokens(symbols);
+    }).catch((e) => {
+      console.log("Error when retrieving data from backend application")
+      console.log(e.message);
+      setTokens([]);
+    })
+  }, []);
+
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <FormControl variant="standard" fullWidth>
+        <InputLabel id="tokenInputLabel">Token</InputLabel>
+        <Select
+          key="token"
+          id="token"
+          label="token"
+          labelId="tokenInputLabel"
+          inputProps={{ "data-testid": "select" }}
+          value={getValues("token")}
+          error={!!errors.token}
+          onChange={(event) => setValue("token", event.target.value)}
+        >
+          {console.log(tokens)}
+          {tokens.map((token, i) => <MenuItem key={token} value={token}>{token}</MenuItem>
+          )}
+        </Select>
+      </FormControl>
+
+      <TextField
+        id="account"
+        key="account"
+        label="Account"
+        error={!!errors.account}
+        helperText={errors.account?.message}
+        margin="dense"
+        variant="standard"
+        fullWidth
+        {...register("account")}
+      />
+
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <DateTimePicker
+          renderInput={(props) => <TextField
+            key="dateTime"
+            variant="standard"
+            margin="dense"
+            error={errors.dateTime?.message}
+            fullWidth
+            {...props} />}
+          label={date}
+          value={dateTime}
+          inputFormat="yyyy-MM-dd HH:mm:ss"
+          onChange={(dt) => {
+            setValue("timeStamp", dt, { shouldValidate: true, shouldDirty: true });
+          }}
+        />
+      </LocalizationProvider>
+      <div> </div>
+      <Button color="primary" variant="contained" fullWidth type="submit">
+        {submit}
+      </Button>
+    </form>
+  );
 }
 
 export default AccountInfoForm;

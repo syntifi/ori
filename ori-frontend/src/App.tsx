@@ -13,22 +13,6 @@ function App() {
       <RootDiv>
         <PaperDiv>
           <BrowserRouter>
-            <Grid
-              container
-              spacing={0}
-              direction="column"
-              alignItems="center"
-            >
-              <Box padding={5}>
-                <Grid item >
-                  <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-                    <Button component={Link} to={'/transaction'}> Transactions</Button>
-                    <Button component={Link} to={'/backtrace'}> Back trace</Button>
-                    <Button component={Link} to={'/forwardtrace'}> Forward Trace</Button>
-                  </ButtonGroup>
-                </Grid>
-              </Box>
-            </Grid>
             <Routes>
               <Route path="/" />
               <Route path="/transaction" element={<AccountList date="To" submit="Transactions" />} />

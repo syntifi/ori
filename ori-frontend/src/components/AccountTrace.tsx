@@ -11,7 +11,8 @@ import {
     Switch
 } from "@mui/material";
 import AccountInfoForm from "./AccountInfoForm";
-import axios from "axios";
+import { format } from 'date-fns'
+import { OriAPI } from '../OriAPI'
 
 /**
  * Component that renders the AccounInfo form, queries the backend for the data
@@ -29,53 +30,54 @@ const AccountTrace: FC<any> = ({ date, submit, direction }): ReactElement => {
     const [hierarchical, setHierarchical] = useState<boolean>(false)
 
     const loadData = (values: any) => {
-        const params = { [direction === "forward" ? "fromDate" : "toDate"]: values.timeStamp.toISOString().replace('Z', '') }
-        axios({
-            method: "GET",
-            url: `${process.env.REACT_APP_API_URL}/monitor/ETH/traceCoin/` + direction + '/' + values.account,
-            params: params
-        }).then(response => {
-            const uniqueIds: any[] = [];
-            const accountIdMap: any = {};
-            var i = 0;
-            response.data.forEach((item: any) => {
-                if (uniqueIds.indexOf(item.toHash) === -1) {
-                    uniqueIds.push(item.toHash)
-                    accountIdMap[item.toHash] = i
-                    i = i + 1
-                }
-                if (uniqueIds.indexOf(item.fromHash) === -1) {
-                    uniqueIds.push(item.fromHash)
-                    accountIdMap[item.fromHash] = i
-                    i = i + 1
-                }
-                
+        const params = {
+            [direction === "forward" ? "fromDate" : "toDate"]:
+                format(values.timeStamp, "yyyy-MM-dd'T'HH:mm:ss.SSSXXXX")
+        }
+        OriAPI.get('monitor/' + values.token + '/traceCoin/' + direction + '/' + values.account,
+            { params: params }).then(response => {
+                console.log(response)
+                const uniqueIds: any[] = [];
+                const accountIdMap: any = {};
+                var i = 0;
+                response.data.forEach((item: any) => {
+                    if (uniqueIds.indexOf(item.toHash) === -1) {
+                        uniqueIds.push(item.toHash)
+                        accountIdMap[item.toHash] = i
+                        i = i + 1
+                    }
+                    if (uniqueIds.indexOf(item.fromHash) === -1) {
+                        uniqueIds.push(item.fromHash)
+                        accountIdMap[item.fromHash] = i
+                        i = i + 1
+                    }
+
+                })
+                const newEdges: any[] = response.data.map((item: any) =>
+                ({
+                    from: accountIdMap[item.fromHash],
+                    to: accountIdMap[item.toHash],
+                    value: item.amount,
+                    title: item.amount / 1000000
+                }))
+                const newNodes: any[] = uniqueIds.map((val: string) =>
+                ({
+                    id: accountIdMap[val],
+                    color: val === values.account ? "#e53e3e" : "#fff",
+                    title: val
+                }))
+                console.log("============")
+                console.log({ nodes: newNodes, edges: newEdges })
+                console.log("============")
+                setGraph({ nodes: newNodes, edges: newEdges })
+            }).catch((e) => {
+                console.log("Error when retrieving data from backend application")
+                console.log(e.message);
+                setGraph({
+                    nodes: [],
+                    edges: []
+                })
             })
-            const newEdges: any[] = response.data.map((item: any) =>
-            ({
-                from: accountIdMap[item.fromHash],
-                to: accountIdMap[item.toHash],
-                value: item.amount,
-                title: item.amount / 1000000
-            }))
-            const newNodes: any[] = uniqueIds.map((val: string) =>
-            ({
-                id: accountIdMap[val],
-                color: val === values.account ? "#e53e3e" : "#fff",
-                title: val
-            }))
-            console.log("============")
-            console.log({ nodes: newNodes, edges: newEdges })
-            console.log("============")
-            setGraph({ nodes: newNodes, edges: newEdges })
-        }).catch((e) => {
-            console.log("Error when retrieving data from backend application")
-            console.log(e.message);
-            setGraph({
-                nodes: [],
-                edges: []
-            })
-        })
     }
 
     return (

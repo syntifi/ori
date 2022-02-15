@@ -2,7 +2,7 @@ import React, { ReactElement, FC, useState } from "react";
 import { Box, Grid, Card, CardHeader, CardContent } from "@mui/material";
 import AccountInfoForm from "./AccountInfoForm";
 import { DataGrid } from '@mui/x-data-grid';
-import axios from "axios";
+import { OriAPI } from '../OriAPI'
 
 /**
  * Component that renders the AccounInfo form, queries the backend for the data
@@ -22,23 +22,21 @@ const AccountList: FC<any> = ({ date, submit }): ReactElement => {
     const [rows, setRows] = useState([])
 
     const loadData = (values: any) => {
-        axios({
-            method: "GET",
-            url: `${process.env.REACT_APP_API_URL}/transaction/ETH/account/` + values.account,
-        }).then(response => {
-            console.log(response)
-            setRows(response.data.map((item: any) =>
-            ({
-                timeStamp: item.timeStamp,
-                fromHash: item.fromHash,
-                toHash: item.toHash,
-                amount: item.amount,
-                id: item.hash
-            })))
-        }).catch(e => {
-            console.log("Error when retrieving data from backend application")
-            console.log(e.message)
-        })
+        OriAPI.get('transaction/' + values.token + '/account/' + values.account).then(
+            response => {
+                console.log(response)
+                setRows(response.data.map((item: any) =>
+                ({
+                    timeStamp: item.timeStamp,
+                    fromHash: item.fromHash,
+                    toHash: item.toHash,
+                    amount: item.amount,
+                    id: item.hash
+                })))
+            }).catch(e => {
+                console.log("Error when retrieving data from backend application")
+                console.log(e.message)
+            })
     }
 
     return (
