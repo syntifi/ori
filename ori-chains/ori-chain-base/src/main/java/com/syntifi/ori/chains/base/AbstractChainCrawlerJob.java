@@ -103,8 +103,8 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
     }
 
     @Bean
-    public Step step1() {
-        return stepBuilderFactory.get("step1").<T, OriData>chunk(oriChainConfigProperties.getBatchChunkSize())
+    public Step crawlAndSendToOri() {
+        return stepBuilderFactory.get("crawlAndSendToOri").<T, OriData>chunk(oriChainConfigProperties.getBatchChunkSize())
                 .reader(getChainReader())
                 .processor(getChainProcessor())
                 .writer(oriWriter)
@@ -117,13 +117,13 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
     }
 
     @Bean
-    public Job job() {
+    public Job oriCrawlerJob() {
         createTokenIfNeeded();
         addBlockZeroIfNeeded();
-        return jobBuilderFactory.get("job")
+        return jobBuilderFactory.get(getClass().getSimpleName())
                 .incrementer(new RunIdIncrementer())
                 .listener(new OriJobExecutionListener())
-                .start(step1())
+                .start(crawlAndSendToOri())
                 .build();
     }
 }
