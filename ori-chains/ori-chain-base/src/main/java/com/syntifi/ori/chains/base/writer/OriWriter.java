@@ -10,8 +10,8 @@ import com.syntifi.ori.client.OriClient;
 import com.syntifi.ori.dto.AccountDTO;
 import com.syntifi.ori.dto.TransactionDTO;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
  */
 @Component
 public class OriWriter implements ItemWriter<OriData> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(OriWriter.class);
+
+    protected static final Log logger = LogFactory.getLog(OriWriter.class);
 
     private OriClient oriClient;
     private OriChainConfigProperties oriChainConfigProperties;
@@ -61,7 +62,8 @@ public class OriWriter implements ItemWriter<OriData> {
                                     getExceptionCause(e)),
                             e);
                 } else {
-                    LOGGER.warn("blocks (or some blocks) already exists ({} blocks)", oriDataList.size());
+                    logger.warn(
+                            String.format("blocks (or some blocks) already exists (%s blocks)", oriDataList.size()));
                 }
             }
         } else {
@@ -74,7 +76,7 @@ public class OriWriter implements ItemWriter<OriData> {
                             "error while writing block %s - (%s[%s])", oriData.getBlock().getHash(),
                             e.getMessage(), getExceptionCause(e)), e);
                 } else {
-                    LOGGER.warn("block {} already exists", oriData.getBlock().getHash());
+                    logger.warn(String.format("block %s already exists", oriData.getBlock().getHash()));
                 }
             }
         }
@@ -94,7 +96,7 @@ public class OriWriter implements ItemWriter<OriData> {
                                     "error while writing transaction %s: (%s[%s])", transfer.getHash(), e.getMessage(),
                                     getExceptionCause(e)), e);
                         } else {
-                            LOGGER.warn("transaction {} already exists", transfer.getHash());
+                            logger.warn(String.format("transaction %s already exists", transfer.getHash()));
                         }
                     }
                 }
@@ -116,7 +118,7 @@ public class OriWriter implements ItemWriter<OriData> {
                         "error while writing account %s - (%s[%s])", hash, e.getMessage(),
                         getExceptionCause(e)), e);
             } else {
-                LOGGER.warn("account {} already exists", hash);
+                logger.warn(String.format("account %s already exists", hash));
             }
         }
     }

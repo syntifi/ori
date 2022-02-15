@@ -13,10 +13,10 @@ import com.syntifi.ori.chains.base.model.MockChainTransfer;
 import com.syntifi.ori.chains.base.model.OriData;
 import com.syntifi.ori.chains.base.service.MockTestChainService;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.test.MetaDataInstanceFactory;
 import org.springframework.batch.test.context.SpringBatchTest;
@@ -28,7 +28,8 @@ import org.springframework.test.context.TestPropertySource;
 @ContextConfiguration(classes = { MockChainConfig.class, MockChainCrawlerJob.class })
 @TestPropertySource("classpath:application.properties")
 public class MockChainProcessorTest {
-    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+
+    protected static final Log logger = LogFactory.getLog(MockChainProcessorTest.class);
 
     @Autowired
     private MockChainProcessor processor;
@@ -44,11 +45,7 @@ public class MockChainProcessorTest {
 
     @Test
     public void testProcessor(@Autowired MockTestChainService mockTestChainService) throws Exception {
-
-        LOGGER.info("testProcessor - mockTestChainService is null? " + (mockTestChainService == null));
         MockChainBlock chainBlock = mockTestChainService.getBlock();
-        LOGGER.info("testProcessor - chainBlock is null? " + (chainBlock == null));
-        LOGGER.info("testProcessor - chainBlock hash: " + chainBlock.getHash());
 
         List<MockChainTransfer> chainTransfers = new LinkedList<>();
 

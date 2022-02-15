@@ -9,6 +9,7 @@ import org.web3j.protocol.http.HttpService;
 
 @Configuration
 public class EthChainConfig extends OriChainConfig {
+    
     @Bean
     protected Web3j getServiceInstance() {
         return Web3j.build(

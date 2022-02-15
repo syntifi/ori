@@ -7,12 +7,14 @@ import com.syntifi.ori.client.MockOriRestClient;
 import com.syntifi.ori.client.OriClient;
 
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 
 @EnableBatchProcessing
+@EnableAutoConfiguration
 @Configuration
 @ComponentScans(value = { @ComponentScan("com.syntifi.ori.chains.base") })
 public class MockChainConfig extends OriChainConfig {

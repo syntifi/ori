@@ -11,6 +11,7 @@ import com.syntifi.ori.client.OriClient;
 
 import org.mockito.Mockito;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -19,6 +20,7 @@ import org.web3j.protocol.core.JsonRpc2_0Web3j;
 import org.web3j.protocol.http.HttpService;
 
 @EnableBatchProcessing
+@EnableAutoConfiguration
 @Configuration
 @Import(value = { OriWriter.class, EthChainReader.class, EthChainProcessor.class })
 public class EthTestChainConfig extends OriChainConfig {

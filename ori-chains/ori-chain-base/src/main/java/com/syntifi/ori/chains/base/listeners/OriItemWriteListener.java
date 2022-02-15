@@ -4,28 +4,28 @@ import java.util.List;
 
 import com.syntifi.ori.chains.base.model.OriData;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.batch.core.annotation.AfterWrite;
 import org.springframework.batch.core.annotation.BeforeWrite;
 import org.springframework.batch.core.annotation.OnWriteError;
 
 public class OriItemWriteListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OriItemWriteListener.class);
+    protected static final Log logger = LogFactory.getLog(OriItemWriteListener.class);
 
     @BeforeWrite
     public void beforeWrite(List<OriData> items) {
-        LOGGER.debug("Writing next blocks");
+        logger.debug("Writing next blocks");
     }
 
     @AfterWrite
     public void afterWrite(List<OriData> items) {
-        LOGGER.debug("Next blocks written");
+        logger.debug("Next blocks written");
     }
 
     @OnWriteError
     public void onWriteError(Exception e, List<OriData> items) {
-        LOGGER.error("Error writing next blocks: {}", e.getMessage());
+        logger.error(String.format("Error writing next blocks: %s", e.getMessage()));
     }
 }
