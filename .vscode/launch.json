@@ -5,7 +5,6 @@
 {
     "version": "0.2.0",
     "configurations": [
-
         {
             "type": "java",
             "name": "Launch EthChainCrawlerApplication",
@@ -27,6 +26,37 @@
             "hostName": "localhost",
             "name": "Debug Quarkus application (ori-api)",
             "port": 5005
-        }
+        },
+        {
+            "name": "Launch jest tests",
+            "type": "node",
+            "request": "launch",
+            "args": [
+              "test",
+              "--runInBand",
+              "--no-cache",
+              "--coverage",
+              "--unhandled-rejections=strict"
+            ],
+            "cwd": "${workspaceFolder}/ori-frontend",
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "disableOptimisticBPs": true,
+            "runtimeExecutable":
+              "${workspaceFolder}/ori-frontend/node_modules/.bin/react-scripts",
+            "protocol": "inspector"
+          },
+          {
+            "name": "Launch Firefox",
+            "type": "firefox",
+            "request": "launch",
+            "url": "http://localhost:3000",
+            "pathMappings": [
+              {
+                "url": "http://localhost:3000/",
+                "path": "${workspaceFolder}/"
+              }
+            ]
+          }
     ]
 }
