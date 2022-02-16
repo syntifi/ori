@@ -2,6 +2,8 @@ package com.syntifi.ori.dto;
 
 import java.time.OffsetDateTime;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
@@ -15,22 +17,29 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BlockDTO {
+public class BlockDTO implements OriDTO {
 
+    @NotNull
     private String hash;
 
+    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
     private OffsetDateTime timeStamp;
 
+    @NotNull
     private Long height;
 
+    @NotNull
     private Long era;
 
+    @NotNull
     private String root;
 
+    @NotNull
     private String validator;
 
     private String parent;
 
+    @NotNull
     private String tokenSymbol;
 }

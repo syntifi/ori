@@ -2,6 +2,7 @@ package com.syntifi.ori.chains.base.processor;
 
 import java.util.LinkedList;
 
+import com.syntifi.ori.chains.base.OriChainConfigProperties;
 import com.syntifi.ori.chains.base.model.MockChainData;
 import com.syntifi.ori.chains.base.model.MockChainTransfer;
 import com.syntifi.ori.chains.base.model.OriData;
@@ -13,20 +14,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class MockChainProcessor extends AbstractChainProcessor<MockChainData> {
 
+    protected MockChainProcessor(OriChainConfigProperties oriChainConfigProperties) {
+        super(oriChainConfigProperties);
+    }
+
     @Override
     public OriData process(MockChainData item) throws Exception {
         final OriData result = new OriData();
 
-        result.setBlock(BlockDTO.builder()
-                .hash(item.getChainBlock().getHash())
-                .height(item.getChainBlock().getHeight())
-                .build());
+        BlockDTO blockDTO = item.getChainBlock().toDTO();
+        blockDTO.setTokenSymbol(oriChainConfigProperties.getChainTokenSymbol());
+        blockDTO.check();
+
+        result.setBlock(blockDTO);
 
         result.setTransfers(new LinkedList<>());
         for (MockChainTransfer transfer : item.getChainTransfers()) {
-            result.getTransfers().add(TransactionDTO.builder()
-                    .hash(transfer.getHash())
-                    .build());
+            TransactionDTO transactionDTO = transfer.toDTO();
+            transactionDTO.setTokenSymbol(getOriChainConfigProperties().getChainTokenSymbol());
+            transactionDTO.check();
+            result.getTransfers().add(transactionDTO);
         }
 
         return result;

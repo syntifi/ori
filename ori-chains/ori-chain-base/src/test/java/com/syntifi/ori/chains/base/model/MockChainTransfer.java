@@ -1,5 +1,11 @@
 package com.syntifi.ori.chains.base.model;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+
+import com.syntifi.ori.dto.TransactionDTO;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,5 +18,17 @@ public class MockChainTransfer {
     private String toHash;
     private String fromHash;
     private String blockHash;
-    private long amount;
+    private double amount;
+    private long timestamp;
+
+    public TransactionDTO toDTO() {
+        return TransactionDTO.builder()
+                .hash(hash)
+                .toHash(toHash)
+                .fromHash(fromHash)
+                .blockHash(blockHash)
+                .timeStamp(OffsetDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.systemDefault()))
+                .amount(amount) // TODO: Improve this
+                .build();
+    }
 }

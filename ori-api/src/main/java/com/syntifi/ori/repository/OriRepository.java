@@ -6,15 +6,13 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 
-public interface Repository<T> extends PanacheRepository<T> {
+public interface OriRepository<T> extends PanacheRepository<T> {
+    static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     public default void check(T obj) throws ConstraintViolationException {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(obj);
         if (!constraintViolations.isEmpty()) {
             throw new ConstraintViolationException(

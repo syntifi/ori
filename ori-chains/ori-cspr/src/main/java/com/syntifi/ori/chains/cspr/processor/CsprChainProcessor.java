@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.syntifi.casper.sdk.model.block.JsonBlock;
 import com.syntifi.casper.sdk.model.transfer.Transfer;
+import com.syntifi.ori.chains.base.OriChainConfigProperties;
 import com.syntifi.ori.chains.base.model.OriData;
 import com.syntifi.ori.chains.base.processor.AbstractChainProcessor;
 import com.syntifi.ori.chains.cspr.model.CsprChainData;
@@ -19,6 +20,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class CsprChainProcessor extends AbstractChainProcessor<CsprChainData> {
 
+    protected CsprChainProcessor(OriChainConfigProperties oriChainConfigProperties) {
+        super(oriChainConfigProperties);
+    }
+
     @Override
     public OriData process(CsprChainData item) throws Exception {
         final OriData result = new OriData();
@@ -26,6 +31,7 @@ public class CsprChainProcessor extends AbstractChainProcessor<CsprChainData> {
         // Block processor
         JsonBlock casperBlock = item.getChainBlock();
         BlockDTO block = new BlockDTO();
+        block.setTokenSymbol(oriChainConfigProperties.getChainTokenSymbol());
         block.setParent(item.getChainBlock().getHeader().getParentHash());
         block.setEra(casperBlock.getHeader().getEraId());
         block.setHash(casperBlock.getHash());
@@ -41,6 +47,7 @@ public class CsprChainProcessor extends AbstractChainProcessor<CsprChainData> {
         result.setTransfers(transfers);
         for (Transfer chainTransfer : item.getChainTransfers()) {
             TransactionDTO oriTransfer = new TransactionDTO();
+            oriTransfer.setTokenSymbol(oriChainConfigProperties.getChainTokenSymbol());
             oriTransfer.setBlockHash(block.getHash());
             oriTransfer.setFromHash(chainTransfer.getFrom());
             oriTransfer.setToHash(chainTransfer.getTo());

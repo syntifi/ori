@@ -9,7 +9,7 @@ import com.syntifi.ori.model.Block;
 import io.quarkus.panache.common.Sort;
 
 @ApplicationScoped
-public class BlockRepository implements Repository<Block> {
+public class BlockRepository implements OriRepository<Block> {
 
     public Block findByTokenSymbolAndHash(String tokenSymbol, String hash) {
         return find("token_symbol= ?1 and hash = ?2", tokenSymbol, hash).singleResult();

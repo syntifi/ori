@@ -13,12 +13,12 @@ public class OriChunkListener {
 
     @BeforeChunk
     public void beforeChunk(ChunkContext context) {
-        logger.debug("Processing next chunk");
+        logger.info("Processing next chunk");
     }
 
     @AfterChunk
     public void afterChunk(ChunkContext context) {
-        logger.debug("Chunk processed.");
+        logger.info("Chunk processed.");
     }
 
     @AfterChunkError

@@ -2,6 +2,8 @@ package com.syntifi.ori.chains.base.model;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.syntifi.ori.dto.BlockDTO;
 import com.syntifi.ori.dto.TransactionDTO;
 
@@ -25,7 +27,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class OriData {
+    @Valid
     private BlockDTO block;
 
+    @Valid
     private List<TransactionDTO> transfers;
 }

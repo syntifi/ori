@@ -6,9 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.syntifi.ori.chains.base.MockChainConfig;
 import com.syntifi.ori.chains.base.MockChainCrawlerJob;
+import com.syntifi.ori.chains.base.OriChainConfigProperties;
 import com.syntifi.ori.chains.base.exception.OriItemWriterException;
 import com.syntifi.ori.chains.base.model.OriData;
 import com.syntifi.ori.chains.base.service.MockTestChainService;
@@ -28,6 +30,12 @@ import org.springframework.test.context.TestPropertySource;
 @ContextConfiguration(classes = { MockChainConfig.class, MockChainCrawlerJob.class })
 @TestPropertySource("classpath:application.properties")
 public class OriWriterTest {
+
+    @Autowired
+    private MockTestChainService mockTestChainService;
+
+    @Autowired
+    private OriChainConfigProperties oriChainConfigProperties;
 
     @Autowired
     private OriWriter writer;
@@ -50,27 +58,28 @@ public class OriWriterTest {
     }
 
     @Test
-    public void testWriter_savingExisting_shouldThrowOriWriterException() throws IOException, InterruptedException {
+    public void testWriter_savingExisting_shouldIgnoreNotThrowOriWriterException()
+            throws IOException, InterruptedException {
         List<OriData> oriData = new LinkedList<>();
 
-        oriData.add(getBlock(0, 0, "parentHash"));
+        oriData.add(getBlock(1));
 
         assertDoesNotThrow(() -> writer.write(oriData));
 
         assertDoesNotThrow(() -> writer.write(oriData));
     }
 
-    private OriData getBlock(long height, int tranferCount, String parentHash) {
-        List<TransactionDTO> transfers = new LinkedList<>();
-
+    private OriData getBlock(int tranferCount) {
+        BlockDTO block = mockTestChainService.getBlock().toDTO();
+        block.setTokenSymbol(oriChainConfigProperties.getChainTokenSymbol());
+        
+        List<TransactionDTO> transfers = mockTestChainService.getTransfers(block.getHash(), tranferCount)
+                .stream()
+                .map(t -> t.toDTO())
+                .collect(Collectors.toList());
+        transfers.forEach(a -> a.setTokenSymbol(oriChainConfigProperties.getChainTokenSymbol()));
         return OriData.builder()
-                .block(BlockDTO.builder()
-                        .hash("hash-" + height)
-                        .height(height)
-                        .era(0L)
-                        .parent(parentHash)
-                        .root("root-" + height)
-                        .build())
+                .block(block)
                 .transfers(transfers).build();
     }
 }

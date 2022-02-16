@@ -73,15 +73,4 @@ public class MockChainCrawlerJobTest {
         BlockDTO oriBlock = oriClient.getLastBlock(oriChainConfigProperties.getChainTokenSymbol());
         assertNotNull(service.getBlock(oriBlock.getHash()));
     }
-
-    // TODO: Create test for batchSize = 1
-
-    // TODO: Create test for BLOCK CONFLICT (save one item that already exists)
-
-    // TODO: Create test for TRANSACTION CONFLICT (save one item that already
-    // exists)
-
-    // TODO: Create test for ACCOUNT CREATION
-
-    // TODO: Create test for ACCOUNT CONFLICT (save one item that already exists)
 }

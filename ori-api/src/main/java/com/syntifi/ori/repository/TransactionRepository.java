@@ -12,7 +12,7 @@ import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
 
 @ApplicationScoped
-public class TransactionRepository implements Repository<Transaction> {
+public class TransactionRepository implements OriRepository<Transaction> {
 
     public Transaction findByTokenSymbolAndHash(String tokenSymbol, String hash) {
         return find("block_token_symbol = ?1 AND hash = ?2", tokenSymbol, hash).singleResult();

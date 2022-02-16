@@ -14,12 +14,12 @@ public class ChainItemReadListener<T extends ChainData<?, ?>> {
 
     @BeforeRead
     public void beforeRead() {
-        logger.debug("Reading next block");
+        logger.info("Reading next block");
     }
 
     @AfterRead
     public void afterRead(T item) {
-        logger.debug("Next block read");
+        logger.info("Next block read");
     }
 
     @OnReadError

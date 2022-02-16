@@ -29,7 +29,6 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import lombok.AccessLevel;
@@ -74,18 +73,18 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
 
     private void createTokenIfNeeded() {
         try {
-            logger.debug("Getting token from properties...");
+            logger.info("Getting token from properties...");
 
             oriClient.getToken(oriChainConfigProperties.getChainTokenSymbol());
 
-            logger.debug(String.format("...found for value \"%s\".", oriChainConfigProperties.getChainTokenSymbol()));
+            logger.info(String.format("...found for value \"%s\".", oriChainConfigProperties.getChainTokenSymbol()));
         } catch (WebClientResponseException e) {
-            logger.debug(
+            logger.info(
                     String.format("...not found for value \"%s\".", oriChainConfigProperties.getChainTokenSymbol()),
                     e);
 
             if (e.getRawStatusCode() == 404) {
-                logger.debug(String.format("Token \"%s\" not found. Creating...",
+                logger.info(String.format("Token \"%s\" not found. Creating...",
                         oriChainConfigProperties.getChainTokenSymbol()));
 
                 TokenDTO token = new TokenDTO();
@@ -94,28 +93,28 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
                 token.setProtocol(oriChainConfigProperties.getChainTokenProtocol());
                 oriClient.postToken(token);
 
-                logger.debug(String.format("...token \"%s\" created!", oriChainConfigProperties.getChainTokenSymbol()));
+                logger.info(String.format("...token \"%s\" created!", oriChainConfigProperties.getChainTokenSymbol()));
             }
         }
     }
 
     private void addBlockZeroIfNeeded() {
         try {
-            logger.debug(String.format("Retrieving zero hash block for \"%s\"...",
+            logger.info(String.format("Retrieving zero hash block for \"%s\"...",
                     oriChainConfigProperties.getChainTokenSymbol()));
 
             oriClient.getBlock(oriChainConfigProperties.getChainTokenSymbol(),
                     oriChainConfigProperties.getChainBlockZeroHash());
 
-            logger.debug(String.format("...zero hash block found for \"%s\" with hash \"%s\" and height \"%s\".",
+            logger.info(String.format("...zero hash block found for \"%s\" with hash \"%s\" and height \"%s\".",
                     oriChainConfigProperties.getChainTokenSymbol(), oriChainConfigProperties.getChainBlockZeroHash(),
                     oriChainConfigProperties.getChainBlockZeroHeight()));
         } catch (WebClientResponseException e) {
-            logger.debug(
+            logger.info(
                     String.format("...not found for token \"%s\".", oriChainConfigProperties.getChainTokenSymbol()), e);
 
             if (e.getRawStatusCode() == 404) {
-                logger.debug(String.format("Zero hash block for token \"%s\" not found. Creating...",
+                logger.info(String.format("Zero hash block for token \"%s\" not found. Creating...",
                         oriChainConfigProperties.getChainTokenSymbol()));
 
                 BlockDTO block = new BlockDTO();
@@ -127,7 +126,7 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
                 block.setValidator(oriChainConfigProperties.getChainBlockZeroHash());
                 oriClient.postBlock(oriChainConfigProperties.getChainTokenSymbol(), block);
 
-                logger.debug(String.format("...zero hash block for token \"%s\" and hash \"%s\" created!",
+                logger.info(String.format("...zero hash block for token \"%s\" and hash \"%s\" created!",
                         oriChainConfigProperties.getChainTokenSymbol(),
                         oriChainConfigProperties.getChainBlockZeroHash()));
             }
@@ -136,7 +135,7 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
 
     @Bean
     public Step crawlAndSendToOri() {
-        logger.debug(String.format("Registering step \"crawlAndSendToOri\" for \"%s\"", getClass().getSimpleName()));
+        logger.info(String.format("Registering step \"crawlAndSendToOri\" for \"%s\"", getClass().getSimpleName()));
 
         return stepBuilderFactory.get("crawlAndSendToOri")
                 .<T, OriData>chunk(oriChainConfigProperties.getBatchChunkSize())
@@ -156,7 +155,7 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
         createTokenIfNeeded();
         addBlockZeroIfNeeded();
 
-        logger.debug(String.format("Registering job \"oriCrawlerJob\" for \"%s\"", getClass().getSimpleName()));
+        logger.info(String.format("Registering job \"oriCrawlerJob\" for \"%s\"", getClass().getSimpleName()));
 
         return jobBuilderFactory.get(getClass().getSimpleName())
                 .incrementer(new RunIdIncrementer())

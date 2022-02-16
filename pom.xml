@@ -62,6 +62,8 @@
     <junit.version>5.8.2</junit.version>
     <mockito.version>4.3.1</mockito.version>
     <jackson.version>2.13.1</jackson.version>
+    <validation-api.version>2.0.1.Final</validation-api.version>
+    <bval-jsr.version>2.0.5</bval-jsr.version>
     <!-- global dependency versions -->
 
     <!-- global plugin versions -->
@@ -145,6 +147,21 @@
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
         <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>${validation-api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.bval</groupId>
+        <artifactId>bval-jsr</artifactId>
+        <version>${bval-jsr.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.bval</groupId>
+        <artifactId>bval-extras</artifactId>
+        <version>${bval-jsr.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

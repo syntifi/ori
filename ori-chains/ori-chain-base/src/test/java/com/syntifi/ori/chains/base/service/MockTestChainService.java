@@ -14,8 +14,10 @@ import com.syntifi.ori.chains.base.model.MockChainBlock;
 import com.syntifi.ori.chains.base.model.MockChainTransfer;
 
 public class MockTestChainService {
-    protected static final long MIN_TRANSFER_AMOUNT = 100;
-    protected static final long MAX_TRANSFER_AMOUNT = 100000000;
+    protected static final Random RANDOM = new Random();
+
+    protected static final double MIN_TRANSFER_AMOUNT = 100.0;
+    protected static final double MAX_TRANSFER_AMOUNT = 100000.0;
 
     protected static final long MIN_START_TIMESTAMP = OffsetDateTime.now().minusYears(3).toEpochSecond();
     protected static final long MAX_START_TIMESTAMP = OffsetDateTime.now().minusYears(1).toEpochSecond();
@@ -96,9 +98,13 @@ public class MockTestChainService {
     }
 
     public List<MockChainTransfer> getTransfers(String blockHash) {
+        return getTransfers(blockHash, randomInRange(MIN_TRANSACTIONS, MAX_TRANSACTIONS));
+    }
+
+    public List<MockChainTransfer> getTransfers(String blockHash, long transactionCount) {
+        MockChainBlock block = getBlock(blockHash);
         List<MockChainTransfer> transfers = new LinkedList<>();
-        long maxTransactions = randomInRange(MIN_TRANSACTIONS, MAX_TRANSACTIONS);
-        for (int i = 0; i < maxTransactions; i++) {
+        for (int i = 0; i < transactionCount; i++) {
             String fromHash = getAccountHashFromPool(null);
             String toHash = getAccountHashFromPool(fromHash);
             transfers.add(MockChainTransfer.builder()
@@ -106,6 +112,7 @@ public class MockTestChainService {
                     .toHash(toHash)
                     .fromHash(fromHash)
                     .blockHash(blockHash)
+                    .timestamp(block.getTimestamp())
                     .amount(randomInRange(MIN_TRANSFER_AMOUNT, MAX_TRANSFER_AMOUNT))
                     .build());
         }
@@ -118,6 +125,7 @@ public class MockTestChainService {
         this.transfers.addAll(transfers);
 
         return transfers;
+
     }
 
     private String getAccountHashFromPool(String exceptHash) {
@@ -128,23 +136,24 @@ public class MockTestChainService {
             }
         }
 
-        Random r = new Random();
-
         return this.accountHashes.stream().filter(h -> !h.equals(exceptHash)).collect(Collectors.toList())
-                .get(r.nextInt(this.accountHashes.size() - 1));
+                .get(RANDOM.nextInt(this.accountHashes.size() - 1));
     }
 
     private String generateRandomHash(int length) {
-        Random r = new Random();
         StringBuffer sb = new StringBuffer();
         while (sb.length() < length) {
-            sb.append(Integer.toHexString(r.nextInt()));
+            sb.append(Integer.toHexString(RANDOM.nextInt()));
         }
 
         return sb.toString().substring(0, length);
     }
 
     protected static long randomInRange(long min, long max) {
-        return (long) (Math.random() * (max - min)) + min;
+        return (long) (RANDOM.nextDouble() * (max - min)) + min;
+    }
+
+    protected static double randomInRange(double min, double max) {
+        return (RANDOM.nextDouble() * (max - min)) + min;
     }
 }

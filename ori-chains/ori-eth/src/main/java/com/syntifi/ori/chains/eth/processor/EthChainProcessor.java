@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.syntifi.ori.chains.base.OriChainConfigProperties;
 import com.syntifi.ori.chains.base.model.OriData;
 import com.syntifi.ori.chains.base.processor.AbstractChainProcessor;
 import com.syntifi.ori.chains.eth.model.EthChainData;
@@ -18,12 +19,17 @@ import org.web3j.protocol.core.methods.response.EthBlock.TransactionObject;
 @Component
 public class EthChainProcessor extends AbstractChainProcessor<EthChainData> {
 
+    protected EthChainProcessor(OriChainConfigProperties oriChainConfigProperties) {
+        super(oriChainConfigProperties);
+    }
+
     @Override
     public OriData process(EthChainData item) throws Exception {
         final OriData result = new OriData();
 
         // Block processor
         BlockDTO block = new BlockDTO();
+        block.setTokenSymbol(oriChainConfigProperties.getChainTokenSymbol());
         block.setHash(item.getChainBlock().getResult().getHash());
         block.setHeight(item.getChainBlock().getResult().getNumber().longValue());
         block.setParent(item.getChainBlock().getResult().getParentHash());
@@ -38,6 +44,7 @@ public class EthChainProcessor extends AbstractChainProcessor<EthChainData> {
         List<TransactionDTO> transfers = new LinkedList<>();
         for (TransactionObject t : item.getChainTransfers()) {
             TransactionDTO transfer = new TransactionDTO();
+            transfer.setTokenSymbol(oriChainConfigProperties.getChainTokenSymbol());
             transfer.setHash(t.getHash());
             transfer.setBlockHash(t.getBlockHash());
             transfer.setFromHash(t.getFrom());

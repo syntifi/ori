@@ -5,7 +5,7 @@ import javax.enterprise.context.ApplicationScoped;
 import com.syntifi.ori.model.Token;
 
 @ApplicationScoped
-public class TokenRepository implements Repository<Token> {
+public class TokenRepository implements OriRepository<Token> {
 
     public Token findBySymbol(String symbol) {
         return find("symbol", symbol).singleResult();

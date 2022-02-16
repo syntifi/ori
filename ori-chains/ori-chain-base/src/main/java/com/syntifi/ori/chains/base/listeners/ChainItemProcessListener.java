@@ -15,13 +15,13 @@ public class ChainItemProcessListener<T extends ChainData<?, ?>> {
 
     @BeforeProcess
     public void beforeProcess(T item) {
-        logger.debug(String.format("Starting processing of block with %s transfers.",
+        logger.info(String.format("Starting processing of block with %s transfers.",
                 item.getChainTransfers() != null ? item.getChainTransfers().size() : 0));
     }
 
     @AfterProcess
     public void afterProcess(T item, OriData result) {
-        logger.debug(String.format("Finished processing of block with %s transfers.",
+        logger.info(String.format("Finished processing of block with %s transfers.",
                 result.getTransfers() != null ? result.getTransfers().size() : 0));
     }
 

@@ -16,12 +16,12 @@ public class OriItemWriteListener {
 
     @BeforeWrite
     public void beforeWrite(List<OriData> items) {
-        logger.debug("Writing next blocks");
+        logger.info("Writing next blocks");
     }
 
     @AfterWrite
     public void afterWrite(List<OriData> items) {
-        logger.debug("Next blocks written");
+        logger.info("Next blocks written");
     }
 
     @OnWriteError
