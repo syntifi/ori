@@ -32,10 +32,7 @@ import org.web3j.protocol.core.methods.response.EthBlock;
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = { EthTestChainConfig.class, EthChainCrawlerJob.class })
 @TestPropertySource("classpath:application.properties")
-public class EthChainCrawlerJobTest implements InitializingBean {
-
-    private final static int MAX_HEIGHT = 10;
-    private int currentHeight = 0;
+public class EthChainCrawlerJobTest extends AbstractEthChainTest {
 
     @Autowired
     public OriClient oriClient;
@@ -49,20 +46,6 @@ public class EthChainCrawlerJobTest implements InitializingBean {
     @Autowired
     private JobLauncherTestUtils jobLauncherTestUtils;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        @SuppressWarnings("unchecked")
-        Request<?, EthBlock> mockRequest = (Request<?, EthBlock>) Mockito.mock(Request.class);
-
-        when(service.ethGetBlockByNumber(any(DefaultBlockParameter.class), eq(true))).thenAnswer(i -> {
-            return ++currentHeight < MAX_HEIGHT ? i.callRealMethod() : mockRequest;
-        });
-
-        when(mockRequest.send()).thenAnswer(i -> {
-            return new EthBlock();
-        });
-    }
-
     @Test
     void testJob() throws Exception {
         JobExecution jobExecution = jobLauncherTestUtils.launchJob();
@@ -72,19 +55,5 @@ public class EthChainCrawlerJobTest implements InitializingBean {
         StepExecution stepExecution = jobExecution.getStepExecutions().iterator().next();
 
         assertEquals(BatchStatus.COMPLETED, stepExecution.getStatus());
-
-        // TODO: Improve comparison input/output
-        BlockDTO oriBlock = oriClient.getLastBlock(oriChainConfigProperties.getChainTokenSymbol());
-        // assertNotNull(service.getBlock(oriBlock.getHash()));
     }
-    // TODO: Create test for batchSize = 1
-
-    // TODO: Create test for BLOCK CONFLICT (save one item that already exists)
-
-    // TODO: Create test for TRANSACTION CONFLICT (save one item that already
-    // exists)
-
-    // TODO: Create test for ACCOUNT CREATION
-
-    // TODO: Create test for ACCOUNT CONFLICT (save one item that already exists)
 }

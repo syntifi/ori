@@ -34,8 +34,7 @@ public class EthChainReader extends AbstractChainReader<Web3j, EthChainData> {
         EthBlock block = blockRequest.send();
 
         // Stop reading if no block data for given height
-        // TODO: Validate if whole block/getResult is null or other stop condition
-        if (block.getResult() == null) {
+        if (block == null || block.getResult() == null) {
             return null;
         }
 
