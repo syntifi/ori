@@ -27,6 +27,12 @@ public class MockOriRestClient implements OriClient {
 
     private final List<AccountDTO> accounts;
 
+    private boolean throwError = false;
+
+    private HttpStatus errorCode;
+
+    private String methodToThrow;
+
     public MockOriRestClient() {
         this.tokens = new LinkedList<>();
         this.blocks = new LinkedList<>();
@@ -40,10 +46,29 @@ public class MockOriRestClient implements OriClient {
         this.blocks.clear();
         this.transactions.clear();
         this.accounts.clear();
+        this.stopGeneratingErrorOnRequest();
+    }
+
+    public void generateErrorOnRequest(HttpStatus codeToThrow, String methodToThrow) {
+        this.throwError = true;
+        this.methodToThrow = methodToThrow;
+        this.errorCode = codeToThrow;
+    }
+
+    public void stopGeneratingErrorOnRequest() {
+        this.throwError = false;
+        this.methodToThrow = null;
+        this.errorCode = null;
     }
 
     @Override
     public TokenDTO getToken(String tokenSymbol) throws WebClientResponseException {
+        if (throwError && methodToThrow.equals(new Throwable().getStackTrace()[0].getMethodName())) {
+            throw WebClientResponseException.create(this.errorCode.value(), this.errorCode.getReasonPhrase(), null,
+                    null,
+                    Charset.defaultCharset());
+        }
+
         return this.tokens.stream().filter(t -> t.getSymbol().equals(tokenSymbol)).findFirst()
                 .orElseThrow(
                         () -> WebClientResponseException.create(HttpStatus.NOT_FOUND.value(), "Not found", null, null,
@@ -52,6 +77,12 @@ public class MockOriRestClient implements OriClient {
 
     @Override
     public JsonObject postToken(TokenDTO token) throws WebClientResponseException {
+        if (throwError && methodToThrow.equals(new Throwable().getStackTrace()[0].getMethodName())) {
+            throw WebClientResponseException.create(this.errorCode.value(), this.errorCode.getReasonPhrase(), null,
+                    null,
+                    Charset.defaultCharset());
+        }
+
         this.tokens.add(token);
         // TODO: What to return here?
         return new JsonObject();
@@ -59,6 +90,12 @@ public class MockOriRestClient implements OriClient {
 
     @Override
     public BlockDTO getBlock(String tokenSymbol, String hash) throws WebClientResponseException {
+        if (throwError && methodToThrow.equals(new Throwable().getStackTrace()[0].getMethodName())) {
+            throw WebClientResponseException.create(this.errorCode.value(), this.errorCode.getReasonPhrase(), null,
+                    null,
+                    Charset.defaultCharset());
+        }
+
         return this.blocks.stream()
                 .filter(t -> t.getTokenSymbol().equals(tokenSymbol) && t.getHash().equals(hash)).findFirst()
                 .orElseThrow(
@@ -68,6 +105,12 @@ public class MockOriRestClient implements OriClient {
 
     @Override
     public BlockDTO getLastBlock(String tokenSymbol) throws WebClientResponseException {
+        if (throwError && methodToThrow.equals(new Throwable().getStackTrace()[0].getMethodName())) {
+            throw WebClientResponseException.create(this.errorCode.value(), this.errorCode.getReasonPhrase(), null,
+                    null,
+                    Charset.defaultCharset());
+        }
+
         return this.blocks
                 .stream()
                 .filter(t -> t.getTokenSymbol().equals(tokenSymbol))
@@ -79,6 +122,12 @@ public class MockOriRestClient implements OriClient {
 
     @Override
     public JsonObject postBlock(String tokenSymbol, BlockDTO block) throws WebClientResponseException {
+        if (throwError && methodToThrow.equals(new Throwable().getStackTrace()[0].getMethodName())) {
+            throw WebClientResponseException.create(this.errorCode.value(), this.errorCode.getReasonPhrase(), null,
+                    null,
+                    Charset.defaultCharset());
+        }
+
         block.setTokenSymbol(tokenSymbol);
         if (this.blocks.stream()
                 .anyMatch(b -> b.getHash().equals(block.getHash()) && b.getTokenSymbol().equals(tokenSymbol))) {
@@ -93,6 +142,12 @@ public class MockOriRestClient implements OriClient {
 
     @Override
     public JsonObject postBlocks(String tokenSymbol, List<BlockDTO> blocks) throws WebClientResponseException {
+        if (throwError && methodToThrow.equals(new Throwable().getStackTrace()[0].getMethodName())) {
+            throw WebClientResponseException.create(this.errorCode.value(), this.errorCode.getReasonPhrase(), null,
+                    null,
+                    Charset.defaultCharset());
+        }
+
         for (BlockDTO block : blocks) {
             block.setTokenSymbol(tokenSymbol);
             if (this.blocks.stream()
@@ -109,6 +164,12 @@ public class MockOriRestClient implements OriClient {
 
     @Override
     public AccountDTO getAccount(String tokenSymbol, String hash) throws WebClientResponseException {
+        if (throwError && methodToThrow.equals(new Throwable().getStackTrace()[0].getMethodName())) {
+            throw WebClientResponseException.create(this.errorCode.value(), this.errorCode.getReasonPhrase(), null,
+                    null,
+                    Charset.defaultCharset());
+        }
+
         return this.accounts.stream()
                 .filter(t -> t.getTokenSymbol().equals(tokenSymbol) && t.getHash().equals(hash)).findFirst()
                 .orElseThrow(
@@ -118,6 +179,12 @@ public class MockOriRestClient implements OriClient {
 
     @Override
     public JsonObject postAccount(String tokenSymbol, AccountDTO account) throws WebClientResponseException {
+        if (throwError && methodToThrow.equals(new Throwable().getStackTrace()[0].getMethodName())) {
+            throw WebClientResponseException.create(this.errorCode.value(), this.errorCode.getReasonPhrase(), null,
+                    null,
+                    Charset.defaultCharset());
+        }
+
         account.setTokenSymbol(tokenSymbol);
         if (this.accounts.stream()
                 .anyMatch(b -> b.getHash().equals(account.getHash()) && b.getTokenSymbol().equals(tokenSymbol))) {
@@ -132,6 +199,12 @@ public class MockOriRestClient implements OriClient {
 
     @Override
     public TransactionDTO getTransfer(String tokenSymbol, String hash) throws WebClientResponseException {
+        if (throwError && methodToThrow.equals(new Throwable().getStackTrace()[0].getMethodName())) {
+            throw WebClientResponseException.create(this.errorCode.value(), this.errorCode.getReasonPhrase(), null,
+                    null,
+                    Charset.defaultCharset());
+        }
+
         return this.transactions.stream()
                 .filter(t -> t.getTokenSymbol().equals(tokenSymbol) && t.getHash().equals(hash)).findFirst()
                 .orElseThrow(
@@ -141,6 +214,11 @@ public class MockOriRestClient implements OriClient {
 
     @Override
     public JsonObject postTransfer(String tokenSymbol, TransactionDTO transfer) throws WebClientResponseException {
+        if (throwError && methodToThrow.equals(new Throwable().getStackTrace()[0].getMethodName())) {
+            throw WebClientResponseException.create(this.errorCode.value(), this.errorCode.getReasonPhrase(), null,
+                    null, Charset.defaultCharset());
+        }
+
         transfer.setTokenSymbol(tokenSymbol);
         if (this.transactions.stream()
                 .anyMatch(b -> b.getHash().equals(transfer.getHash()) && b.getTokenSymbol().equals(tokenSymbol))) {
@@ -156,6 +234,10 @@ public class MockOriRestClient implements OriClient {
     @Override
     public JsonObject postTransfers(String tokenSymbol, List<TransactionDTO> transfers)
             throws WebClientResponseException {
+        if (throwError && methodToThrow.equals(new Throwable().getStackTrace()[0].getMethodName())) {
+            throw WebClientResponseException.create(this.errorCode.value(), this.errorCode.getReasonPhrase(), null,
+                    null, Charset.defaultCharset());
+        }
         for (TransactionDTO transfer : transfers) {
             transfer.setTokenSymbol(tokenSymbol);
             if (this.transactions.stream()
