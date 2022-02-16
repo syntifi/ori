@@ -32,6 +32,9 @@ public class MockChainProcessorTest {
     protected static final Log logger = LogFactory.getLog(MockChainProcessorTest.class);
 
     @Autowired
+    private MockTestChainService service;
+
+    @Autowired
     private MockChainProcessor processor;
 
     public StepExecution getStepExecution() {
@@ -39,17 +42,17 @@ public class MockChainProcessorTest {
     }
 
     @BeforeEach
-    void beforeEach(@Autowired MockTestChainService service) {
+    void beforeEach() {
         service.reset();
     }
 
     @Test
-    public void testProcessor(@Autowired MockTestChainService mockTestChainService) throws Exception {
-        MockChainBlock chainBlock = mockTestChainService.getBlock();
+    public void testProcessor() throws Exception {
+        MockChainBlock chainBlock = service.getNextBlock();
 
         List<MockChainTransfer> chainTransfers = new LinkedList<>();
 
-        chainTransfers.addAll(mockTestChainService.getTransfers(chainBlock.getHash()));
+        chainTransfers.addAll(service.getTransfers(chainBlock.getHash()));
 
         MockChainData chainData = MockChainData.builder()
                 .chainBlock(chainBlock)

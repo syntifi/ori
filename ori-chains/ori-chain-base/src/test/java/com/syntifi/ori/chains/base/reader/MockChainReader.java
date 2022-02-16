@@ -23,13 +23,16 @@ public class MockChainReader extends AbstractChainReader<MockTestChainService, M
 
     @Override
     public MockChainData read() throws IOException, InterruptedException {
-        MockChainBlock chainBlock = getChainService().getBlock();
-        if (chainBlock == null)
+        MockChainBlock chainBlock = getChainService().getBlock(getBlockHeight());
+        if (chainBlock == null) {
             return null;
+        }
 
         List<MockChainTransfer> chainTransfers = new LinkedList<>();
 
         chainTransfers.addAll(getChainService().getTransfers(chainBlock.getHash()));
+
+        nextItem();
 
         return MockChainData.builder()
                 .chainBlock(chainBlock)

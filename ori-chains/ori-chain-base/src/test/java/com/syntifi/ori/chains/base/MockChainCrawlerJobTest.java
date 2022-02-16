@@ -1,11 +1,9 @@
 package com.syntifi.ori.chains.base;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.syntifi.ori.chains.base.service.MockTestChainService;
 import com.syntifi.ori.client.OriClient;
-import com.syntifi.ori.dto.BlockDTO;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,24 +51,5 @@ public class MockChainCrawlerJobTest {
         StepExecution stepExecution = jobExecution.getStepExecutions().iterator().next();
 
         assertEquals(BatchStatus.COMPLETED, stepExecution.getStatus());
-
-        // TODO: Improve comparison input/output
-        BlockDTO oriBlock = oriClient.getLastBlock(oriChainConfigProperties.getChainTokenSymbol());
-        assertNotNull(service.getBlock(oriBlock.getHash()));
-    }
-
-    @Test
-    void testJob_withChunkSize1() throws Exception {
-        JobExecution jobExecution = jobLauncherTestUtils.launchJob();
-
-        assertEquals(ExitStatus.COMPLETED, jobExecution.getExitStatus());
-
-        StepExecution stepExecution = jobExecution.getStepExecutions().iterator().next();
-
-        assertEquals(BatchStatus.COMPLETED, stepExecution.getStatus());
-
-        // TODO: Improve comparison input/output
-        BlockDTO oriBlock = oriClient.getLastBlock(oriChainConfigProperties.getChainTokenSymbol());
-        assertNotNull(service.getBlock(oriBlock.getHash()));
     }
 }

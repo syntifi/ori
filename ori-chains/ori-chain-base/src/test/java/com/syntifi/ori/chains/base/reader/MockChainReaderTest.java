@@ -1,6 +1,7 @@
 package com.syntifi.ori.chains.base.reader;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.IOException;
 
@@ -24,6 +25,9 @@ import org.springframework.test.context.TestPropertySource;
 public class MockChainReaderTest {
 
     @Autowired
+    private MockTestChainService mockTestChainService;
+
+    @Autowired
     private MockChainReader reader;
 
     public StepExecution getStepExecution() {
@@ -37,8 +41,11 @@ public class MockChainReaderTest {
 
     @Test
     public void testReader() throws IOException, InterruptedException {
-        MockChainData chainData = reader.read();
+        MockChainData chainData;
+        while ((chainData = reader.read()) != null) {
+            assertNotNull(mockTestChainService.getBlock(chainData.getChainBlock().getHash()));
+        }
 
-        assertNotNull(chainData);
+        assertNull(chainData);
     }
 }

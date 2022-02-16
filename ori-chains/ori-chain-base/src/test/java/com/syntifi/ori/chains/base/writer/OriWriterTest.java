@@ -62,18 +62,18 @@ public class OriWriterTest {
             throws IOException, InterruptedException {
         List<OriData> oriData = new LinkedList<>();
 
-        oriData.add(getBlock(1));
+        oriData.add(getBlock());
 
         assertDoesNotThrow(() -> writer.write(oriData));
 
         assertDoesNotThrow(() -> writer.write(oriData));
     }
 
-    private OriData getBlock(int tranferCount) {
-        BlockDTO block = mockTestChainService.getBlock().toDTO();
+    private OriData getBlock() {
+        BlockDTO block = mockTestChainService.getNextBlock().toDTO();
         block.setTokenSymbol(oriChainConfigProperties.getChainTokenSymbol());
         
-        List<TransactionDTO> transfers = mockTestChainService.getTransfers(block.getHash(), tranferCount)
+        List<TransactionDTO> transfers = mockTestChainService.getTransfers(block.getHash())
                 .stream()
                 .map(t -> t.toDTO())
                 .collect(Collectors.toList());

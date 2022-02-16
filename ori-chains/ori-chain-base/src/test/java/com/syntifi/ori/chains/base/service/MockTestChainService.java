@@ -30,8 +30,9 @@ public class MockTestChainService {
 
     protected static final int MAX_BLOCK_HEIGHT = 5;
 
-    protected long currentHeight = 0;
     protected long lastTimestamp = 0;
+
+    private int currentHeight = 0;
 
     private final List<MockChainBlock> blocks;
 
@@ -50,10 +51,19 @@ public class MockTestChainService {
     }
 
     public void reset() {
+        this.lastTimestamp = 0;
+        this.currentHeight = 0;
         this.blocks.clear();
         this.transfers.clear();
         this.accountHashes.clear();
-        this.currentHeight = oriChainConfigProperties.getChainBlockZeroHeight() + 1L;
+
+        long itemCount = oriChainConfigProperties.getChainBlockZeroHeight();
+
+        while (itemCount < oriChainConfigProperties.getChainBlockZeroHeight() + MAX_BLOCK_HEIGHT) {
+            MockChainBlock block = createBlock(itemCount);
+            createTransfers(block.getHash(), randomInRange(MIN_TRANSACTIONS, MAX_TRANSACTIONS));
+            itemCount++;
+        }
     }
 
     public List<MockChainBlock> getAllBlocks() {
@@ -75,7 +85,27 @@ public class MockTestChainService {
         return transfer.isPresent() ? transfer.get() : null;
     }
 
-    public MockChainBlock getBlock() {
+    public MockChainBlock getBlock(long height) {
+        if (height < this.blocks.size()) {
+            return this.blocks.get((int) (height - oriChainConfigProperties.getChainBlockZeroHeight()));
+        } else {
+            return null;
+        }
+    }
+
+    public MockChainBlock getNextBlock() {
+        if (this.currentHeight < this.blocks.size()) {
+            return this.blocks.get(this.currentHeight++);
+        } else {
+            return null;
+        }
+    }
+
+    public List<MockChainTransfer> getTransfers(String blockHash) {
+        return this.transfers.stream().filter(t -> t.getBlockHash().equals(blockHash)).collect(Collectors.toList());
+    }
+
+    private MockChainBlock createBlock(long itemCount) {
         long timestamp = lastTimestamp == 0 ? randomInRange(MIN_START_TIMESTAMP, MAX_START_TIMESTAMP)
                 : lastTimestamp + randomInRange(MIN_SECONDS_BETWEEN_BLOCKS, MAX_SECONDS_BETWEEN_BLOCKS);
 
@@ -85,23 +115,24 @@ public class MockTestChainService {
             throw new OriChainCrawlerException("error getting mock block", e);
         }
 
-        MockChainBlock block = currentHeight < MAX_BLOCK_HEIGHT ? MockChainBlock.builder()
-                .hash(String.format(oriChainConfigProperties.getChainBlockZeroHash(), currentHeight))
-                .parentHash(String.format(oriChainConfigProperties.getChainBlockZeroHash(), currentHeight - 1))
-                .height(currentHeight++)
-                .timestamp(timestamp)
-                .build() : null;
+        MockChainBlock block = itemCount < (MAX_BLOCK_HEIGHT
+                + oriChainConfigProperties.getChainBlockZeroHeight())
+                        ? MockChainBlock.builder()
+                                .hash(String.format(oriChainConfigProperties.getChainBlockZeroHash(),
+                                        itemCount))
+                                .parentHash(String.format(oriChainConfigProperties.getChainBlockZeroHash(),
+                                        itemCount - 1))
+                                .height(itemCount++)
+                                .timestamp(timestamp)
+                                .build()
+                        : null;
 
         this.blocks.add(block);
 
         return block;
     }
 
-    public List<MockChainTransfer> getTransfers(String blockHash) {
-        return getTransfers(blockHash, randomInRange(MIN_TRANSACTIONS, MAX_TRANSACTIONS));
-    }
-
-    public List<MockChainTransfer> getTransfers(String blockHash, long transactionCount) {
+    private List<MockChainTransfer> createTransfers(String blockHash, long transactionCount) {
         MockChainBlock block = getBlock(blockHash);
         List<MockChainTransfer> transfers = new LinkedList<>();
         for (int i = 0; i < transactionCount; i++) {
@@ -125,7 +156,6 @@ public class MockTestChainService {
         this.transfers.addAll(transfers);
 
         return transfers;
-
     }
 
     private String getAccountHashFromPool(String exceptHash) {
