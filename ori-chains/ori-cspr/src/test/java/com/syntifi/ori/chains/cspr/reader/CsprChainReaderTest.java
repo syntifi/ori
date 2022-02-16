@@ -1,14 +1,14 @@
-package com.syntifi.ori.chains.eth.reader;
+package com.syntifi.ori.chains.cspr.reader;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.IOException;
 
-import com.syntifi.ori.chains.eth.AbstractEthChainTest;
-import com.syntifi.ori.chains.eth.EthChainCrawlerJob;
-import com.syntifi.ori.chains.eth.EthTestChainConfig;
-import com.syntifi.ori.chains.eth.model.EthChainData;
+import com.syntifi.ori.chains.cspr.AbstractCsprChainTest;
+import com.syntifi.ori.chains.cspr.CsprChainCrawlerJob;
+import com.syntifi.ori.chains.cspr.CsprTestChainConfig;
+import com.syntifi.ori.chains.cspr.model.CsprChainData;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,12 +22,12 @@ import org.springframework.test.context.TestPropertySource;
 
 @SpringBatchTest
 @ExtendWith(MockitoExtension.class)
-@ContextConfiguration(classes = { EthTestChainConfig.class, EthChainCrawlerJob.class })
+@ContextConfiguration(classes = { CsprTestChainConfig.class, CsprChainCrawlerJob.class })
 @TestPropertySource("classpath:application.properties")
-public class EthChainReaderTest extends AbstractEthChainTest {
+public class CsprChainReaderTest extends AbstractCsprChainTest {
 
     @Autowired
-    private EthChainReader reader;
+    private CsprChainReader reader;
 
     public StepExecution getStepExecution() {
         return MetaDataInstanceFactory.createStepExecution();
@@ -35,7 +35,7 @@ public class EthChainReaderTest extends AbstractEthChainTest {
 
     @Test
     public void testReader_with_resources_test_data() throws IOException, InterruptedException {
-        EthChainData chainData;
+        CsprChainData chainData;
         while ((chainData = reader.read()) != null) {
             assertNotNull(chainData);
         }
