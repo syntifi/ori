@@ -10,6 +10,14 @@ import javax.validation.Validator;
 
 import org.apache.bval.jsr.ApacheValidationProvider;
 
+/**
+ * Ori DTO for every object that needs validation or other common funcionality
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 public interface OriDTO {
     static final Validator validator = Validation.byProvider(ApacheValidationProvider.class)
             .configure().buildValidatorFactory().getValidator();
