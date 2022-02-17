@@ -25,10 +25,10 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework. If you want 
 
 > **_NOTE:_**  After building, the database is empty. Please follow the steps listed on [After build instructions](#after-build-instructions) to populate the database.
 
-The project is divided into several modules with some interdependency. For this reason one must first package the project before running in dev mode:
+The project is divided into several modules with some interdependency. For this reason one must first install before running it in dev mode:
 
 ```shell script
-./mvnw clean package
+./mvnw clean install 
 ```
 
 ### Running the application in dev mode

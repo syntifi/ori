@@ -184,9 +184,9 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
      * @throws ORIException
      */
     @GET
-    @Path("/{tokenSymbol}/hash/{transactionHash}")
+    @Path("/{tokenSymbol}/hash/{hash}")
     public TransactionDTO getTransactionByHash(@PathParam("tokenSymbol") String symbol,
-            @PathParam("transactionHash") String hash) throws ORIException {
+            @PathParam("hash") String hash) throws ORIException {
         try {
             Transaction out = transactionRepository.findByTokenSymbolAndHash(symbol, hash);
             return TransactionMapper.fromModel(out);
@@ -270,9 +270,9 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
      */
     @DELETE
     @Transactional
-    @Path("/{tokenSymbol}/hash/{transactionHash}")
+    @Path("/{tokenSymbol}/hash/{hash}")
     public Response delete(@PathParam("tokenSymbol") String symbol,
-            @PathParam("transactionHash") String hash) throws ORIException {
+            @PathParam("hash") String hash) throws ORIException {
         try {
             Transaction transaction = transactionRepository.findByTokenSymbolAndHash(symbol, hash);
 
