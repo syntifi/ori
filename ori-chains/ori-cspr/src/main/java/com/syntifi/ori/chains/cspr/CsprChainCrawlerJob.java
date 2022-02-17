@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import lombok.Getter;
 
 /**
- * Concrete class of {@link AbstractChainCrawlerJob} for Casper
+ * Implementation class of {@link AbstractChainCrawlerJob} for Casper
  * 
  * @author Alexandre Carvalho
  * @author Andre Bertolace

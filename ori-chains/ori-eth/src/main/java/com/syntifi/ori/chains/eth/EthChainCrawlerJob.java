@@ -11,6 +11,14 @@ import org.web3j.protocol.Web3j;
 
 import lombok.Getter;
 
+/**
+ * Implementation class of {@link AbstractChainCrawlerJob} for Ethereum
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @Getter
 @Component
 public class EthChainCrawlerJob extends AbstractChainCrawlerJob<Web3j, EthChainData> {
