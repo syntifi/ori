@@ -62,12 +62,11 @@ public class BlockRestAPI extends AbstractBaseRestApi {
     }
 
     /**
-     * POST method to add and index a new block in ES
+     * POST method to persist a new block in the DB
      * 
      * @param symbol
-     * @param parent
      * @param blockDTO
-     * @return Response
+     * @return
      * @throws ORIException
      */
     @POST
@@ -95,6 +94,14 @@ public class BlockRestAPI extends AbstractBaseRestApi {
         return Response.created(URI.create(String.format("/block/%s/hash/%s", symbol, block.getHash()))).build();
     }
 
+    /**
+     * POST method to pesist a list many blocks to the DB at once
+     * 
+     * @param symbol
+     * @param blockDTOs
+     * @return
+     * @throws ORIException
+     */
     @POST
     @Transactional
     @Path("/{tokenSymbol}/multiple")
@@ -131,11 +138,10 @@ public class BlockRestAPI extends AbstractBaseRestApi {
     }
 
     /**
-     * GET method to retrieve all blocks indexed in ES. Note that the blocks are
-     * sorted in reverse chronological order
+     * GET method to retrieve all blocks for a given token symbol
      * 
      * @param symbol
-     * @return a list of {@link BlockDTO}
+     * @return
      * @throws ORIException
      */
     @GET
@@ -147,6 +153,14 @@ public class BlockRestAPI extends AbstractBaseRestApi {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * GET method to retrieve the last block (chronologically speaking) for a given
+     * token symbol
+     * 
+     * @param symbol
+     * @return
+     * @throws ORIException
+     */
     @GET
     @Path("/{tokenSymbol}/last")
     public BlockDTO getLastBlock(@PathParam("tokenSymbol") String symbol) throws ORIException {
@@ -164,8 +178,9 @@ public class BlockRestAPI extends AbstractBaseRestApi {
     /**
      * GET method to retrieve a block by it's hash. Hash is given as a hex string.
      * 
+     * @param symbol
      * @param hash
-     * @return Block
+     * @return
      * @throws ORIException
      */
     @GET
@@ -186,9 +201,10 @@ public class BlockRestAPI extends AbstractBaseRestApi {
     }
 
     /**
-     * DELETE method to remove a specific block given the hash. Hash is given as a
-     * hex string
+     * DELETE method to remove a specific block stored in a given DB given its hash.
+     * Hash is given as a hex string
      * 
+     * @param symbol
      * @param hash
      * @return
      * @throws ORIException

@@ -34,6 +34,16 @@ public class TransactionService {
     @Inject
     TransactionRepository transactionRepository;
 
+    /**
+     * Method to retrieve the chain of transactions that end up in the given account
+     * during the period fromDate to toDate
+     * 
+     * @param tokenSymbol
+     * @param account
+     * @param fromDate
+     * @param toDate
+     * @return
+     */
     public List<Transaction> reverseGraphWalk(String tokenSymbol, String account, OffsetDateTime fromDate,
             OffsetDateTime toDate) {
         int size = 100;
@@ -60,6 +70,17 @@ public class TransactionService {
         return graph;
     }
 
+    /**
+     * Method to retrieve the chain of transactions that track the destination of
+     * the funds originating from the given account during the period fromDate to
+     * toDate
+     * 
+     * @param tokenSymbol
+     * @param account
+     * @param fromDate
+     * @param toDate
+     * @return
+     */
     public List<Transaction> forwardGraphWalk(String tokenSymbol, String account, OffsetDateTime fromDate,
             OffsetDateTime toDate) {
         int size = 100;

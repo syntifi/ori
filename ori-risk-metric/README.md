@@ -1,4 +1,6 @@
-# Risk metrics
+# ORI-risk-metric
+
+This module is responsible for the risk metrics used in the ori-api to monitor transactions 
 
 ## Trace the coin
 To check the origin of the money, it is is possible to trace back the coins to a given account prior to the given date. The back trace feature returns the graph with all accounts that are either directly or indirectly linked to the given account. The maximum number of nodes in the graph is limited by ```ORI_AML_MAX_TRACE_LENGTH```.

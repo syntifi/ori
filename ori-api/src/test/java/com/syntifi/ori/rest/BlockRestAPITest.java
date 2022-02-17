@@ -29,8 +29,6 @@ import io.vertx.core.json.JsonObject;
 @TestMethodOrder(OrderAnnotation.class)
 public class BlockRestAPITest {
 
-    private static Object LOCK = new Object();
-
     @Test
     @Order(1)
     public void createToken() throws Exception {
