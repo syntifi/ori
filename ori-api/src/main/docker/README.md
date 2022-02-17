@@ -1,5 +1,7 @@
 # Docker images
 
+## Creating the docker image with the application in JVM mode
+
 Before building the container image run:
 ```shell script
 ./mvnw package
@@ -19,6 +21,28 @@ Then run the container using :
 ```shell script
 docker run -i --rm -p 8080:8080 -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" ori-jvm
 ```
+## Creating a docker image in native mode (no JVM dependencies)
+
+It is possible to to build a container that runs the application in native (no JVM) mode
+
+Before building the container image run:
+
+```shell script
+./mvnw package -Pnative
+```
+
+Then, build the image with:
+
+```shell script
+docker build -f ori-api/src/main/docker/Dockerfile.native -t ori-native .
+```
+
+Then run the container using:
+
+```shell script
+docker run -i --rm -p 8080:8080 ori-native
+```
+
 
 ## Docker-compose
 
