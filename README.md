@@ -14,6 +14,13 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework. If you want 
 - [Docker](https://www.docker.com/)
 - [Node.js](https://nodejs.org/)
 
+## Modules
+- [Ori API](ori-api/README.md)
+- [Ori chains](ori-chains/README.md)
+- [Ori client](ori-client/README.md)
+- [Ori frontend](ori-frontend/README.md)
+- [Ori shared](ori-shared/README.md)
+
 ## Build instructions
 
 > **_NOTE:_**  After building, the database is empty. Please follow the steps listed on [After build instructions](#after-build-instructions) to populate the database.
@@ -64,7 +71,7 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 ./mvnw package -Pnative -Dquarkus.native.container-build=true
 ```
 
-You can then execute your native executable with: `./target/ori-1.0.0-SNAPSHOT-runner`
+You can then execute your native executable with: `./ori-api/target/ori-api-0.2.0-SNAPSHOT-runner`.
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.html.
 
@@ -81,5 +88,5 @@ The module ori-chains implements the batch jobs to crawl a specific chain and po
 
 ## Features
 
-- [REST API](ori-api/src/main/java/com/syntifi/ori/rest/README.md)
-- [Risk metrics](ori-api/src/main/java/com/syntifi/ori/service/README.md)
+- [REST API](ori-api/README.md)
+- [Risk metrics](ori-risk-metric/README.md)
