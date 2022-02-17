@@ -34,16 +34,31 @@ import lombok.Getter;
 @PropertySource("classpath:ori-chain-default-application.properties")
 public class OriChainConfig {
 
+    /**
+     * {@link OriChainConfigProperties} reference
+     * 
+     * @return the {@link OriChainConfigProperties} object
+     */
     @Getter(value = AccessLevel.PROTECTED)
     @Autowired
     private OriChainConfigProperties oriChainConfigProperties;
 
+    /**
+     * Getter for the default {@link OriClient} bean
+     * 
+     * @return the OriClient bean
+     */
     @Bean
     @ConditionalOnMissingBean
     protected OriClient getOriClient() {
         return new OriRestClient(oriChainConfigProperties.getHost());
     }
 
+    /**
+     * Getter for Spring Batch {@link DataSource}
+     * 
+     * @return the bean of the datasource for Spring Batch database
+     */
     @Bean
     @BatchDataSource
     @ConfigurationProperties(prefix = "ori.batch.datasource")

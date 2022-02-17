@@ -16,8 +16,8 @@ import lombok.Setter;
 /**
  * ORI compliant Data class
  * 
- * @author Alexandre Carvalho <adcarvalho@gmail.com>
- * @author Andre Bertolace <andre@syntifi.com>
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
  * 
  * @since 0.1.0
  */
@@ -27,9 +27,21 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class OriData {
+    /**
+     * ori block DTO object
+     * 
+     * @param block ori block DTO object
+     * @return ori block DTO object
+     */
     @Valid
     private BlockDTO block;
 
+    /**
+     * list of ori transaction DTO object
+     * 
+     * @param transfers list of ori transaction DTO object
+     * @return list of ori transaction DTO object
+     */
     @Valid
     private List<TransactionDTO> transfers;
 }

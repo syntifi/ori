@@ -20,8 +20,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 /**
  * The default ORI data writer
  * 
- * @author Alexandre Carvalho <adcarvalho@gmail.com>
- * @author Andre Bertolace <andre@syntifi.com>
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
  * 
  * @since 0.1.0
  */
@@ -30,14 +30,38 @@ public class OriWriter implements ItemWriter<OriData> {
 
     protected static final Log logger = LogFactory.getLog(OriWriter.class);
 
+    /**
+     * {@link OriClient} reference
+     * 
+     * @return the {@link OriClient} object
+     */
     private OriClient oriClient;
+
+    /**
+     * {@link OriChainConfigProperties} reference
+     * 
+     * @return the {@link OriChainConfigProperties} object
+     */
     private OriChainConfigProperties oriChainConfigProperties;
 
+    /**
+     * Constructs an instance of an ItemWriter for writing data to Ori which was
+     * read from a blockchain
+     * 
+     * @param oriClient                the ori client to be used by this ItemWriter
+     * @param oriChainConfigProperties the ori chain configuration
+     */
     public OriWriter(OriClient oriClient, OriChainConfigProperties oriChainConfigProperties) {
         this.oriClient = oriClient;
         this.oriChainConfigProperties = oriChainConfigProperties;
     }
 
+    /**
+     * Process each object on the list and calls client methods to save data to ORI
+     * database
+     * 
+     * @param oriDataList the resulting list of read and processed data
+     */
     @Override
     public void write(List<? extends OriData> oriDataList) {
         // Write Block
@@ -47,6 +71,11 @@ public class OriWriter implements ItemWriter<OriData> {
         writeTransactions(oriDataList);
     }
 
+    /**
+     * Writes the block or blocks
+     * 
+     * @param oriDataList the resulting list of read and processed data
+     */
     private void writeBlock(List<? extends OriData> oriDataList) {
         if (oriDataList == null || oriDataList.isEmpty()) {
             throw new OriItemWriterException("should not receive an empty list on OriWriter", null);
@@ -82,6 +111,11 @@ public class OriWriter implements ItemWriter<OriData> {
         }
     }
 
+    /**
+     * Writes the transactions
+     * 
+     * @param oriDataList the resulting list of read and processed data
+     */
     private void writeTransactions(List<? extends OriData> oriDataList) {
         for (OriData oriDataItem : oriDataList) {
             if (oriDataItem.getTransfers() != null) {
@@ -104,6 +138,11 @@ public class OriWriter implements ItemWriter<OriData> {
         }
     }
 
+    /**
+     * Writes the accounts
+     * 
+     * @param hash the account hash to write
+     */
     private void writeAccount(String hash) {
         if (hash == null) {
             return;
@@ -123,7 +162,13 @@ public class OriWriter implements ItemWriter<OriData> {
         }
     }
 
-    private Object getExceptionCause(WebClientResponseException e) {
+    /**
+     * Helper method to extract the exception cause and throw info if/when neeeded
+     * 
+     * @param e the exception
+     * @return the cause message or "no cause" if none found
+     */
+    private String getExceptionCause(WebClientResponseException e) {
         return e.getCause() != null ? e.getCause().getMessage() : "no cause";
     }
 }
