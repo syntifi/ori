@@ -115,6 +115,9 @@
             <layers>
               <enabled>true</enabled>
             </layers>
+            <image>
+              <name>syntifi.com/ori-chains/${project.artifactId}</name>
+            </image>
           </configuration>
           <executions>
             <execution>
