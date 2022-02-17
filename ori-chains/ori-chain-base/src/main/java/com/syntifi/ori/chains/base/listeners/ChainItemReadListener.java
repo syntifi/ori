@@ -8,8 +8,16 @@ import org.springframework.batch.core.annotation.AfterRead;
 import org.springframework.batch.core.annotation.BeforeRead;
 import org.springframework.batch.core.annotation.OnReadError;
 
+/**
+ * Chain ReadListener for listening to batch read events
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 public class ChainItemReadListener<T extends ChainData<?, ?>> {
-    
+
     protected static final Log logger = LogFactory.getLog(ChainItemReadListener.class);
 
     @BeforeRead

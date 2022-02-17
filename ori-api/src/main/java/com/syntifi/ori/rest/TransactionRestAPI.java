@@ -34,11 +34,13 @@ import org.jboss.resteasy.specimpl.ResponseBuilderImpl;
 
 import io.vertx.core.json.JsonObject;
 
-//TODO: pagination
 /**
- * REST API transaction endpoints
+ * Ori Rest Api for {@link Transaction} endpoints
+ * TODO: pagination
  * 
+ * @author Alexandre Carvalho
  * @author Andre Bertolace
+ * 
  * @since 0.1.0
  */
 @Singleton

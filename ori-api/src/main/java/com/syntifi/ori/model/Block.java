@@ -24,9 +24,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Block model, only a couple of the fields available in the chain are needed
+ * Ori Entity for Block data
  * 
+ * @author Alexandre Carvalho
  * @author Andre Bertolace
+ * 
  * @since 0.1.0
  */
 @Entity

@@ -27,9 +27,11 @@ import io.quarkus.panache.common.Sort;
 import io.vertx.core.json.JsonObject;
 
 /**
- * REST API block endpoints
+ * Ori Rest Api for {@link Token} endpoints
  * 
+ * @author Alexandre Carvalho
  * @author Andre Bertolace
+ * 
  * @since 0.1.0
  */
 @Singleton

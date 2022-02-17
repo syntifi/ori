@@ -17,7 +17,12 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 
 /**
+ * Rest API {@link OriClient} implementation
  * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
  */
 public class OriRestClient implements OriClient {
 

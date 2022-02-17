@@ -16,6 +16,14 @@ import com.syntifi.ori.dto.TransactionDTO;
 import org.springframework.stereotype.Component;
 import org.web3j.protocol.core.methods.response.EthBlock.TransactionObject;
 
+/**
+ * {@link AbstractChainProcessor} for Ethereum block chain
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @Component
 public class EthChainProcessor extends AbstractChainProcessor<EthChainData> {
 

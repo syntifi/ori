@@ -4,6 +4,14 @@ import javax.enterprise.context.ApplicationScoped;
 
 import com.syntifi.ori.model.Account;
 
+/**
+ * Ori Repository for {@link Account} model
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @ApplicationScoped
 public class AccountRepository implements OriRepository<Account> {
 

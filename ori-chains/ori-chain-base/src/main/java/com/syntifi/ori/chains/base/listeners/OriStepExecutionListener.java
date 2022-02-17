@@ -7,6 +7,14 @@ import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.annotation.AfterStep;
 import org.springframework.batch.core.annotation.BeforeStep;
 
+/**
+ * Chain StepExecutionListener for listening to batch step execution events
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 public class OriStepExecutionListener {
 
     protected static final Log logger = LogFactory.getLog(OriStepExecutionListener.class);

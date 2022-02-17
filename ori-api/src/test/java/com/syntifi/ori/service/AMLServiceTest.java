@@ -14,6 +14,14 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 
+/**
+ * {@link AMLService} tests
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @QuarkusTest
 public class AMLServiceTest {
 
@@ -63,7 +71,7 @@ public class AMLServiceTest {
         Assertions.assertNotNull(scores);
         Assertions.assertEquals(0.4, scores.getStructuringOverTimeScore());
         Assertions.assertEquals(1.0, scores.getFlowThroughScore());
-        Assertions.assertEquals(38934.0/70794.0, scores.getUnusualOutgoingVolumeScore());
+        Assertions.assertEquals(38934.0 / 70794.0, scores.getUnusualOutgoingVolumeScore());
         Assertions.assertEquals(0.4, scores.getUnusualBehaviorScore());
     }
 

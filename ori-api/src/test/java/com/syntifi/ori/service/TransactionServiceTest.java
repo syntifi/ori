@@ -22,102 +22,118 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import io.quarkus.test.junit.QuarkusTest;
 
+/**
+ * {@link TransactionService} tests
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @QuarkusTest
 @TestMethodOrder(OrderAnnotation.class)
 public class TransactionServiceTest {
-    @Inject
-    TransactionRepository transactionRepository;
+        @Inject
+        TransactionRepository transactionRepository;
 
-    @Inject
-    TokenRepository tokenRepository;
+        @Inject
+        TokenRepository tokenRepository;
 
-    @Inject
-    AccountRepository accountRepository;
+        @Inject
+        AccountRepository accountRepository;
 
-    @Inject
-    BlockRepository blockRepository;
+        @Inject
+        BlockRepository blockRepository;
 
-    @Inject
-    TransactionService transactionService;
+        @Inject
+        TransactionService transactionService;
 
-    @Test
-    @Order(1)
-    public void testEmptyDB() {
-        var now = OffsetDateTime.now();
+        @Test
+        @Order(1)
+        public void testEmptyDB() {
+                var now = OffsetDateTime.now();
 
-        Assertions.assertEquals(0, transactionService.forwardGraphWalk("ABC", "from", now.minusHours(1), now).size());
-        Assertions.assertEquals(0, transactionService.reverseGraphWalk("ABC", "to", now.minusHours(1), now).size());
-    }
+                Assertions.assertEquals(0,
+                                transactionService.forwardGraphWalk("ABC", "from", now.minusHours(1), now).size());
+                Assertions.assertEquals(0,
+                                transactionService.reverseGraphWalk("ABC", "to", now.minusHours(1), now).size());
+        }
 
-    @Test
-    @Transactional
-    @Order(2)
-    public void testNonEmptyDB() {
-        Token token = Token.builder().symbol("ABC").protocol("ABC").name("ABC").build();
-        tokenRepository.persistAndFlush(token);
+        @Test
+        @Transactional
+        @Order(2)
+        public void testNonEmptyDB() {
+                Token token = Token.builder().symbol("ABC").protocol("ABC").name("ABC").build();
+                tokenRepository.persistAndFlush(token);
 
-        Block block = Block.builder()
-                .hash("block")
-                .height(0L)
-                .era(0L)
-                .parent(null)
-                .root("root")
-                .validator("validator")
-                .timeStamp(OffsetDateTime.now())
-                .token(token)
-                .build();
-        blockRepository.persistAndFlush(block);
+                Block block = Block.builder()
+                                .hash("block")
+                                .height(0L)
+                                .era(0L)
+                                .parent(null)
+                                .root("root")
+                                .validator("validator")
+                                .timeStamp(OffsetDateTime.now())
+                                .token(token)
+                                .build();
+                blockRepository.persistAndFlush(block);
 
-        Account from = Account.builder().hash("from").label("label").publicKey("key").token(token).build();
-        Account to = Account.builder().hash("to").label("label").publicKey("key").token(token).build();
-        accountRepository.persistAndFlush(from);
-        accountRepository.persistAndFlush(to);
+                Account from = Account.builder().hash("from").label("label").publicKey("key").token(token).build();
+                Account to = Account.builder().hash("to").label("label").publicKey("key").token(token).build();
+                accountRepository.persistAndFlush(from);
+                accountRepository.persistAndFlush(to);
 
-        Transaction tx1 = Transaction.builder()
-                .amount(10.)
-                .block(block)
-                .fromAccount(from)
-                .toAccount(to)
-                .token(token)
-                .timeStamp(OffsetDateTime.now().minusSeconds(5))
-                .hash("tx1")
-                .build();
-        Transaction tx2 = Transaction.builder()
-                .amount(5.)
-                .block(block)
-                .fromAccount(to)
-                .toAccount(from)
-                .token(token)
-                .timeStamp(OffsetDateTime.now())
-                .hash("tx2")
-                .build();
-        transactionRepository.persistAndFlush(tx1);
-        transactionRepository.persistAndFlush(tx2);
+                Transaction tx1 = Transaction.builder()
+                                .amount(10.)
+                                .block(block)
+                                .fromAccount(from)
+                                .toAccount(to)
+                                .token(token)
+                                .timeStamp(OffsetDateTime.now().minusSeconds(5))
+                                .hash("tx1")
+                                .build();
+                Transaction tx2 = Transaction.builder()
+                                .amount(5.)
+                                .block(block)
+                                .fromAccount(to)
+                                .toAccount(from)
+                                .token(token)
+                                .timeStamp(OffsetDateTime.now())
+                                .hash("tx2")
+                                .build();
+                transactionRepository.persistAndFlush(tx1);
+                transactionRepository.persistAndFlush(tx2);
 
-        var now = OffsetDateTime.now();
+                var now = OffsetDateTime.now();
 
-        Assertions.assertEquals(2, transactionService.forwardGraphWalk("ABC", "from", now.minusHours(1), now).size());
-        Assertions.assertEquals(1, transactionService.reverseGraphWalk("ABC", "to", now.minusHours(1), now).size());
+                Assertions.assertEquals(2,
+                                transactionService.forwardGraphWalk("ABC", "from", now.minusHours(1), now).size());
+                Assertions.assertEquals(1,
+                                transactionService.reverseGraphWalk("ABC", "to", now.minusHours(1), now).size());
 
-        Assertions.assertEquals(0,
-                transactionService.forwardGraphWalk("ABC", "from", now.minusHours(5), now.minusHours(2)).size());
-        Assertions.assertEquals(0,
-                transactionService.reverseGraphWalk("ABC", "to", now.minusHours(5), now.minusHours(2)).size());
-    }
+                Assertions.assertEquals(0,
+                                transactionService.forwardGraphWalk("ABC", "from", now.minusHours(5), now.minusHours(2))
+                                                .size());
+                Assertions.assertEquals(0,
+                                transactionService.reverseGraphWalk("ABC", "to", now.minusHours(5), now.minusHours(2))
+                                                .size());
+        }
 
-    @Transactional
-    @Order(2)
-    @Test
-    public void testCleanDB() {
-        var now = OffsetDateTime.now();
+        @Transactional
+        @Order(2)
+        @Test
+        public void testCleanDB() {
+                var now = OffsetDateTime.now();
 
-        transactionRepository.deleteAll();
-        accountRepository.deleteAll();
-        blockRepository.deleteAll();
-        tokenRepository.deleteAll();
+                transactionRepository.deleteAll();
+                accountRepository.deleteAll();
+                blockRepository.deleteAll();
+                tokenRepository.deleteAll();
 
-        Assertions.assertEquals(0, transactionService.forwardGraphWalk("ABC", "from", now.minusHours(1), now).size());
-        Assertions.assertEquals(0, transactionService.reverseGraphWalk("ABC", "to", now.minusHours(1), now).size());
-    }
+                Assertions.assertEquals(0,
+                                transactionService.forwardGraphWalk("ABC", "from", now.minusHours(1), now).size());
+                Assertions.assertEquals(0,
+                                transactionService.reverseGraphWalk("ABC", "to", now.minusHours(1), now).size());
+        }
 
 }

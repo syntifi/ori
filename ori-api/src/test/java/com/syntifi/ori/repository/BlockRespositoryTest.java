@@ -17,6 +17,14 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import io.quarkus.test.junit.QuarkusTest;
 
+/**
+ * {@link BlockRepository} tests
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @QuarkusTest
 @TestMethodOrder(OrderAnnotation.class)
 public class BlockRespositoryTest {
@@ -46,7 +54,7 @@ public class BlockRespositoryTest {
     }
 
     @Test
-    @Transactional 
+    @Transactional
     @Order(3)
     public void testNonEmptyDB() {
         Token token = Token.builder().symbol("ABC").protocol("ABC").name("ABC").build();
@@ -72,7 +80,7 @@ public class BlockRespositoryTest {
     }
 
     @Test
-    @Transactional 
+    @Transactional
     @Order(4)
     public void testCleanDB() {
         blockRepository.deleteAll();

@@ -8,7 +8,14 @@ import com.syntifi.ori.model.Transaction;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
+/**
+ * Mapper for {@link Transaction} model and {@link TransactionDTO}
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransactionMapper {
 

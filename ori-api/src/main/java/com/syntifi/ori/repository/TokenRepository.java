@@ -4,6 +4,14 @@ import javax.enterprise.context.ApplicationScoped;
 
 import com.syntifi.ori.model.Token;
 
+/**
+ * Ori Repository for {@link Token} model
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @ApplicationScoped
 public class TokenRepository implements OriRepository<Token> {
 

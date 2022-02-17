@@ -10,6 +10,14 @@ import org.springframework.batch.core.annotation.AfterWrite;
 import org.springframework.batch.core.annotation.BeforeWrite;
 import org.springframework.batch.core.annotation.OnWriteError;
 
+/**
+ * Chain WriteListener for listening to batch write events
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 public class OriItemWriteListener {
 
     protected static final Log logger = LogFactory.getLog(OriItemWriteListener.class);

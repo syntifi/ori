@@ -8,6 +8,14 @@ import com.syntifi.ori.model.Block;
 
 import io.quarkus.panache.common.Sort;
 
+/**
+ * Ori Repository for {@link Block} model
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @ApplicationScoped
 public class BlockRepository implements OriRepository<Block> {
 

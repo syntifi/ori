@@ -7,6 +7,14 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.annotation.AfterJob;
 import org.springframework.batch.core.annotation.BeforeJob;
 
+/**
+ * Chain JobExecutionListener for listening to batch job execution events
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 public class OriJobExecutionListener {
 
     protected static final Log logger = LogFactory.getLog(OriJobExecutionListener.class);

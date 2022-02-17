@@ -11,6 +11,14 @@ import com.syntifi.ori.model.Token;
 import com.syntifi.ori.repository.AccountRepository;
 import com.syntifi.ori.repository.TokenRepository;
 
+/**
+ * Ori Rest Api for common base functionallity/injections
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 public abstract class AbstractBaseRestApi {
 
     @Inject

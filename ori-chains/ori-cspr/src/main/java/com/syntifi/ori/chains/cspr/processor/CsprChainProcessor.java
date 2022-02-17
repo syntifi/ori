@@ -17,6 +17,14 @@ import com.syntifi.ori.dto.TransactionDTO;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * {@link AbstractChainProcessor} for Casper block chain
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @Component
 public class CsprChainProcessor extends AbstractChainProcessor<CsprChainData> {
 

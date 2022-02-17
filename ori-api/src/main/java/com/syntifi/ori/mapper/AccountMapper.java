@@ -7,6 +7,14 @@ import com.syntifi.ori.model.Token;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * Mapper for {@link Account} model and {@link AccountDTO}
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountMapper {
 
@@ -25,7 +33,7 @@ public class AccountMapper {
 
     public static Account toModel(AccountDTO dto) {
         Token token = Token.builder().symbol(dto.getTokenSymbol()).build();
-        
+
         return Account.builder()
                 .hash(dto.getHash())
                 .publicKey(dto.getPublicKey())
