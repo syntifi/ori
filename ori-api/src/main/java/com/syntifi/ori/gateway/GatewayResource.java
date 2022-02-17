@@ -20,60 +20,67 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+/**
+ * Gateway resource configuration class
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @Path("/")
 public class GatewayResource {
 
-  private static final String FALLBACK_RESOURCE = "/frontend/index.html";
-  private static final Map<String, String> EXTENSION_TYPES = Map.of(
-      "svg", "image/svg+xml");
-  private final RestApiResource apiResource;
+    private static final String FALLBACK_RESOURCE = "/frontend/index.html";
+    private static final Map<String, String> EXTENSION_TYPES = Map.of("svg", "image/svg+xml");
+    private final RestApiResource apiResource;
 
-  @Inject
-  public GatewayResource(RestApiResource apiResource) {
-    this.apiResource = apiResource;
-  }
-
-  @Path("/api/v2")
-  public RestApiResource getApiResource() {
-    return apiResource;
-  }
-
-  @GET
-  @Path("/")
-  @Schema(hidden = true)
-  @Operation(hidden = true)
-  public Response getFrontendRoot() throws IOException {
-    return getFrontendStaticFile("/frontend/index.html");
-  }
-
-  @GET
-  @Path("/{fileName:.+}")
-  @Schema(hidden = true)
-  @Operation(hidden = true)
-  public Response getFrontendStaticFile(@PathParam("fileName") String fileName) throws IOException {
-    final InputStream requestedFileStream = GatewayResource.class.getResourceAsStream("/frontend/" + fileName);
-    final InputStream inputStream;
-    final String fileToServe;
-    if (requestedFileStream != null) {
-      fileToServe = fileName;
-      inputStream = requestedFileStream;
-    } else {
-      fileToServe = FALLBACK_RESOURCE;
-      inputStream = GatewayResource.class.getResourceAsStream(FALLBACK_RESOURCE);
+    @Inject
+    public GatewayResource(RestApiResource apiResource) {
+        this.apiResource = apiResource;
     }
 
-    final StreamingOutput streamingOutput = outputStream -> IOUtils.copy(inputStream, outputStream);
+    @Path("/api/v2")
+    public RestApiResource getApiResource() {
+        return apiResource;
+    }
 
-    return Response
-        .ok(streamingOutput)
-        .cacheControl(CacheControl.valueOf("max-age=900"))
-        .type(contentType(inputStream, fileToServe))
-        .build();
-  }
+    @GET
+    @Path("/")
+    @Schema(hidden = true)
+    @Operation(hidden = true)
+    public Response getFrontendRoot() throws IOException {
+        return getFrontendStaticFile("/frontend/index.html");
+    }
 
-  private String contentType(InputStream inputStream, String file) throws IOException {
-    return EXTENSION_TYPES.getOrDefault(
-        FilenameUtils.getExtension(file),
-        URLConnection.guessContentTypeFromStream(inputStream));
-  }
+    @GET
+    @Path("/{fileName:.+}")
+    @Schema(hidden = true)
+    @Operation(hidden = true)
+    public Response getFrontendStaticFile(@PathParam("fileName") String fileName) throws IOException {
+        final InputStream requestedFileStream = GatewayResource.class.getResourceAsStream("/frontend/" + fileName);
+        final InputStream inputStream;
+        final String fileToServe;
+        if (requestedFileStream != null) {
+            fileToServe = fileName;
+            inputStream = requestedFileStream;
+        } else {
+            fileToServe = FALLBACK_RESOURCE;
+            inputStream = GatewayResource.class.getResourceAsStream(FALLBACK_RESOURCE);
+        }
+
+        final StreamingOutput streamingOutput = outputStream -> IOUtils.copy(inputStream, outputStream);
+
+        return Response
+                .ok(streamingOutput)
+                .cacheControl(CacheControl.valueOf("max-age=900"))
+                .type(contentType(inputStream, fileToServe))
+                .build();
+    }
+
+    private String contentType(InputStream inputStream, String file) throws IOException {
+        return EXTENSION_TYPES.getOrDefault(
+                FilenameUtils.getExtension(file),
+                URLConnection.guessContentTypeFromStream(inputStream));
+    }
 }

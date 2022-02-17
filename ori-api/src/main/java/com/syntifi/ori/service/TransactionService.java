@@ -17,6 +17,14 @@ import org.eclipse.microprofile.config.ConfigProvider;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Sort;
 
+/**
+ * Service for Transaction business logic
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @Singleton
 public class TransactionService {
 

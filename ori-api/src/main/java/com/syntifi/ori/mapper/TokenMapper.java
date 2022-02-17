@@ -6,6 +6,14 @@ import com.syntifi.ori.model.Token;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * Mapper for {@link Token} model and {@link TokenDTO}
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TokenMapper {
     

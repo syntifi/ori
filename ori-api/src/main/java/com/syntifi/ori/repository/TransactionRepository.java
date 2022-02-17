@@ -11,6 +11,14 @@ import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
 
+/**
+ * Ori Repository for {@link Transaction} model
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @ApplicationScoped
 public class TransactionRepository implements OriRepository<Transaction> {
 

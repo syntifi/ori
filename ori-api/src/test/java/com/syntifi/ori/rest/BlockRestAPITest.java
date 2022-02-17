@@ -17,6 +17,14 @@ import org.junit.jupiter.api.TestMethodOrder;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.JsonObject;
 
+/**
+ * {@link BlockRestAPI} tests
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @QuarkusTest
 @TestMethodOrder(OrderAnnotation.class)
 public class BlockRestAPITest {
@@ -157,8 +165,8 @@ public class BlockRestAPITest {
             block.put("hash", "multipleBlocks" + ("" + i));
             block.put("height", i);
             block.put("root", "root");
-            block.put("timeStamp", "2099-01-01T0" + ("" + i)+ ":00:00.000+0000");
-            block.put("parent", i==0 ? "mockBlock2" : "multipleBlocks" + ("" + (i-1)));
+            block.put("timeStamp", "2099-01-01T0" + ("" + i) + ":00:00.000+0000");
+            block.put("parent", i == 0 ? "mockBlock2" : "multipleBlocks" + ("" + (i - 1)));
             block.put("validator", "validator");
             blocks.add(block);
         }

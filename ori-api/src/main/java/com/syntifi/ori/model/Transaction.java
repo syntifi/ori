@@ -19,10 +19,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Transaction model, only a couple of the fields available in the chain are
- * needed
+ * Ori Entity for Transaction data
  * 
+ * @author Alexandre Carvalho
  * @author Andre Bertolace
+ * 
  * @since 0.1.0
  */
 @Entity

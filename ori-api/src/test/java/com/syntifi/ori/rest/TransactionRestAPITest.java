@@ -17,6 +17,14 @@ import org.junit.jupiter.api.TestMethodOrder;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.JsonObject;
 
+/**
+ * {@link TransactionRestAPI} tests
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @QuarkusTest
 @TestMethodOrder(OrderAnnotation.class)
 public class TransactionRestAPITest {

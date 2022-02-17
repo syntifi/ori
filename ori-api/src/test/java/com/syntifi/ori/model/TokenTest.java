@@ -1,4 +1,5 @@
 package com.syntifi.ori.model;
+
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -11,6 +12,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+/**
+ * {@link Token} model tests
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 public class TokenTest {
     @Inject
     private static Validator validator;
@@ -62,4 +71,3 @@ public class TokenTest {
     }
 
 }
-
