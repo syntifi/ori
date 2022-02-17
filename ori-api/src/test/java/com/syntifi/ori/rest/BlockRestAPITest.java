@@ -39,9 +39,6 @@ public class BlockRestAPITest {
                 .then()
                 .statusCode(200)
                 .body("created", equalTo("/token/ABC"));
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test
@@ -61,9 +58,6 @@ public class BlockRestAPITest {
                 .post("/api/v2/block/ABC")
                 .then()
                 .statusCode(201);
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test
@@ -151,9 +145,6 @@ public class BlockRestAPITest {
                 .post("/api/v2/block/ABC")
                 .then()
                 .statusCode(201);
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test
@@ -178,9 +169,6 @@ public class BlockRestAPITest {
                 .post("/api/v2/block/ABC/multiple")
                 .then()
                 .statusCode(201);
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test

@@ -1,23 +1,32 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.syntifi.ori</groupId>
-  <artifactId>ori-api</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
-
   <parent>
     <groupId>com.syntifi.ori</groupId>
     <artifactId>ori</artifactId>
     <version>0.2.0-SNAPSHOT</version>
   </parent>
-
+  <groupId>com.syntifi.ori</groupId>
+  <artifactId>ori-api</artifactId>
+  <version>0.2.0-SNAPSHOT</version>
   <properties>
+    <ori-shared.version>0.1.0-SNAPSHOT</ori-shared.version>
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
     <quarkus.platform.version>2.6.3.Final</quarkus.platform.version>
-    <ori-shared.version>0.1.0-SNAPSHOT</ori-shared.version>
   </properties>
-
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>${quarkus.platform.group-id}</groupId>
+        <artifactId>${quarkus.platform.artifact-id}</artifactId>
+        <version>${quarkus.platform.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>com.syntifi.ori</groupId>
@@ -69,7 +78,6 @@
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
-      <version>2.0.1.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -93,21 +101,12 @@
       <artifactId>quarkus-jacoco</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-jdbc-h2</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
-
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>${quarkus.platform.group-id}</groupId>
-        <artifactId>${quarkus.platform.artifact-id}</artifactId>
-        <version>${quarkus.platform.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
   <build>
     <resources>
       <resource>
@@ -157,15 +156,12 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
           </plugin>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
           </plugin>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
           </plugin>
         </plugins>
@@ -178,9 +174,6 @@
           <name>native</name>
         </property>
       </activation>
-      <properties>
-        <quarkus.package.type>native</quarkus.package.type>
-      </properties>
       <build>
         <plugins>
           <plugin>
@@ -203,6 +196,9 @@
           </plugin>
         </plugins>
       </build>
+      <properties>
+        <quarkus.package.type>native</quarkus.package.type>
+      </properties>
     </profile>
   </profiles>
 </project>

@@ -36,9 +36,6 @@ public class AccountRestAPITest {
                 .then()
                 .statusCode(200)
                 .body("created", equalTo("/token/ABC"));
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test
@@ -56,9 +53,6 @@ public class AccountRestAPITest {
                 .then()
                 .statusCode(200)
                 .body("created", equalTo("/account/ABC/mockAccount"));
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test
@@ -112,9 +106,6 @@ public class AccountRestAPITest {
                 .statusCode(200)
                 .body("method", equalTo("DELETE"))
                 .body("uri", equalTo("/account/ABC/hash/mockAccount"));
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test

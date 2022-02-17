@@ -39,9 +39,6 @@ public class TransactionMonitorRestAPITest {
                 .then()
                 .statusCode(200)
                 .body("created", equalTo("/token/ABC"));
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test
@@ -63,9 +60,6 @@ public class TransactionMonitorRestAPITest {
                     .statusCode(200)
                     .body("created", equalTo("/account/ABC/" + account));
         }
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test
@@ -86,9 +80,6 @@ public class TransactionMonitorRestAPITest {
                 .post("/api/v2/block/{token}")
                 .then()
                 .statusCode(201);
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test
@@ -115,9 +106,6 @@ public class TransactionMonitorRestAPITest {
                 .post("/api/v2/transaction/{token}/multiple")
                 .then()
                 .statusCode(201);
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test

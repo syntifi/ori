@@ -36,9 +36,6 @@ public class TokenRestAPITest {
                 .then()
                 .statusCode(200)
                 .body("created", equalTo("/token/ABC"));
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test

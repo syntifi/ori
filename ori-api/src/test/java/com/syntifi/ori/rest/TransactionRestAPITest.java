@@ -39,9 +39,6 @@ public class TransactionRestAPITest {
                 .then()
                 .statusCode(200)
                 .body("created", equalTo("/token/ABC"));
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test
@@ -60,9 +57,6 @@ public class TransactionRestAPITest {
                 .then()
                 .statusCode(200)
                 .body("created", equalTo("/account/ABC/fromacc"));
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test
@@ -81,9 +75,6 @@ public class TransactionRestAPITest {
                 .then()
                 .statusCode(200)
                 .body("created", equalTo("/account/ABC/toacc"));
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test
@@ -104,9 +95,6 @@ public class TransactionRestAPITest {
                 .post("/api/v2/block/{token}")
                 .then()
                 .statusCode(201);
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test
@@ -128,9 +116,6 @@ public class TransactionRestAPITest {
                 .post("/api/v2/transaction/{token}")
                 .then()
                 .statusCode(201);
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test
@@ -242,9 +227,6 @@ public class TransactionRestAPITest {
                 .post("/api/v2/transaction/{token}/multiple")
                 .then()
                 .statusCode(201);
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test
@@ -273,9 +255,6 @@ public class TransactionRestAPITest {
                 .statusCode(200)
                 .body("method", equalTo("DELETE"))
                 .body("uri", equalTo("/account/ABC/hash/fromacc"));
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test
@@ -289,9 +268,6 @@ public class TransactionRestAPITest {
                 .statusCode(200)
                 .body("method", equalTo("DELETE"))
                 .body("uri", equalTo("/account/ABC/hash/toacc"));
-        synchronized (LOCK) {
-            LOCK.wait(5000);
-        }
     }
 
     @Test

@@ -46,8 +46,8 @@ public class AccountRespositoryTest {
                 () -> accountRepository.check(account));
         Assertions.assertEquals(1, e.getConstraintViolations().size());
         List<String> violatedFields = e.getConstraintViolations().stream()
-                        .map(v -> v.getPropertyPath().iterator().next().getName()).collect(Collectors.toList());
-        Assertions.assertTrue(violatedFields.contains("token"));        
+                .map(v -> v.getPropertyPath().iterator().next().getName()).collect(Collectors.toList());
+        Assertions.assertTrue(violatedFields.contains("token"));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class AccountRespositoryTest {
     }
 
     @Test
-    @Transactional 
+    @Transactional
     @Order(4)
     public void testNonEmptyDB() {
         Token token = Token.builder().symbol("ABC").protocol("ABC").name("ABC").build();
@@ -75,7 +75,7 @@ public class AccountRespositoryTest {
     }
 
     @Test
-    @Transactional 
+    @Transactional
     @Order(5)
     public void testCleanDB() {
         accountRepository.deleteAll();
@@ -87,4 +87,3 @@ public class AccountRespositoryTest {
                 () -> accountRepository.findByTokenSymbolAndHash("ABC", "Account"));
     }
 }
-
