@@ -1,9 +1,8 @@
 import React from 'react';
 import Header from './components/Header'
 import { RootDiv, PaperDiv } from './styles';
-import { Box, Button, ButtonGroup, Grid } from "@mui/material";
 import AccountTrace from './components/AccountTrace';
-import { Route, BrowserRouter, Routes, Link } from "react-router-dom";
+import { Route, BrowserRouter, Routes } from "react-router-dom";
 import AccountList from './components/AccountList';
 
 function App() {
