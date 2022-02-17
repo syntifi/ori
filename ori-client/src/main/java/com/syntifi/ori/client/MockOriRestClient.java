@@ -15,7 +15,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 /**
+ * Mock {@link OriClient} for general testing
  * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
  */
 public class MockOriRestClient implements OriClient {
 
