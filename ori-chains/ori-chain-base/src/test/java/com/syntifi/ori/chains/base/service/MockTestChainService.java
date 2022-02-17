@@ -110,7 +110,7 @@ public class MockTestChainService {
                 : lastTimestamp + randomInRange(MIN_SECONDS_BETWEEN_BLOCKS, MAX_SECONDS_BETWEEN_BLOCKS);
 
         try {
-            TimeUnit.MILLISECONDS.sleep(500);
+            TimeUnit.MILLISECONDS.sleep(300);
         } catch (InterruptedException e) {
             throw new OriChainCrawlerException("error getting mock block", e);
         }
@@ -148,7 +148,7 @@ public class MockTestChainService {
                     .build());
         }
         try {
-            TimeUnit.MILLISECONDS.sleep(200);
+            TimeUnit.MILLISECONDS.sleep(100);
         } catch (InterruptedException e) {
             throw new OriChainCrawlerException("error getting mock block", e);
         }

@@ -27,7 +27,13 @@ import lombok.Setter;
 @Builder
 public class CsprChainData implements ChainData<JsonBlock, Transfer> {
 
+    /**
+     * The Casper block object
+     */
     private JsonBlock chainBlock;
 
+    /**
+     * the Casper transaction object
+     */
     private List<Transfer> chainTransfers;
 }

@@ -38,39 +38,79 @@ import lombok.Getter;
  * Abstract class to be extended by target chain crawler which effectively runs
  * the crawler
  * 
- * @author Alexandre Carvalho <adcarvalho@gmail.com>
- * @author Andre Bertolace <andre@syntifi.com>
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
  * 
  * @since 0.1.0
  */
 @EnableConfigurationProperties(OriChainConfigProperties.class)
 public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
+
     protected static final Log logger = LogFactory.getLog(AbstractChainCrawlerJob.class);
 
+    /**
+     * Getter for chain processor
+     * 
+     * @return the actual chain processor
+     */
     protected abstract AbstractChainProcessor<T> getChainProcessor();
 
+    /**
+     * Getter for chain reader
+     * 
+     * @return the actual chain reader
+     */
     protected abstract AbstractChainReader<S, T> getChainReader();
 
+    /**
+     * Getter for chain service
+     * 
+     * @return the actual chain service
+     */
+    protected abstract S getChainService();
+
+    /**
+     * OriWriter instance
+     * 
+     * @return the oriWriter being used
+     */
     @Getter(value = AccessLevel.PROTECTED)
     @Autowired
     private OriWriter oriWriter;
 
-    protected abstract S getChainService();
-
+    /**
+     * {@link OriChainConfigProperties} reference
+     * 
+     * @return the {@link OriChainConfigProperties} object
+     */
     @Getter(value = AccessLevel.PROTECTED)
     @Autowired
     private OriChainConfigProperties oriChainConfigProperties;
 
+    /**
+     * {@link OriClient} reference
+     * 
+     * @return the {@link OriClient} object
+     */
     @Getter(value = AccessLevel.PROTECTED)
     @Autowired
     private OriClient oriClient;
 
+    /**
+     * Spring batch {@link JobBuilderFactory}
+     */
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
 
+    /**
+     * Spring batch {@link StepBuilderFactory}
+     */
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
+    /**
+     * Check if token already exists on ORI and create if it does not
+     */
     private void createTokenIfNeeded() {
         try {
             logger.info("Getting token from properties...");
@@ -98,6 +138,10 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
         }
     }
 
+    /**
+     * Check if the BLOCK ZERO exists already on ORI for this chain and writes it if
+     * needed
+     */
     private void addBlockZeroIfNeeded() {
         try {
             logger.info(String.format("Retrieving zero hash block for \"%s\"...",
@@ -133,6 +177,11 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
         }
     }
 
+    /**
+     * The main step which crawls the node, extract, process and writes data to ORI
+     * 
+     * @return the bean of the step to be created
+     */
     @Bean
     public Step crawlAndSendToOri() {
         logger.info(String.format("Registering step \"crawlAndSendToOri\" for \"%s\"", getClass().getSimpleName()));
@@ -150,6 +199,12 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
                 .build();
     }
 
+    /**
+     * 
+     * The job which runs the crawler
+     * 
+     * @return the bean of the job to be created
+     */
     @Bean
     public Job oriCrawlerJob() {
         createTokenIfNeeded();
