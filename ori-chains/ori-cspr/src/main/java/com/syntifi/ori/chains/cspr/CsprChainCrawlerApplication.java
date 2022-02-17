@@ -5,7 +5,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Runner for Casper Chain Crawler Job
+ * Runner for {@link CsprChainCrawlerJob}
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
  */
 @SpringBootApplication
 @EnableBatchProcessing

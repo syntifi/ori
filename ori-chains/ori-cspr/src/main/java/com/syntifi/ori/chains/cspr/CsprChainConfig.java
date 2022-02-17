@@ -8,6 +8,14 @@ import com.syntifi.ori.chains.base.OriChainConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * {@link OriChainConfig} for Casper block chain
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @Configuration
 public class CsprChainConfig extends OriChainConfig {
 

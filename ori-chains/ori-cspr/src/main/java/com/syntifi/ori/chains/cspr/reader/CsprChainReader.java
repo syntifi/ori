@@ -13,6 +13,14 @@ import com.syntifi.ori.client.OriClient;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * {@link AbstractChainReader} for Casper block chain
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @Component
 public class CsprChainReader
         extends AbstractChainReader<CasperService, CsprChainData> {
@@ -25,16 +33,16 @@ public class CsprChainReader
     @Override
     public CsprChainData read() throws IOException, InterruptedException {
         JsonBlockData blockData = getChainService().getBlock(new HeightBlockIdentifier(getBlockHeight()));
-        
+
         // Stop reading if no block data for given height
         if (blockData == null) {
             return null;
         }
-        
+
         TransferData transferData = getChainService().getBlockTransfers(new HeightBlockIdentifier(getBlockHeight()));
 
         nextItem();
-        
+
         return new CsprChainData(blockData.getBlock(), transferData.getTransfers());
     }
 }
