@@ -2,9 +2,9 @@
 This modeule and its submodules make use of [Spring Batch Job](https://spring.io/projects/spring-batch) framework. The batch job pulls records from a specific chain, process them and insert the processed records into the ORI persistency layer through [ori-api](../ori-api/README.md) and using [ori-client](../ori-chains/README.md).
 
 ## High-Level Design
-1. _Reader- the batch will read records from from the specific Blockchain (normally using a java-api for the chain or JSON-RPC calls);
-2. _Processor- the batch will process the inputs from the chains and convert them into a format that ORI understands;
-3. _Writer- the batch will then output and write the data into ORI's database using [ori-client](../ori-chains/README.md).
+1. _Reader_ the batch will read records from from the specific Blockchain (normally using a java-api for the chain or JSON-RPC calls);
+2. _Processor_ the batch will process the inputs from the chains and convert them into a format that ORI understands;
+3. _Writer_ the batch will then output and write the data into ORI's database using [ori-client](../ori-chains/README.md).
 
 ## Packaging
 
