@@ -2,40 +2,27 @@
 # docker-compose up -d
 version: '2.1'
 services:
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+  ori_postgresql_prod:
+    image: postgres:13.1
     environment:
-      discovery.type: single-node
+      POSTGRES_USER: quarkus_prod
+      POSTGRES_PASSWORD: quarkus_prod
+      POSTGRES_DB: quarkus_prod
     ports:
-      - 9200:9200
+      - 5432:5432
     networks:
-      - elastic
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:7.13.4
-    depends_on:
-      - elasticsearch
-    environment: 
-      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
-    ports: 
-      - 5601:5601
-    networks:
-      - elastic
+      - ori 
 
   ori:
     image: ori-jvm 
     depends_on:
-      - elasticsearch
+      - ori_postgresql_prod
     environment:
-      ORI_ELASTICSEARCH_HOST_PORT: elasticsearch:9200 
-      ORI_CASPER_NODE: 134.209.16.172 #Node used to crawl the Casper network 
-      ORI_CASPER_NODE_LIST: 134.209.16.172,139.59.226.13,135.181.56.53,54.252.66.23,149.28.167.111,46.101.61.107,18.217.20.213,31.7.207.16,167.172.32.44,148.251.190.103 #Similar to above but using a list of nodes 
-      ORI_CASPER_PORT: 7777 #RPC port on the node
-      ORI_CASPER_TIMEOUT: 10 #Request time out
-      ORI_CASPER_THREADS: 10 # Number of concurrent http connection threads
-      CASPER_UPDATE_FREQ: 10 #Frequency for running the quartz job updating the blocks, eg every 10s
-      CASPER_CRAWL_FREQ: 1 #Frequency for running the quartz job crawling the casper network, eg every 1s
-      # The following are specific to the AML rules
+      ORI_POSTGRES_HOST: ori_postgresql_prod
+      ORI_POSTGRES_PORT: 5432
+      ORI_POSTGRES_USER: quarkus_prod
+      ORI_POSTGRES_PASSWORD: quarkus_prod
+      ORI_POSTGRES_DB: quarkus_prod
       ORI_AML_REPORTING_THRESHOLD: 10000 
       ORI_AML_LONG_WINDOW_DAYS: 30 
       ORI_AML_MID_WINDOW_DAYS: 14
@@ -44,8 +31,8 @@ services:
     ports:
       - 8080:8080
     networks:
-      - elastic
+      - ori 
 
 networks:
-  elastic:
-    driver: bridge
+  ori:
+    driver: bridge 
