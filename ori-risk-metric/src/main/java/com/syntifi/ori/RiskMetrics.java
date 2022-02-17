@@ -7,17 +7,31 @@ import java.util.stream.Collectors;
 
 import com.syntifi.ori.dto.TransactionDTO;
 
+/**
+ * Ori Risk Metric calculator
+ *
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 public class RiskMetrics {
+
+        private RiskMetrics() {
+        }
 
         // TODO: the reporting threshold is normally expressed in FIAT currency, a
         // conversion is needed here
-        /***
+        /**
          * This rule returns the proportion of transactions falling in the interval
-         * [0.9, 1[
-         * of the reporting threshold (ori.aml.reportting-threshold) over the historical
-         * period (ori.aml.historical-length).
+         * [0.9, 1[ of the reporting threshold
          * 
-         * @return double between [0,1]
+         * @param in
+         * @param out
+         * @param threshold
+         * @param minNumberOfTransactions
+         * @return
          */
         public static double calculateStructuringOverTimeScore(List<TransactionDTO> in, List<TransactionDTO> out,
                         Double threshold, int minNumberOfTransactions) {
@@ -32,17 +46,16 @@ public class RiskMetrics {
                 return n < minNumberOfTransactions ? 0.0 : (nOut + nIn) * 1.0 / n;
         }
 
-        /***
+        /**
          * This rule returns the percentual increase in outgoing transactions over a
-         * short
-         * window moving average (ori.aml.short-window). It is meant to spot an unusual
-         * increase in outgoing transactions over the moving average window. The score
-         * is
-         * set to 0.0 if there was a decrease in outgoing transactions or if the number
-         * of
-         * outgoing transactions is low.
+         * short window moving average. It is meant to spot an unusual increase in
+         * outgoing transactions over the moving average window.
          * 
-         * @return double between [0,1]
+         * @param out
+         * @param shortWindow
+         * @param longWindow
+         * @param minNumberOfTransactions
+         * @return
          */
         public static double calculateUnusualOutgoingVolumeScore(List<TransactionDTO> out, Integer shortWindow,
                         Integer longWindow, int minNumberOfTransactions) {
@@ -75,12 +88,14 @@ public class RiskMetrics {
                                 : amountOutShortWindow * 1.0 / amountOutLongWindow;
         }
 
-        /****
+        /**
          * This rule returns how much does the last moving average transaction deviate
-         * from
-         * the average value of transactions.
+         * from the average value of transactions.
          * 
-         * @return double between [0,1]
+         * @param out
+         * @param window
+         * @param minNumberOfTransactions
+         * @return
          */
         public static double calculateUnusualBehaviourScore(List<TransactionDTO> out, Integer window,
                         int minNumberOfTransactions) {
@@ -104,14 +119,16 @@ public class RiskMetrics {
                 return N < minNumberOfTransactions ? 0.0 : idx * 1.0 / N;
         }
 
-        /****
+        /**
          * This rule returns the ratio of total outgoing value and total incoming value
-         * over
-         * the window (ori.aml.mid-window). This is supposed to indicate "fake" accounts
-         * used
-         * to increase the difficulty of tracing the coin.
+         * over the window. This is supposed to spot "fake" accounts used to increase
+         * the difficulty of tracing the coin.
          * 
-         * @return double between [0,1]
+         * @param in
+         * @param out
+         * @param window
+         * @param minNumberOfTransactions
+         * @return
          */
         public static double calculateFlowThroughScore(List<TransactionDTO> in, List<TransactionDTO> out,
                         Integer window, int minNumberOfTransactions) {
