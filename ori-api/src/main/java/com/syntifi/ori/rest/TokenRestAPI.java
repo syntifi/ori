@@ -38,6 +38,12 @@ import io.vertx.core.json.JsonObject;
 @Tag(name = "Token", description = "Token resources")
 public class TokenRestAPI extends AbstractBaseRestApi {
 
+    /**
+     * POST method to persist a new token in the DB
+     * 
+     * @param tokenDTO
+     * @return
+     */
     @POST
     @Transactional
     public Response addToken(TokenDTO tokenDTO) {
@@ -56,12 +62,23 @@ public class TokenRestAPI extends AbstractBaseRestApi {
                 .build();
     }
 
+    /**
+     * GET method to return all tokens stored in the DB
+     * 
+     * @return
+     */
     @GET
     public List<TokenDTO> getAllTokens() {
         return tokenRepository.listAll(Sort.ascending("symbol")).stream().map(TokenMapper::fromModel)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * GET method to return a token given its symbol
+     * 
+     * @param symbol
+     * @return
+     */
     @GET
     @Path("/{tokenSymbol}")
     public TokenDTO getTokenBySymbol(@PathParam("tokenSymbol") String symbol) {
@@ -75,6 +92,12 @@ public class TokenRestAPI extends AbstractBaseRestApi {
         }
     }
 
+    /**
+     * DELETE method to drop a tiven token from the database
+     * 
+     * @param symbol
+     * @return
+     */
     @DELETE
     @Transactional
     @Path("/{tokenSymbol}")

@@ -38,6 +38,9 @@ public class OriData {
 
     /**
      * list of ori transaction DTO object
+     * 
+     * @param transfers list of ori transaction DTO object
+     * @return list of ori transaction DTO object
      */
     @Valid
     private List<TransactionDTO> transfers;

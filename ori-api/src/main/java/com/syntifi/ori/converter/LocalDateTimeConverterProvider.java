@@ -1,16 +1,18 @@
 package com.syntifi.ori.converter;
 
-import javax.ws.rs.ext.ParamConverter;
-import javax.ws.rs.ext.ParamConverterProvider;
-import javax.ws.rs.ext.Provider;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+
+import javax.ws.rs.ext.ParamConverter;
+import javax.ws.rs.ext.ParamConverterProvider;
+import javax.ws.rs.ext.Provider;
 
 /**
  * Class to register the LocalDateTimeConverter. The @Provider 
  * decorator makes sure to forward the parameter to the actual converter.
  * 
+ * @author Alexandre Carvalho
  * @author Andre Bertolace 
  * @since 0.1.0
  */

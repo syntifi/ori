@@ -15,6 +15,7 @@ import com.syntifi.ori.exception.ORIException;
  * Custom LocalDateTimeConverter implementing JAX-RS ParamConverter interface. This class
  * is the one handling the conversion from/to LocalDatetime/String
  * 
+ * @author Alexandre Carvalho
  * @author Andre Bertolace 
  * @since 0.1.0
  */

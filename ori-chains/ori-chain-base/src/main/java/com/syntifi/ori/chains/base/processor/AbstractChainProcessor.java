@@ -11,7 +11,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /**
- * Abstract class that implements {@link ItemProcessor} to be extended by target chain crawler and process the
+ * Abstract class that implements {@link ItemProcessor} to be extended by target
+ * chain crawler and process the
  * input from chain to ORI compliant format
  * 
  * @author Alexandre Carvalho
@@ -34,7 +35,7 @@ public abstract class AbstractChainProcessor<T> implements ItemProcessor<T, OriD
     /**
      * Constructor for injecting {@link OriChainConfigProperties}
      * 
-     * @param oriChainConfigProperties
+     * @param oriChainConfigProperties the {@link OriChainConfigProperties} object
      */
     protected AbstractChainProcessor(OriChainConfigProperties oriChainConfigProperties) {
         this.oriChainConfigProperties = oriChainConfigProperties;
