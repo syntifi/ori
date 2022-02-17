@@ -1,16 +1,18 @@
 package com.syntifi.ori.exception;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import io.vertx.core.json.JsonObject;
 
 /**
  * Json Handler used when finding issues in parsing Json parameters sent by the user 
  * in the body of a request 
  * 
+ * @author Alexandre Carvalho
  * @author Andre Bertolace 
  * @since 0.1.0
  */

@@ -4,6 +4,17 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.Path;
 
+/**
+ * Ori Rest Api resource endpoints for {@link BlockRestAPI},
+ * {@link TransactionRestAPI}, {@link AccountRestAPI}, {@link TokenRestAPI} and
+ * {@link TransactionMonitorAPI}
+ * 
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 @Singleton
 public class RestApiResource {
     private final BlockRestAPI blockAPI;
@@ -13,11 +24,11 @@ public class RestApiResource {
     private final TransactionMonitorAPI monitorAPI;
 
     @Inject
-    public RestApiResource( BlockRestAPI blockRestAPI,  
-                TransactionRestAPI transactionRestAPI, 
-                AccountRestAPI accountRestAPI,
-                TokenRestAPI tokenRestAPI,
-                TransactionMonitorAPI transactionMonitorAPI) {
+    public RestApiResource(BlockRestAPI blockRestAPI,
+            TransactionRestAPI transactionRestAPI,
+            AccountRestAPI accountRestAPI,
+            TokenRestAPI tokenRestAPI,
+            TransactionMonitorAPI transactionMonitorAPI) {
         this.blockAPI = blockRestAPI;
         this.transactionAPI = transactionRestAPI;
         this.accountAPI = accountRestAPI;
@@ -48,7 +59,5 @@ public class RestApiResource {
     @Path("/monitor")
     public TransactionMonitorAPI getMonitorResource() {
         return monitorAPI;
-    }   
+    }
 }
-
-

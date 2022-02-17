@@ -9,7 +9,14 @@ import com.syntifi.ori.dto.TransactionDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-
+/**
+ * {@link RiskMetrics} tests
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 public class RiskMetricsTest {
 
     @Test

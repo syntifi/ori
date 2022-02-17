@@ -54,11 +54,11 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
     BlockRepository blockRepository;
 
     /**
-     * POST method to add and index a new transactions in ES
+     * POST method to persist a new transaction in the DB
      * 
      * @param symbol
      * @param transactionDTO
-     * @return Response
+     * @return
      * @throws ORIException
      */
     @POST
@@ -95,6 +95,14 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
         }
     }
 
+    /**
+     * POST method to pesist a list many transactions to the DB at once
+     * 
+     * @param symbol
+     * @param transactionDTOs
+     * @return
+     * @throws ORIException
+     */
     @POST
     @Transactional
     @Path("/{tokenSymbol}/multiple")
@@ -130,23 +138,20 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
     }
 
     /**
-     * GET method to retreive all transactions indexed in ES originating from one
-     * account
-     * to another account. Note that the transactions are sorted in reverse
-     * chronological order
+     * GET method to retrieve all transactions for a given token symbol from one
+     * account to another account
      * 
      * @param symbol
      * @param fromHash
      * @param toHash
-     * @param block
-     * @return a list of {@link Transaction}
+     * @return
      * @throws ORIException
      */
     @GET
     @Path("/{tokenSymbol}")
     public List<TransactionDTO> getAllTransactions(@PathParam("tokenSymbol") String symbol,
-            @QueryParam("fromAccount") String fromHash, @QueryParam("toAccount") String toHash,
-            @QueryParam("blockHash") String block) throws ORIException {
+            @QueryParam("fromAccount") String fromHash, @QueryParam("toAccount") String toHash)
+            throws ORIException {
         getTokenOr404(symbol);
         List<Transaction> transactions;
         Account from = fromHash == null ? null : getAccountOr404(symbol, fromHash);
@@ -173,8 +178,9 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
      * GET method to retrieve a transaction by it's hash. Hash is given as a hex
      * string.
      * 
+     * @param symbol
      * @param hash
-     * @return Transaction
+     * @return
      * @throws ORIException
      */
     @GET
@@ -213,6 +219,14 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * GET method to retrieve all incoming transactions to a given account
+     * 
+     * @param symbol
+     * @param hash
+     * @return
+     * @throws ORIException
+     */
     @GET
     @Path("{tokenSymbol}/incoming/account/{account}")
     public List<TransactionDTO> getIncomingTransactionsToAccount(@PathParam("tokenSymbol") String symbol,
@@ -225,6 +239,14 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * GET method to retrieve all outgoing transactions from a given account
+     * 
+     * @param symbol
+     * @param hash
+     * @return
+     * @throws ORIException
+     */
     @GET
     @Path("{tokenSymbol}/outgoing/account/{account}")
     public List<TransactionDTO> getOutgoingTransactionsFromAccount(@PathParam("tokenSymbol") String symbol,

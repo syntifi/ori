@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
 /**
  * The actual LocalDateTimeFormat decorator. By detault the format is "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
  * 
+ * @author Alexandre Carvalho
  * @author Andre Bertolace 
  * @since 0.1.0
  */

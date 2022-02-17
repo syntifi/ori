@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response.Status;
  * object that will
  * finally be returned to the user in a readeable form
  * 
+ * @author Alexandre Carvalho
  * @author Andre Bertolace
  * @since 0.1.0
  */

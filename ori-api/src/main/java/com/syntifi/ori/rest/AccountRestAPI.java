@@ -39,7 +39,7 @@ import io.vertx.core.json.JsonObject;
 public class AccountRestAPI extends AbstractBaseRestApi {
 
    /**
-    * POST method to add a new account and index in ES
+    * POST method to persist a new account in the DB
     * 
     * @param symbol
     * @param accountDTO
@@ -70,10 +70,11 @@ public class AccountRestAPI extends AbstractBaseRestApi {
    }
 
    /**
-    * GET method to retreive all blocks indexed in ES. Note that the blocks are
+    * GET method to retreive all blocks in the DB. Note that the blocks are
     * sorted in reverse chronological order
     * 
-    * @return a list of {@link AccountDTO}
+    * @param symbol
+    * @return
     * @throws ORIException
     */
    @GET
@@ -89,8 +90,9 @@ public class AccountRestAPI extends AbstractBaseRestApi {
    /**
     * GET method to retrieve a block by it's hash. Hash is given as a hex string.
     * 
+    * @param symbol
     * @param hash
-    * @return Block
+    * @return
     * @throws ORIException
     */
    @GET
@@ -114,6 +116,7 @@ public class AccountRestAPI extends AbstractBaseRestApi {
     * DELETE method to remove a specific block given the hash. Hash is given as a
     * hex string
     * 
+    * @param symbol
     * @param hash
     * @return
     * @throws ORIException

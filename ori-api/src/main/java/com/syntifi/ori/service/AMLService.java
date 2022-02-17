@@ -18,6 +18,7 @@ import org.eclipse.microprofile.config.ConfigProvider;
 /**
  * AML rules calculator
  * 
+ * @author Alexandre Carvalho
  * @author Andre Bertolace
  * @since 0.1.0
  */
@@ -27,6 +28,17 @@ public class AMLService {
     private static int minNumberOfTransactions = ConfigProvider.getConfig()
             .getValue("ori.aml.min-number-transactions", int.class);
 
+    /**
+     * Method to calculate the risk metrics scores and return a AMLRulesDTO object
+     *  
+     * @param in
+     * @param out
+     * @param thresh
+     * @param sWindow
+     * @param lWindow
+     * @return
+     * @throws ORIException
+     */
     public AMLRulesDTO calculateScores(List<Transaction> in, List<Transaction> out, Double thresh,
             Integer sWindow, Integer lWindow)
             throws ORIException {
@@ -50,11 +62,14 @@ public class AMLService {
                 .collect(Collectors.toList());
 
         scores.setFlowThroughScore(
-                RiskMetrics.calculateFlowThroughScore(inDTO, outDTO, longWindow, minNumberOfTransactions));
+                RiskMetrics.calculateFlowThroughScore(inDTO, outDTO, longWindow,
+                        minNumberOfTransactions));
         scores.setStructuringOverTimeScore(
-                RiskMetrics.calculateStructuringOverTimeScore(inDTO, outDTO, threshold, minNumberOfTransactions));
+                RiskMetrics.calculateStructuringOverTimeScore(inDTO, outDTO, threshold,
+                        minNumberOfTransactions));
         scores.setUnusualBehaviorScore(
-                RiskMetrics.calculateUnusualBehaviourScore(outDTO, shortWindow, minNumberOfTransactions));
+                RiskMetrics.calculateUnusualBehaviourScore(outDTO, shortWindow,
+                        minNumberOfTransactions));
         scores.setUnusualOutgoingVolumeScore(
                 RiskMetrics.calculateUnusualOutgoingVolumeScore(outDTO, shortWindow, longWindow,
                         minNumberOfTransactions));

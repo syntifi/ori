@@ -9,6 +9,7 @@ import io.vertx.core.json.JsonObject;
 /**
  * Handler that maps the ORIExcept to a jsonObject 
  * 
+ * @author Alexandre Carvalho
  * @author Andre Bertolace 
  * @since 0.1.0
  */
