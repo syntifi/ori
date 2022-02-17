@@ -7,6 +7,14 @@ import org.springframework.batch.core.annotation.AfterChunkError;
 import org.springframework.batch.core.annotation.BeforeChunk;
 import org.springframework.batch.core.scope.context.ChunkContext;
 
+/**
+ * Chain ChunkListener for listening to batch chunk events
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 public class OriChunkListener {
 
     protected static final Log logger = LogFactory.getLog(OriChunkListener.class);

@@ -18,7 +18,18 @@ import org.springframework.context.annotation.PropertySource;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-@ComponentScan(basePackageClasses=OriChainConfig.class)
+/**
+ * Chain Configuration for properties loading and bean definitions
+ * 
+ * Can and should be extended by chain crawlers to inject its beans (ie:
+ * its specific api client)
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
+@ComponentScan(basePackageClasses = OriChainConfig.class)
 @EnableConfigurationProperties(OriChainConfigProperties.class)
 @PropertySource("classpath:ori-chain-default-application.properties")
 public class OriChainConfig {

@@ -9,6 +9,14 @@ import org.springframework.batch.core.annotation.AfterProcess;
 import org.springframework.batch.core.annotation.BeforeProcess;
 import org.springframework.batch.core.annotation.OnProcessError;
 
+/**
+ * Chain ProcessListener for listening to batch process events
+ * 
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * 
+ * @since 0.1.0
+ */
 public class ChainItemProcessListener<T extends ChainData<?, ?>> {
 
     protected static final Log logger = LogFactory.getLog(ChainItemProcessListener.class);

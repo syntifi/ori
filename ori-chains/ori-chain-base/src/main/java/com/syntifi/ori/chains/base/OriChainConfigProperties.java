@@ -6,8 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Abstract class to be extended by target chain crawler and read the
- * specific configuration to feed the crawler
+ * Read the specific configuration to feed the crawler
  * 
  * @author Alexandre Carvalho <adcarvalho@gmail.com>
  * @author Andre Bertolace <andre@syntifi.com>
