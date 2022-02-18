@@ -23,7 +23,9 @@ import com.syntifi.ori.model.Account;
 
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import io.quarkus.arc.Unremovable;
 import io.quarkus.panache.common.Sort;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.vertx.core.json.JsonObject;
 
 /**
@@ -35,6 +37,8 @@ import io.vertx.core.json.JsonObject;
  * @since 0.1.0
  */
 @Singleton
+@Unremovable
+@RegisterForReflection
 @Tag(name = "Account", description = "Account resources")
 public class AccountRestAPI extends AbstractBaseRestApi {
 

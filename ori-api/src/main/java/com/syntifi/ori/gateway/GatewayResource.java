@@ -11,7 +11,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 
 import com.syntifi.ori.rest.RestApiResource;
@@ -20,6 +19,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+import io.quarkus.arc.Unremovable;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 
 /**
  * Gateway resource configuration class
@@ -31,9 +33,12 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @since 0.1.0
  */
 @Path("/")
+@Unremovable
+@RegisterForReflection
 public class GatewayResource {
 
     private static final String INDEX_RESOURCE = "index.html";
+    private static final String FALLBACK_RESOURCE = "/frontend/index.html";
     private static final Map<String, String> EXTENSION_TYPES = Map.of("svg", "image/svg+xml");
 
     private RestApiResource apiResource;
@@ -61,25 +66,24 @@ public class GatewayResource {
     @Schema(hidden = true)
     @Operation(hidden = true)
     public Response getFrontendStaticFile(@PathParam("fileName") String fileName) throws IOException {
+        final InputStream requestedFileStream = GatewayResource.class.getResourceAsStream("/frontend/" + fileName);
         final InputStream inputStream;
         final String fileToServe;
-
-        try (InputStream requestedFileStream = GatewayResource.class.getResourceAsStream("/frontend/" + fileName)) {
+        if (requestedFileStream != null) {
             fileToServe = fileName;
             inputStream = requestedFileStream;
-
-            if (requestedFileStream == null) {
-                return Response.status(Status.NOT_FOUND).build();
-            }
-
-            final StreamingOutput streamingOutput = outputStream -> IOUtils.copy(inputStream, outputStream);
-
-            return Response
-                    .ok(streamingOutput)
-                    .cacheControl(CacheControl.valueOf("max-age=900"))
-                    .type(contentType(inputStream, fileToServe))
-                    .build();
+        } else {
+            fileToServe = INDEX_RESOURCE;
+            inputStream = GatewayResource.class.getResourceAsStream(FALLBACK_RESOURCE);
         }
+
+        final StreamingOutput streamingOutput = outputStream -> IOUtils.copy(inputStream, outputStream);
+
+        return Response
+                .ok(streamingOutput)
+                .cacheControl(CacheControl.valueOf("max-age=900"))
+                .type(contentType(inputStream, fileToServe))
+                .build();
     }
 
     private String contentType(InputStream inputStream, String file) throws IOException {

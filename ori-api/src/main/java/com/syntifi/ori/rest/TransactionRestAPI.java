@@ -32,6 +32,8 @@ import com.syntifi.ori.repository.TransactionRepository;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.specimpl.ResponseBuilderImpl;
 
+import io.quarkus.arc.Unremovable;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.vertx.core.json.JsonObject;
 
 /**
@@ -44,6 +46,8 @@ import io.vertx.core.json.JsonObject;
  * @since 0.1.0
  */
 @Singleton
+@Unremovable
+@RegisterForReflection
 @Tag(name = "Transaction", description = "Transaction resources")
 public class TransactionRestAPI extends AbstractBaseRestApi {
 
