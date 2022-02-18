@@ -10,8 +10,10 @@
   <artifactId>ori-api</artifactId>
   <version>0.2.0-SNAPSHOT</version>
   <properties>
+    <ori-frontend.version>0.1.0-SNAPSHOT</ori-frontend.version>
     <ori-shared.version>0.1.0-SNAPSHOT</ori-shared.version>
     <ori-risk-metric.version>0.1.0-SNAPSHOT</ori-risk-metric.version>
+
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
     <quarkus.platform.version>2.7.1.Final</quarkus.platform.version>
@@ -28,6 +30,13 @@
     </dependencies>
   </dependencyManagement>
   <dependencies>
+    <!-- ensure front-end files were generated before packaging ori-api -->
+    <dependency>
+      <groupId>com.syntifi.ori</groupId>
+      <artifactId>ori-frontend</artifactId>
+      <version>${ori-frontend.version}</version>
+      <type>pom</type>
+    </dependency>
     <dependency>
       <groupId>com.syntifi.ori</groupId>
       <artifactId>ori-shared</artifactId>

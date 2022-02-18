@@ -14,7 +14,7 @@ services:
       - ori 
 
   ori:
-    image: ori-jvm 
+    image: syntifi.com/ori/ori-api-jvm
     depends_on:
       - ori_postgresql_prod
     environment:

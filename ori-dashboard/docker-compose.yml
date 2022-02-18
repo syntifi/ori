@@ -52,7 +52,7 @@ services:
     command: --syncmode "fast" --cache=512 --http --http.addr "0.0.0.0"
 
   ori-chains-eth:
-    image: syntifi.com/ori-chains/ori-eth
+    image: syntifi.com/ori/ori-chains/ori-eth
     depends_on:
       - geth
       - ori

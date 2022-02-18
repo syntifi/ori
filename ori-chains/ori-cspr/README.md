@@ -10,7 +10,7 @@ The application can be packaged using:
 
 This will create the following docker image locally:
 ```
-syntifi.com/ori-chains/ori-cspr
+syntifi.com/ori/ori-chains/ori-cspr
 ``` 
 
 ## Running the application
@@ -21,5 +21,5 @@ Please make sure that ORI-API is running either on a docker, in dev mode or in a
 > Select a peer from [this list](https://cspr.live/tools/peers) and set the appropriate value as an environment variable for docker, if needed.
 
 ```shell script
-docker run [-e ORI_CHAIN_ADDRESS=XX.XXX.XX.X] syntifi.com/ori-chains/ori-cspr
+docker run [-e ORI_CHAIN_ADDRESS=XX.XXX.XX.X] syntifi.com/ori/ori-chains/ori-cspr
 ```

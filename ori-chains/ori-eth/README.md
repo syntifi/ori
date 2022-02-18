@@ -10,7 +10,7 @@ The application can be packaged using:
 
 This will create the following docker image locally:
 ```
-syntifi.com/ori-chains/ori-eth
+syntifi.com/ori/ori-chains/ori-eth
 ``` 
 
 ## Running the application
@@ -23,5 +23,5 @@ Please make sure that ORI-API is running either on a docker, in dev mode or in a
 > ```
 
 ```shell script
-docker run syntifi.com/ori-chains/ori-eth
+docker run syntifi.com/ori/ori-chains/ori-eth
 ```

@@ -19,6 +19,7 @@
   </modules>
 
   <properties>
+    <image.prefix>${image.prefix}/ori-chains</image.prefix>
     <spring-batch.version>4.3.4</spring-batch.version>
     <spring-framework.version>5.3.15</spring-framework.version>
     <ori-client.version>0.1.0-SNAPSHOT</ori-client.version>
@@ -116,7 +117,7 @@
               <enabled>true</enabled>
             </layers>
             <image>
-              <name>syntifi.com/ori-chains/${project.artifactId}</name>
+              <name>${image.prefix}/${project.artifactId}</name>
             </image>
           </configuration>
           <executions>
