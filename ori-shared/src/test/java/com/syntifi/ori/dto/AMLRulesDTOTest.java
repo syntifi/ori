@@ -1,21 +1,21 @@
 package com.syntifi.ori.dto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.vertx.java.core.json.JsonObject;
 
 public class AMLRulesDTOTest {
+    final static ObjectMapper mapper = new ObjectMapper();
 
     @Test
     public void testSerializer() {
-        ObjectMapper mapper = new ObjectMapper();
-        var rules = new JsonObject();
-        rules.putNumber("structuringOverTimeScore", 0.76876);
-        rules.putNumber("unusualOutgoingVolumeScore", 0.1789);
-        rules.putNumber("unusualBehaviorScore", 0.56023);
-        rules.putNumber("flowThroughScore", 0.76876);
+        ObjectNode rules = mapper.createObjectNode();
+        rules.put("structuringOverTimeScore", 0.76876);
+        rules.put("unusualOutgoingVolumeScore", 0.1789);
+        rules.put("unusualBehaviorScore", 0.56023);
+        rules.put("flowThroughScore", 0.76876);
         Assertions.assertDoesNotThrow(() -> mapper.readValue(rules.toString(), AMLRulesDTO.class));
     }
 }

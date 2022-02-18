@@ -8,8 +8,6 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
-import org.apache.bval.jsr.ApacheValidationProvider;
-
 /**
  * Ori DTO for every object that needs validation or other common funcionality
  * 
@@ -19,8 +17,7 @@ import org.apache.bval.jsr.ApacheValidationProvider;
  * @since 0.1.0
  */
 public interface OriDTO {
-    static final Validator validator = Validation.byProvider(ApacheValidationProvider.class)
-            .configure().buildValidatorFactory().getValidator();
+    static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     public default void check() throws ConstraintViolationException {
         Set<ConstraintViolation<OriDTO>> constraintViolations = validator.validate(this);
