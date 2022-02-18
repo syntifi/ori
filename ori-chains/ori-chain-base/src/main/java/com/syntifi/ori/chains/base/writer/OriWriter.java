@@ -81,7 +81,7 @@ public class OriWriter implements ItemWriter<OriData> {
             throw new OriItemWriterException("should not receive an empty list on OriWriter", null);
         } else if (oriDataList.size() > 1) {
             try {
-                oriClient.postBlocks(oriChainConfigProperties.getChainTokenSymbol(),
+                oriClient.postBlocks(oriChainConfigProperties.getChain().getTokenSymbol(),
                         oriDataList.stream().map(OriData::getBlock)
                                 .collect(Collectors.toList()));
             } catch (WebClientResponseException e) {
@@ -98,7 +98,7 @@ public class OriWriter implements ItemWriter<OriData> {
         } else {
             OriData oriData = oriDataList.get(0);
             try {
-                oriClient.postBlock(oriChainConfigProperties.getChainTokenSymbol(), oriData.getBlock());
+                oriClient.postBlock(oriChainConfigProperties.getChain().getTokenSymbol(), oriData.getBlock());
             } catch (WebClientResponseException e) {
                 if (e.getStatusCode() != HttpStatus.CONFLICT) {
                     throw new OriItemWriterException(String.format(
@@ -123,7 +123,8 @@ public class OriWriter implements ItemWriter<OriData> {
                     writeAccount(transfer.getFromHash());
                     writeAccount(transfer.getToHash());
                     try {
-                        oriClient.postTransfer(oriChainConfigProperties.getChainTokenSymbol(), transfer);
+                        oriClient.postTransfer(oriChainConfigProperties.getChain().getTokenSymbol(),
+                                transfer);
                     } catch (WebClientResponseException e) {
                         if (e.getStatusCode() != HttpStatus.CONFLICT) {
                             throw new OriItemWriterException(String.format(
@@ -149,7 +150,7 @@ public class OriWriter implements ItemWriter<OriData> {
         }
 
         try {
-            oriClient.postAccount(oriChainConfigProperties.getChainTokenSymbol(),
+            oriClient.postAccount(oriChainConfigProperties.getChain().getTokenSymbol(),
                     AccountDTO.builder().hash(hash).build());
         } catch (WebClientResponseException e) {
             if (e.getStatusCode() != HttpStatus.CONFLICT) {

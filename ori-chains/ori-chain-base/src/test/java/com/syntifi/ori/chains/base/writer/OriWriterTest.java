@@ -20,6 +20,8 @@ import com.syntifi.ori.dto.TransactionDTO;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.test.MetaDataInstanceFactory;
 import org.springframework.batch.test.context.SpringBatchTest;
@@ -87,36 +89,11 @@ public class OriWriterTest {
         assertThrows(OriItemWriterException.class, () -> writer.write(oriData));
     }
 
-    @Test
-    public void testWriter_badRequest_onWriteBlocks_shouldThrowItemWriterException()
+    @ParameterizedTest
+    @ValueSource(strings = { "postBlocks", "postTransfer", "postAccount" })
+    public void testWriter_badRequest_onWriteElements_shouldThrowItemWriterException(String method)
             throws IOException, InterruptedException {
-        oriClient.generateErrorOnRequest(HttpStatus.BAD_REQUEST, "postBlocks");
-
-        List<OriData> oriData = new LinkedList<>();
-
-        oriData.add(getBlock());
-        oriData.add(getBlock());
-
-        assertThrows(OriItemWriterException.class, () -> writer.write(oriData));
-    }
-
-    @Test
-    public void testWriter_badRequest_onWriteTransactions_shouldThrowItemWriterException()
-            throws IOException, InterruptedException {
-        oriClient.generateErrorOnRequest(HttpStatus.BAD_REQUEST, "postTransfer");
-
-        List<OriData> oriData = new LinkedList<>();
-
-        oriData.add(getBlock());
-        oriData.add(getBlock());
-
-        assertThrows(OriItemWriterException.class, () -> writer.write(oriData));
-    }
-
-    @Test
-    public void testWriter_badRequest_onWriteAccount_shouldThrowItemWriterException()
-            throws IOException, InterruptedException {
-        oriClient.generateErrorOnRequest(HttpStatus.BAD_REQUEST, "postAccount");
+        oriClient.generateErrorOnRequest(HttpStatus.BAD_REQUEST, method);
 
         List<OriData> oriData = new LinkedList<>();
 
@@ -128,13 +105,13 @@ public class OriWriterTest {
 
     private OriData getBlock() {
         BlockDTO block = mockTestChainService.getNextBlock().toDTO();
-        block.setTokenSymbol(oriChainConfigProperties.getChainTokenSymbol());
+        block.setTokenSymbol(oriChainConfigProperties.getChain().getTokenSymbol());
 
         List<TransactionDTO> transfers = mockTestChainService.getTransfers(block.getHash())
                 .stream()
                 .map(t -> t.toDTO())
                 .collect(Collectors.toList());
-        transfers.forEach(a -> a.setTokenSymbol(oriChainConfigProperties.getChainTokenSymbol()));
+        transfers.forEach(a -> a.setTokenSymbol(oriChainConfigProperties.getChain().getTokenSymbol()));
         return OriData.builder()
                 .block(block)
                 .transfers(transfers).build();

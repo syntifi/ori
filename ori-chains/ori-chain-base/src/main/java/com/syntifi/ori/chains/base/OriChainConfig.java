@@ -51,7 +51,8 @@ public class OriChainConfig {
     @Bean
     @ConditionalOnMissingBean
     protected OriClient getOriClient() {
-        return new OriRestClient(oriChainConfigProperties.getHost());
+        return new OriRestClient(String.format("%s://%s:%s", oriChainConfigProperties.getHost().getScheme(),
+                oriChainConfigProperties.getHost().getAddress(), oriChainConfigProperties.getHost().getPort()));
     }
 
     /**

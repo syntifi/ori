@@ -13,7 +13,18 @@ The application can be packaged using:
 ./mvnw package
 ```
 
-This will create the required docker images with the crawlers ready for execution
+This will create the required docker images with the crawlers ready for execution.
+
+Also, you can override the following property settings with environment variables:
+
+```shell script
+ORI_REST_API_SCHEME=http
+ORI_REST_API_ADDRESS=localhost
+ORI_REST_API_PORT=8080
+ORI_CHAIN_SCHEME=http
+ORI_CHAIN_ADDRESS=localhost
+ORI_CHAIN_PORT=9090
+```
 
 ## Specific crawlers
 

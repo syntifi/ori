@@ -17,11 +17,13 @@ import org.web3j.protocol.http.HttpService;
  */
 @Configuration
 public class EthChainConfig extends OriChainConfig {
-    
+
     @Bean
     protected Web3j getServiceInstance() {
         return Web3j.build(
-                new HttpService("http://" + getOriChainConfigProperties().getChainNode() + ":"
-                        + getOriChainConfigProperties().getChainNodePort()));
+                new HttpService(String.format("%s://%s:%s",
+                        getOriChainConfigProperties().getChain().getNode().getScheme(),
+                        getOriChainConfigProperties().getChain().getNode().getAddress(),
+                        getOriChainConfigProperties().getChain().getNode().getPort())));
     }
 }

@@ -23,7 +23,7 @@ public class MockChainProcessor extends AbstractChainProcessor<MockChainData> {
         final OriData result = new OriData();
 
         BlockDTO blockDTO = item.getChainBlock().toDTO();
-        blockDTO.setTokenSymbol(oriChainConfigProperties.getChainTokenSymbol());
+        blockDTO.setTokenSymbol(oriChainConfigProperties.getChain().getTokenSymbol());
         blockDTO.check();
 
         result.setBlock(blockDTO);
@@ -31,7 +31,7 @@ public class MockChainProcessor extends AbstractChainProcessor<MockChainData> {
         result.setTransfers(new LinkedList<>());
         for (MockChainTransfer transfer : item.getChainTransfers()) {
             TransactionDTO transactionDTO = transfer.toDTO();
-            transactionDTO.setTokenSymbol(getOriChainConfigProperties().getChainTokenSymbol());
+            transactionDTO.setTokenSymbol(getOriChainConfigProperties().getChain().getTokenSymbol());
             transactionDTO.check();
             result.getTransfers().add(transactionDTO);
         }

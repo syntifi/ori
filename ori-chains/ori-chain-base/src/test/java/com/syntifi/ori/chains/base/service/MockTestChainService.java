@@ -57,9 +57,9 @@ public class MockTestChainService {
         this.transfers.clear();
         this.accountHashes.clear();
 
-        long itemCount = oriChainConfigProperties.getChainBlockZeroHeight();
+        long itemCount = oriChainConfigProperties.getChain().getBlockZeroHeight();
 
-        while (itemCount < oriChainConfigProperties.getChainBlockZeroHeight() + MAX_BLOCK_HEIGHT) {
+        while (itemCount < oriChainConfigProperties.getChain().getBlockZeroHeight() + MAX_BLOCK_HEIGHT) {
             MockChainBlock block = createBlock(itemCount);
             createTransfers(block.getHash(), randomInRange(MIN_TRANSACTIONS, MAX_TRANSACTIONS));
             itemCount++;
@@ -87,7 +87,7 @@ public class MockTestChainService {
 
     public MockChainBlock getBlock(long height) {
         if (height < this.blocks.size()) {
-            return this.blocks.get((int) (height - oriChainConfigProperties.getChainBlockZeroHeight()));
+            return this.blocks.get((int) (height - oriChainConfigProperties.getChain().getBlockZeroHeight()));
         } else {
             return null;
         }
@@ -116,11 +116,11 @@ public class MockTestChainService {
         }
 
         MockChainBlock block = itemCount < (MAX_BLOCK_HEIGHT
-                + oriChainConfigProperties.getChainBlockZeroHeight())
+                + oriChainConfigProperties.getChain().getBlockZeroHeight())
                         ? MockChainBlock.builder()
-                                .hash(String.format(oriChainConfigProperties.getChainBlockZeroHash(),
+                                .hash(String.format(oriChainConfigProperties.getChain().getBlockZeroHash(),
                                         itemCount))
-                                .parentHash(String.format(oriChainConfigProperties.getChainBlockZeroHash(),
+                                .parentHash(String.format(oriChainConfigProperties.getChain().getBlockZeroHash(),
                                         itemCount - 1))
                                 .height(itemCount++)
                                 .timestamp(timestamp)

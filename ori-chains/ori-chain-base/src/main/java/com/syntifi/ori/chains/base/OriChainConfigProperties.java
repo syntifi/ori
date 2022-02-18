@@ -18,75 +18,121 @@ import lombok.Setter;
 @ConfigurationProperties(prefix = "ori")
 public class OriChainConfigProperties {
 
-    /**
-     * ORI client host
-     * 
-     * @return the host address
-     * @param host the host address to set
-     */
-    private String host;
+    @Getter
+    @Setter
+    public static class HostProperties {
+
+        /**
+         * ORI client scheme
+         * 
+         * @return the scheme
+         * @param scheme the scheme to set
+         */
+        private String scheme;
+
+        /**
+         * ORI client address
+         * 
+         * @return the address address
+         * @param address the address address to set
+         */
+        private String address;
+
+        /**
+         * ORI client port
+         * 
+         * @return the port address
+         * @param port the port address to set
+         */
+        private int port;
+    }
+
+    @Getter
+    @Setter
+    public static class ChainProperties {
+
+        /**
+         * Chain node properties
+         * 
+         * @return the chain node properties
+         * @param node the chain node properties to set
+         */
+        private HostProperties node;
+
+        /**
+         * Chain token symbol
+         * 
+         * @return the chain token symbol
+         * @param tokenSymbol the chain token symbol to set
+         */
+        private String tokenSymbol;
+
+        /**
+         * Chain token name
+         * 
+         * @return the chain token name
+         * @param tokenName the chain token name to set
+         */
+        private String tokenName;
+
+        /**
+         * Chain token protocol
+         * 
+         * @return the chain token protocol
+         * @param tokenProtocol the chain token protocol to set
+         */
+        private String tokenProtocol;
+
+        /**
+         * Chain block zero hash
+         * 
+         * @return the chain block zero hash
+         * @param blockZeroHash the chain block zero hash to set
+         */
+        private String blockZeroHash;
+
+        /**
+         * Chain block zero height
+         * 
+         * @return the block zero height
+         * @param blockZeroHeight the block zero height to set
+         */
+        private long blockZeroHeight;
+    }
+
+    @Getter
+    @Setter
+    public static class BatchProperties {
+        /**
+         * Spring Batch chunk size
+         * 
+         * @return the Spring Batch chunk size value
+         * @param chunkSize the Spring Batch chunk size value to set
+         */
+        private int chunkSize;
+    }
 
     /**
-     * Chain node address
+     * ORI host properties
      * 
-     * @return the chain node address
-     * @param chainNode the chain node address to set
+     * @return the ORI host properties
+     * @param host the ORI host properties to set
      */
-    private String chainNode;
+    private HostProperties host;
 
     /**
-     * Chain node port
+     * Chain settings
      * 
-     * @return the chain node port
-     * @param chainNodePort the chain node port to set
+     * @return the Chain settings
+     * @param chain the Chain settings value to set
      */
-    private int chainNodePort;
+    private ChainProperties chain;
 
     /**
-     * Chain token symbol
+     * Spring Batch settings
      * 
-     * @return the chain token symbol
-     * @param chainTokenSymbol the chain token symbol to set
+     * @return the Spring Batch settings
+     * @param batch the Spring Batch settings value to set
      */
-    private String chainTokenSymbol;
-
-    /**
-     * Chain token name
-     * 
-     * @return the chain token name
-     * @param chainTokenName the chain token name to set
-     */
-    private String chainTokenName;
-
-    /**
-     * Chain token protocol
-     * 
-     * @return the chain token protocol
-     * @param chainTokenProtocol the chain token protocol to set
-     */
-    private String chainTokenProtocol;
-
-    /**
-     * Chain block zero hash
-     * 
-     * @return the chain block zero hash
-     * @param chainBlockZeroHash the chain block zero hash to set
-     */
-    private String chainBlockZeroHash;
-
-    /**
-     * Chain block zero height
-     * 
-     * @return the block zero height
-     * @param chainBlockZeroHeight the block zero height to set
-     */
-    private long chainBlockZeroHeight;
-
-    /**
-     * Spring Batch chunk size
-     * 
-     * @return the Spring Batch chunk size value
-     * @param batchChunkSize the Spring Batch chunk size value to set
-     */
-    private int batchChunkSize;
+    private BatchProperties batch;
 }

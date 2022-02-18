@@ -21,7 +21,7 @@ public class CsprChainConfig extends OriChainConfig {
 
     @Bean
     protected CasperService getServiceInstance() throws MalformedURLException {
-        return CasperService.usingPeer(getOriChainConfigProperties().getChainNode(),
-                getOriChainConfigProperties().getChainNodePort());
+        return CasperService.usingPeer(getOriChainConfigProperties().getChain().getNode().getAddress(),
+                getOriChainConfigProperties().getChain().getNode().getPort());
     }
 }

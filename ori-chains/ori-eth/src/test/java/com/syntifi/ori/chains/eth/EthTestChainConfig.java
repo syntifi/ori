@@ -33,8 +33,9 @@ public class EthTestChainConfig extends OriChainConfig {
     @Bean
     protected Web3j getServiceInstance() {
         return Mockito.mock(JsonRpc2_0Web3j.class,
-                withSettings()
-                        .useConstructor(new HttpService("http://" + getOriChainConfigProperties().getChainNode() + ":"
-                                + getOriChainConfigProperties().getChainNodePort())));
+                withSettings().useConstructor(new HttpService(String.format("%s://%s:%s",
+                        getOriChainConfigProperties().getChain().getNode().getScheme(),
+                        getOriChainConfigProperties().getChain().getNode().getAddress(),
+                        getOriChainConfigProperties().getChain().getNode().getPort()))));
     }
 }

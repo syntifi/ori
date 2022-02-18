@@ -37,7 +37,7 @@ public class EthChainProcessor extends AbstractChainProcessor<EthChainData> {
 
         // Block processor
         BlockDTO block = new BlockDTO();
-        block.setTokenSymbol(oriChainConfigProperties.getChainTokenSymbol());
+        block.setTokenSymbol(oriChainConfigProperties.getChain().getTokenSymbol());
         block.setHash(item.getChainBlock().getResult().getHash());
         block.setHeight(item.getChainBlock().getResult().getNumber().longValue());
         block.setParent(item.getChainBlock().getResult().getParentHash());
@@ -52,7 +52,7 @@ public class EthChainProcessor extends AbstractChainProcessor<EthChainData> {
         List<TransactionDTO> transfers = new LinkedList<>();
         for (TransactionObject t : item.getChainTransfers()) {
             TransactionDTO transfer = new TransactionDTO();
-            transfer.setTokenSymbol(oriChainConfigProperties.getChainTokenSymbol());
+            transfer.setTokenSymbol(oriChainConfigProperties.getChain().getTokenSymbol());
             transfer.setHash(t.getHash());
             transfer.setBlockHash(t.getBlockHash());
             transfer.setFromHash(t.getFrom());

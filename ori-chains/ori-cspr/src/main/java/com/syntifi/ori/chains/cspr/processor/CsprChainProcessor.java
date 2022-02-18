@@ -39,7 +39,7 @@ public class CsprChainProcessor extends AbstractChainProcessor<CsprChainData> {
         // Block processor
         JsonBlock casperBlock = item.getChainBlock();
         BlockDTO block = new BlockDTO();
-        block.setTokenSymbol(oriChainConfigProperties.getChainTokenSymbol());
+        block.setTokenSymbol(oriChainConfigProperties.getChain().getTokenSymbol());
         block.setParent(item.getChainBlock().getHeader().getParentHash());
         block.setEra(casperBlock.getHeader().getEraId());
         block.setHash(casperBlock.getHash());
@@ -55,7 +55,7 @@ public class CsprChainProcessor extends AbstractChainProcessor<CsprChainData> {
         result.setTransfers(transfers);
         for (Transfer chainTransfer : item.getChainTransfers()) {
             TransactionDTO oriTransfer = new TransactionDTO();
-            oriTransfer.setTokenSymbol(oriChainConfigProperties.getChainTokenSymbol());
+            oriTransfer.setTokenSymbol(oriChainConfigProperties.getChain().getTokenSymbol());
             oriTransfer.setBlockHash(block.getHash());
             oriTransfer.setFromHash(chainTransfer.getFrom());
             oriTransfer.setToHash(chainTransfer.getTo());

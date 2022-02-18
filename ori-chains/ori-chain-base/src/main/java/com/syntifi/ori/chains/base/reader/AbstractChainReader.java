@@ -78,10 +78,11 @@ public abstract class AbstractChainReader<S, T extends ChainData<?, ?>>
      */
     private void initialize() {
         try {
-            blockHeight = oriClient.getLastBlock(oriChainConfigProperties.getChainTokenSymbol()).getHeight();
+            blockHeight = oriClient.getLastBlock(oriChainConfigProperties.getChain().getTokenSymbol()).getHeight();
+            blockHeight = blockHeight == -1 ? 0: blockHeight; // in case the zero block is the last one on database
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
-                blockHeight = oriChainConfigProperties.getChainBlockZeroHeight();
+                blockHeight = oriChainConfigProperties.getChain().getBlockZeroHeight();
             } else {
                 throw new OriChainCrawlerException("Error initializing blockHeight", e);
             }

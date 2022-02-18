@@ -17,11 +17,9 @@ syntifi.com/ori-chains/ori-cspr
 
 Please make sure that ORI-API is running either on a docker, in dev mode or in a production setup.
 
-> **_NOTE:_** The crawler depends on a local ETH node. Please run the following docker container: 
-> ```shell script
-> docker run -p 127.0.0.1:8545:8545 -p 30303:30303 ethereum/client-go:latest --syncmode "full" --cache=512 --http --http.addr "0.0.0.0" --name geth
-> ```
+> **_NOTE:_** The crawler depends on a Casper node.  
+> Select a peer from [this list](https://cspr.live/tools/peers) and set the appropriate value as an environment variable for docker, if needed.
 
 ```shell script
-docker run syntifi.com/ori-chains/ori-cspr
+docker run [-e ORI_CHAIN_ADDRESS=XX.XXX.XX.X] syntifi.com/ori-chains/ori-cspr
 ```
