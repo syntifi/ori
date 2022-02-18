@@ -12,6 +12,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.Response.Status;
 
 import com.syntifi.ori.rest.RestApiResource;
 
@@ -31,7 +32,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Path("/")
 public class GatewayResource {
 
-    private static final String FALLBACK_RESOURCE = "/frontend/index.html";
+    private static final String INDEX_RESOURCE = "index.html";
     private static final Map<String, String> EXTENSION_TYPES = Map.of("svg", "image/svg+xml");
     private final RestApiResource apiResource;
 
@@ -50,7 +51,7 @@ public class GatewayResource {
     @Schema(hidden = true)
     @Operation(hidden = true)
     public Response getFrontendRoot() throws IOException {
-        return getFrontendStaticFile("/frontend/index.html");
+        return getFrontendStaticFile(INDEX_RESOURCE);
     }
 
     @GET
@@ -58,15 +59,13 @@ public class GatewayResource {
     @Schema(hidden = true)
     @Operation(hidden = true)
     public Response getFrontendStaticFile(@PathParam("fileName") String fileName) throws IOException {
-        final InputStream requestedFileStream = GatewayResource.class.getResourceAsStream("/frontend/" + fileName);
         final InputStream inputStream;
         final String fileToServe;
-        if (requestedFileStream != null) {
+        try (InputStream requestedFileStream = GatewayResource.class.getResourceAsStream("/frontend/" + fileName)) {
             fileToServe = fileName;
             inputStream = requestedFileStream;
-        } else {
-            fileToServe = FALLBACK_RESOURCE;
-            inputStream = GatewayResource.class.getResourceAsStream(FALLBACK_RESOURCE);
+        } catch (NullPointerException e) {
+            return Response.status(Status.NOT_FOUND).build();
         }
 
         final StreamingOutput streamingOutput = outputStream -> IOUtils.copy(inputStream, outputStream);
