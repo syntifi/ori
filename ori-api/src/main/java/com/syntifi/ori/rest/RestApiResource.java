@@ -1,8 +1,8 @@
 package com.syntifi.ori.rest;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.Path;
+
 import io.quarkus.arc.Unremovable;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
@@ -27,7 +27,6 @@ public class RestApiResource {
     private final TokenRestAPI tokenAPI;
     private final TransactionMonitorAPI monitorAPI;
 
-    @Inject
     public RestApiResource(BlockRestAPI blockRestAPI,
             TransactionRestAPI transactionRestAPI,
             AccountRestAPI accountRestAPI,
