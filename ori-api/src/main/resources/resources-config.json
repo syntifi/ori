@@ -3,15 +3,7 @@
         "includes": [
             {
                 "pattern": "frontend/.*"
-            },
-            {
-                "pattern": ".*/ValidationMessages.*properties"
             }
         ]
-    },
-    "bundles": [
-        {
-            "name": "org.apache.bval.jsr.ValidationMessages"
-        }
-    ]
+    }
 }

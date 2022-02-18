@@ -51,6 +51,8 @@ import io.vertx.core.json.JsonObject;
 @Tag(name = "Transaction", description = "Transaction resources")
 public class TransactionRestAPI extends AbstractBaseRestApi {
 
+    private static final String NOT_FOUND_TEXT = " not found";
+
     @Inject
     TransactionRepository transactionRepository;
 
@@ -93,7 +95,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
                     .created(URI.create("/transaction/" + symbol + "/hash/" + transaction.getHash()))
                     .build();
         } catch (NoResultException e) {
-            throw new ORIException(transactionDTO.getBlockHash() + " not found", Status.NOT_FOUND);
+            throw new ORIException(transactionDTO.getBlockHash() + NOT_FOUND_TEXT, Status.NOT_FOUND);
         } catch (NonUniqueResultException e) {
             throw new ORIException(transactionDTO.getBlockHash() + " not unique", Status.INTERNAL_SERVER_ERROR);
         }
@@ -195,7 +197,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
             Transaction out = transactionRepository.findByTokenSymbolAndHash(symbol, hash);
             return TransactionMapper.fromModel(out);
         } catch (NoResultException nre) {
-            throw new ORIException(hash + " not found", Status.NOT_FOUND);
+            throw new ORIException(hash + NOT_FOUND_TEXT, Status.NOT_FOUND);
         } catch (NonUniqueResultException nure) {
             throw new ORIException(hash + " not unique", Status.INTERNAL_SERVER_ERROR);
         }
@@ -291,7 +293,7 @@ public class TransactionRestAPI extends AbstractBaseRestApi {
                     .put("uri", "/transaction/" + symbol + "/hash/" + hash))
                     .build();
         } catch (NoResultException nre) {
-            throw new ORIException(hash + " not found", Status.NOT_FOUND);
+            throw new ORIException(hash + NOT_FOUND_TEXT, Status.NOT_FOUND);
         } catch (NonUniqueResultException nure) {
             throw new ORIException(hash + " not unique", Status.INTERNAL_SERVER_ERROR);
         }

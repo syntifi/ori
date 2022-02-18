@@ -1,6 +1,7 @@
 package com.syntifi.ori.repository;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -30,7 +31,11 @@ public interface OriRepository<T> extends PanacheRepository<T> {
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(model);
         if (!constraintViolations.isEmpty()) {
             throw new ConstraintViolationException(
-                    String.format("Constraint violation for object of type %s", model.getClass().getTypeName()),
+                    String.format("Constraint violation for object of type %s (fields: %s)",
+                            this.getClass().getSimpleName(),
+                            constraintViolations.stream()
+                                    .map(v -> v.getPropertyPath().toString())
+                                    .collect(Collectors.joining(","))),
                     constraintViolations);
         }
     }

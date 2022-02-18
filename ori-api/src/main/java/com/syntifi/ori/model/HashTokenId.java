@@ -2,7 +2,8 @@ package com.syntifi.ori.model;
 
 import java.io.Serializable;
 
-import io.smallrye.common.constraint.NotNull;
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
