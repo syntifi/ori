@@ -64,10 +64,11 @@ public class GatewayResource {
         try (InputStream requestedFileStream = GatewayResource.class.getResourceAsStream("/frontend/" + fileName)) {
             fileToServe = fileName;
             inputStream = requestedFileStream;
-        } catch (NullPointerException e) {
-            return Response.status(Status.NOT_FOUND).build();
-        }
 
+            if (requestedFileStream == null) {
+                return Response.status(Status.NOT_FOUND).build();
+            }
+        }
         final StreamingOutput streamingOutput = outputStream -> IOUtils.copy(inputStream, outputStream);
 
         return Response
