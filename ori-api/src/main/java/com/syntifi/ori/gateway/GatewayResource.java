@@ -11,8 +11,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.StreamingOutput;
 
 import com.syntifi.ori.rest.RestApiResource;
 
@@ -24,6 +24,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 /**
  * Gateway resource configuration class
  * 
+ * 
  * @author Alexandre Carvalho
  * @author Andre Bertolace
  * 
@@ -34,10 +35,11 @@ public class GatewayResource {
 
     private static final String INDEX_RESOURCE = "index.html";
     private static final Map<String, String> EXTENSION_TYPES = Map.of("svg", "image/svg+xml");
-    private final RestApiResource apiResource;
+
+    private RestApiResource apiResource;
 
     @Inject
-    public GatewayResource(RestApiResource apiResource) {
+    public void setApiResource(RestApiResource apiResource) {
         this.apiResource = apiResource;
     }
 
@@ -61,6 +63,7 @@ public class GatewayResource {
     public Response getFrontendStaticFile(@PathParam("fileName") String fileName) throws IOException {
         final InputStream inputStream;
         final String fileToServe;
+
         try (InputStream requestedFileStream = GatewayResource.class.getResourceAsStream("/frontend/" + fileName)) {
             fileToServe = fileName;
             inputStream = requestedFileStream;
@@ -68,14 +71,15 @@ public class GatewayResource {
             if (requestedFileStream == null) {
                 return Response.status(Status.NOT_FOUND).build();
             }
-        }
-        final StreamingOutput streamingOutput = outputStream -> IOUtils.copy(inputStream, outputStream);
 
-        return Response
-                .ok(streamingOutput)
-                .cacheControl(CacheControl.valueOf("max-age=900"))
-                .type(contentType(inputStream, fileToServe))
-                .build();
+            final StreamingOutput streamingOutput = outputStream -> IOUtils.copy(inputStream, outputStream);
+
+            return Response
+                    .ok(streamingOutput)
+                    .cacheControl(CacheControl.valueOf("max-age=900"))
+                    .type(contentType(inputStream, fileToServe))
+                    .build();
+        }
     }
 
     private String contentType(InputStream inputStream, String file) throws IOException {
