@@ -3,6 +3,8 @@ package com.syntifi.ori.rest;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.Path;
+import io.quarkus.arc.Unremovable;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 
 /**
  * Ori Rest Api resource endpoints for {@link BlockRestAPI},
@@ -16,6 +18,8 @@ import javax.ws.rs.Path;
  * @since 0.1.0
  */
 @Singleton
+@Unremovable
+@RegisterForReflection
 public class RestApiResource {
     private final BlockRestAPI blockAPI;
     private final TransactionRestAPI transactionAPI;
