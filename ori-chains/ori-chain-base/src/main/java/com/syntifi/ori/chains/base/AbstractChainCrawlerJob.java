@@ -133,6 +133,7 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
                 token.setSymbol(oriChainConfigProperties.getChain().getTokenSymbol());
                 token.setName(oriChainConfigProperties.getChain().getTokenName());
                 token.setProtocol(oriChainConfigProperties.getChain().getTokenProtocol());
+                token.check();
                 oriClient.postToken(token);
 
                 logger.info(String.format("...token \"%s\" created!",
@@ -168,13 +169,17 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
                 logger.info(String.format("Zero hash block for token \"%s\" not found. Creating...",
                         oriChainConfigProperties.getChain().getTokenSymbol()));
 
-                BlockDTO block = new BlockDTO();
-                block.setTimeStamp(OffsetDateTime.ofInstant(Instant.ofEpochMilli(0), ZoneId.of("GMT")));
-                block.setHash(oriChainConfigProperties.getChain().getBlockZeroHash());
-                block.setHeight(oriChainConfigProperties.getChain().getBlockZeroHeight());
-                block.setEra(-1L);
-                block.setRoot(oriChainConfigProperties.getChain().getBlockZeroHash());
-                block.setValidator(oriChainConfigProperties.getChain().getBlockZeroHash());
+                BlockDTO block = BlockDTO.builder()
+                        .hash(oriChainConfigProperties.getChain().getBlockZeroHash())
+                        .tokenSymbol(oriChainConfigProperties.getChain().getTokenSymbol())
+                        .timeStamp(OffsetDateTime.ofInstant(Instant.ofEpochMilli(0), ZoneId.of("GMT")))
+                        .height(oriChainConfigProperties.getChain().getBlockZeroHeight())
+                        .era(-1L)
+                        .root(oriChainConfigProperties.getChain().getBlockZeroHash())
+                        .validator(oriChainConfigProperties.getChain().getBlockZeroHash())
+                        .build();
+
+                block.check();
                 oriClient.postBlock(oriChainConfigProperties.getChain().getTokenSymbol(), block);
 
                 logger.info(String.format(

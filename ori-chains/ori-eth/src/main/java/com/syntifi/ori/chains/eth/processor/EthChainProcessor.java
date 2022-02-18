@@ -46,6 +46,7 @@ public class EthChainProcessor extends AbstractChainProcessor<EthChainData> {
         block.setValidator(item.getChainBlock().getResult().getMiner());
         Instant timestamp = Instant.ofEpochSecond(item.getChainBlock().getResult().getTimestamp().longValue());
         block.setTimeStamp(OffsetDateTime.ofInstant(timestamp, ZoneId.of("UTC")));
+        block.check();
         result.setBlock(block);
 
         // Transfer processor
@@ -61,6 +62,7 @@ public class EthChainProcessor extends AbstractChainProcessor<EthChainData> {
             Instant timestampTransaction = Instant
                     .ofEpochSecond(item.getChainBlock().getResult().getTimestamp().longValue());
             transfer.setTimeStamp(OffsetDateTime.ofInstant(timestampTransaction, ZoneId.of("UTC")));
+            transfer.check();
             transfers.add(transfer);
         }
         result.setTransfers(transfers);

@@ -48,6 +48,7 @@ public class CsprChainProcessor extends AbstractChainProcessor<CsprChainData> {
         block.setValidator(new BigInteger(casperBlock.getBody().getProposer().getKey()).toString(16));
         block.setTimeStamp(
                 OffsetDateTime.ofInstant(casperBlock.getHeader().getTimeStamp().toInstant(), ZoneId.of("UTC")));
+        block.check();
         result.setBlock(block);
 
         // Transfer processor
@@ -63,6 +64,7 @@ public class CsprChainProcessor extends AbstractChainProcessor<CsprChainData> {
                     OffsetDateTime.ofInstant(casperBlock.getHeader().getTimeStamp().toInstant(), ZoneId.of("UTC")));
             oriTransfer.setAmount(chainTransfer.getAmount().doubleValue());
             oriTransfer.setHash(chainTransfer.getDeployHash());
+            oriTransfer.check();
             transfers.add(oriTransfer);
         }
 
