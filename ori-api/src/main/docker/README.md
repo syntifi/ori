@@ -51,6 +51,12 @@ The application makes use of Postgresql as persistency layer.
 Alternatively, it is possible to run all necessary images using docker-compose:
 
 ```shell script
-docker-compose -f ori-api/src/main/docker/docker-compose.yml up
+docker-compose -f ori-api/src/main/docker/docker-compose-jvm.yml up
 ```
-Please make sure to edit the ```docker-compose.yml``` file accordingly
+
+or for the native build:
+
+```shell script
+docker-compose -f ori-api/src/main/docker/docker-compose-native.yml up
+```
+Please make sure to edit the ```docker-compose-*.yml``` files accordingly
