@@ -6,6 +6,7 @@ import com.syntifi.ori.chains.base.OriChainConfigProperties;
 import com.syntifi.ori.chains.base.exception.OriChainCrawlerException;
 import com.syntifi.ori.chains.base.model.ChainData;
 import com.syntifi.ori.client.OriClient;
+import com.syntifi.ori.dto.BlockDTO;
 
 import org.springframework.batch.item.ItemReader;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -78,11 +79,11 @@ public abstract class AbstractChainReader<S, T extends ChainData<?, ?>>
      */
     private void initialize() {
         try {
-            blockHeight = oriClient.getLastBlock(oriChainConfigProperties.getChain().getTokenSymbol()).getHeight();
-            blockHeight = blockHeight == -1 ? 0: blockHeight; // in case the zero block is the last one on database
+            BlockDTO lastBlock = oriClient.getLastBlock(oriChainConfigProperties.getChain().getTokenSymbol());
+            blockHeight = (lastBlock.getParent() == null) ? lastBlock.getHeight() + 1 : lastBlock.getHeight();
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
-                blockHeight = 0L;
+                blockHeight = oriChainConfigProperties.getChain().getBlockZeroHeight() + 1;
             } else {
                 throw new OriChainCrawlerException("Error initializing blockHeight", e);
             }
@@ -101,8 +102,9 @@ public abstract class AbstractChainReader<S, T extends ChainData<?, ?>>
     }
 
     /**
-     * Abstract method to be implemented by each chain reader
-     * read() should return null if next item is not found
+     * Abstract method to be implemented by each chain reader read()
+     * 
+     * @return the read object or null if next item is not found
      */
     @Override
     public abstract T read() throws IOException, InterruptedException;
