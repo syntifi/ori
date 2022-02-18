@@ -82,7 +82,7 @@ public abstract class AbstractChainReader<S, T extends ChainData<?, ?>>
             blockHeight = blockHeight == -1 ? 0: blockHeight; // in case the zero block is the last one on database
         } catch (WebClientResponseException e) {
             if (e.getRawStatusCode() == 404) {
-                blockHeight = oriChainConfigProperties.getChain().getBlockZeroHeight();
+                blockHeight = 0L;
             } else {
                 throw new OriChainCrawlerException("Error initializing blockHeight", e);
             }
