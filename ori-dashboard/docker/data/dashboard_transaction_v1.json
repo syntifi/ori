@@ -1,0 +1,383 @@
+{
+    "dashboards": [
+        {
+            "__Dashboard__": {
+                "css": "",
+                "dashboard_title": "Transactions Monitor",
+                "description": null,
+                "json_metadata": "{\"show_native_filters\": true, \"color_scheme\": \"\", \"refresh_frequency\": 0, \"expanded_slices\": {}, \"label_colors\": {}, \"timed_refresh_immune_slices\": [], \"default_filters\": \"{}\", \"chart_configuration\": {}, \"native_filter_configuration\": [{\"id\": \"NATIVE_FILTER-fQbt_ePo3\", \"controlValues\": {\"enableEmptyFilter\": false}, \"name\": \"DateTime range\", \"filterType\": \"filter_time\", \"targets\": [{}], \"defaultDataMask\": {\"extraFormData\": {}, \"filterState\": {}, \"ownState\": {}}, \"cascadeParentIds\": [], \"scope\": {\"rootPath\": [\"ROOT_ID\"], \"excluded\": []}, \"type\": \"NATIVE_FILTER\", \"description\": \"\", \"chartsInScope\": [1, 2, 3], \"tabsInScope\": []}, {\"id\": \"NATIVE_FILTER-0vUR951DN\", \"controlValues\": {\"enableEmptyFilter\": false, \"defaultToFirstItem\": false, \"multiSelect\": false, \"searchAllOptions\": true, \"inverseSelection\": false}, \"name\": \"To Account\", \"filterType\": \"filter_select\", \"targets\": [{\"datasetId\": 1, \"column\": {\"name\": \"toaccount_hash\"}}], \"defaultDataMask\": {\"extraFormData\": {}, \"filterState\": {}, \"ownState\": {}}, \"cascadeParentIds\": [], \"scope\": {\"rootPath\": [\"ROOT_ID\"], \"excluded\": []}, \"type\": \"NATIVE_FILTER\", \"description\": \"\", \"chartsInScope\": [1, 2, 3], \"tabsInScope\": []}, {\"id\": \"NATIVE_FILTER-7c3-DVezA\", \"controlValues\": {\"enableEmptyFilter\": false, \"defaultToFirstItem\": false, \"multiSelect\": false, \"searchAllOptions\": true, \"inverseSelection\": false}, \"name\": \"From account\", \"filterType\": \"filter_select\", \"targets\": [{\"datasetId\": 1, \"column\": {\"name\": \"fromaccount_hash\"}}], \"defaultDataMask\": {\"extraFormData\": {}, \"filterState\": {}, \"ownState\": {}}, \"cascadeParentIds\": [], \"scope\": {\"rootPath\": [\"ROOT_ID\"], \"excluded\": []}, \"type\": \"NATIVE_FILTER\", \"description\": \"\", \"chartsInScope\": [1, 2, 3], \"tabsInScope\": []}], \"remote_id\": 1}",
+                "position_json": "{\"CHART-C5UKFqEcI7\":{\"children\":[],\"id\":\"CHART-C5UKFqEcI7\",\"meta\":{\"chartId\":3,\"height\":46,\"sliceName\":\"Top 10 inflows\",\"uuid\":\"2ebb4fa9-1e76-4e23-835d-f5e295b2f29c\",\"width\":4},\"parents\":[\"ROOT_ID\",\"GRID_ID\",\"ROW-aUYEe8BfBi\",\"COLUMN-I73Fx2e5G7\"],\"type\":\"CHART\"},\"CHART-RP2mLztf2F\":{\"children\":[],\"id\":\"CHART-RP2mLztf2F\",\"meta\":{\"chartId\":2,\"height\":46,\"sliceName\":\"Top 10 outflows\",\"uuid\":\"96c1f33c-e665-43a9-aa5c-f0a87cec99fb\",\"width\":4},\"parents\":[\"ROOT_ID\",\"GRID_ID\",\"ROW-aUYEe8BfBi\",\"COLUMN-I73Fx2e5G7\"],\"type\":\"CHART\"},\"CHART-lYxqIeHMwt\":{\"children\":[],\"id\":\"CHART-lYxqIeHMwt\",\"meta\":{\"chartId\":1,\"height\":128,\"sliceName\":\"Coin flow\",\"uuid\":\"e2672bf7-e9ac-48c5-9641-042612216a6d\",\"width\":8},\"parents\":[\"ROOT_ID\",\"GRID_ID\",\"ROW-aUYEe8BfBi\"],\"type\":\"CHART\"},\"CHART-vIXlzuN5zh\":{\"children\":[],\"id\":\"CHART-vIXlzuN5zh\",\"meta\":{\"chartId\":5,\"height\":32,\"sliceName\":\"Total transactions\",\"uuid\":\"aaa71025-397b-48b2-a4c5-8624f1a303dd\",\"width\":2},\"parents\":[\"ROOT_ID\",\"GRID_ID\",\"ROW-aUYEe8BfBi\",\"COLUMN-I73Fx2e5G7\",\"ROW-mV_wWAsDaj\"],\"type\":\"CHART\"},\"CHART-xvY8j0Aakc\":{\"children\":[],\"id\":\"CHART-xvY8j0Aakc\",\"meta\":{\"chartId\":4,\"height\":32,\"sliceName\":\"Total amount\",\"uuid\":\"c18149e0-379f-498a-9afd-27864ff36e1c\",\"width\":2},\"parents\":[\"ROOT_ID\",\"GRID_ID\",\"ROW-aUYEe8BfBi\",\"COLUMN-I73Fx2e5G7\",\"ROW-mV_wWAsDaj\"],\"type\":\"CHART\"},\"COLUMN-I73Fx2e5G7\":{\"children\":[\"CHART-RP2mLztf2F\",\"CHART-C5UKFqEcI7\",\"ROW-mV_wWAsDaj\"],\"id\":\"COLUMN-I73Fx2e5G7\",\"meta\":{\"background\":\"BACKGROUND_TRANSPARENT\",\"width\":4},\"parents\":[\"ROOT_ID\",\"GRID_ID\",\"ROW-aUYEe8BfBi\"],\"type\":\"COLUMN\"},\"DASHBOARD_VERSION_KEY\":\"v2\",\"GRID_ID\":{\"children\":[\"ROW-aUYEe8BfBi\"],\"id\":\"GRID_ID\",\"parents\":[\"ROOT_ID\"],\"type\":\"GRID\"},\"HEADER_ID\":{\"id\":\"HEADER_ID\",\"meta\":{\"text\":\"Transactions Monitor\"},\"type\":\"HEADER\"},\"ROOT_ID\":{\"children\":[\"GRID_ID\"],\"id\":\"ROOT_ID\",\"type\":\"ROOT\"},\"ROW-aUYEe8BfBi\":{\"children\":[\"CHART-lYxqIeHMwt\",\"COLUMN-I73Fx2e5G7\"],\"id\":\"ROW-aUYEe8BfBi\",\"meta\":{\"background\":\"BACKGROUND_TRANSPARENT\"},\"parents\":[\"ROOT_ID\",\"GRID_ID\"],\"type\":\"ROW\"},\"ROW-mV_wWAsDaj\":{\"children\":[\"CHART-xvY8j0Aakc\",\"CHART-vIXlzuN5zh\"],\"id\":\"ROW-mV_wWAsDaj\",\"meta\":{\"background\":\"BACKGROUND_TRANSPARENT\"},\"parents\":[\"ROOT_ID\",\"GRID_ID\",\"ROW-aUYEe8BfBi\",\"COLUMN-I73Fx2e5G7\"],\"type\":\"ROW\"}}",
+                "slices": [
+                    {
+                        "__Slice__": {
+                            "cache_timeout": null,
+                            "datasource_name": "public.transaction",
+                            "datasource_type": "table",
+                            "id": 1,
+                            "params": "{\"adhoc_filters\": [], \"baseEdgeWidth\": 3, \"baseNodeSize\": 20, \"color_scheme\": \"d3Category10\", \"datasource\": \"1__table\", \"edgeLength\": 400, \"edgeSymbol\": \"none,arrow\", \"extra_form_data\": {}, \"friction\": 0.2, \"granularity_sqla\": \"time_stamp\", \"gravity\": 0.3, \"layout\": \"circular\", \"legendOrientation\": \"top\", \"legendType\": \"scroll\", \"metric\": {\"aggregate\": \"SUM\", \"column\": {\"certification_details\": null, \"certified_by\": null, \"column_name\": \"amount\", \"description\": null, \"expression\": null, \"filterable\": true, \"groupby\": true, \"id\": 2, \"is_certified\": false, \"is_dttm\": false, \"python_date_format\": null, \"type\": \"DOUBLE PRECISION\", \"type_generic\": 0, \"verbose_name\": null, \"warning_markdown\": null}, \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": false, \"isNew\": false, \"label\": \"SUM(amount)\", \"optionName\": \"metric_kuxt13fv0p_eq8dgodqsf7\", \"sqlExpression\": null}, \"repulsion\": 1000, \"roam\": true, \"row_limit\": 100, \"selectedMode\": \"single\", \"show_legend\": false, \"slice_id\": 1, \"source\": \"fromaccount_hash\", \"source_category\": \"fromaccount_hash\", \"target\": \"toaccount_hash\", \"time_range\": \"No filter\", \"time_range_endpoints\": [\"inclusive\", \"exclusive\"], \"url_params\": {}, \"viz_type\": \"graph_chart\", \"remote_id\": 1, \"datasource_name\": \"transaction\", \"schema\": \"public\", \"database_name\": \"ORI\"}",
+                            "query_context": "{\"datasource\":{\"id\":1,\"type\":\"table\"},\"force\":false,\"queries\":[{\"time_range\":\"No filter\",\"granularity\":\"time_stamp\",\"filters\":[],\"extras\":{\"time_range_endpoints\":[\"inclusive\",\"exclusive\"],\"having\":\"\",\"having_druid\":[],\"where\":\"\"},\"applied_time_extras\":{},\"columns\":[\"fromaccount_hash\",\"toaccount_hash\"],\"metrics\":[{\"aggregate\":\"SUM\",\"column\":{\"certification_details\":null,\"certified_by\":null,\"column_name\":\"amount\",\"description\":null,\"expression\":null,\"filterable\":true,\"groupby\":true,\"id\":2,\"is_certified\":false,\"is_dttm\":false,\"python_date_format\":null,\"type\":\"DOUBLE PRECISION\",\"type_generic\":0,\"verbose_name\":null,\"warning_markdown\":null},\"expressionType\":\"SIMPLE\",\"hasCustomLabel\":false,\"isNew\":false,\"label\":\"SUM(amount)\",\"optionName\":\"metric_kuxt13fv0p_eq8dgodqsf7\",\"sqlExpression\":null}],\"annotation_layers\":[],\"row_limit\":100,\"timeseries_limit\":0,\"order_desc\":true,\"url_params\":{},\"custom_params\":{},\"custom_form_data\":{}}],\"form_data\":{\"viz_type\":\"graph_chart\",\"datasource\":\"1__table\",\"slice_id\":1,\"url_params\":{},\"time_range_endpoints\":[\"inclusive\",\"exclusive\"],\"granularity_sqla\":\"time_stamp\",\"time_range\":\"No filter\",\"source\":\"fromaccount_hash\",\"target\":\"toaccount_hash\",\"metric\":{\"aggregate\":\"SUM\",\"column\":{\"certification_details\":null,\"certified_by\":null,\"column_name\":\"amount\",\"description\":null,\"expression\":null,\"filterable\":true,\"groupby\":true,\"id\":2,\"is_certified\":false,\"is_dttm\":false,\"python_date_format\":null,\"type\":\"DOUBLE PRECISION\",\"type_generic\":0,\"verbose_name\":null,\"warning_markdown\":null},\"expressionType\":\"SIMPLE\",\"hasCustomLabel\":false,\"isNew\":false,\"label\":\"SUM(amount)\",\"optionName\":\"metric_kuxt13fv0p_eq8dgodqsf7\",\"sqlExpression\":null},\"source_category\":\"fromaccount_hash\",\"adhoc_filters\":[],\"row_limit\":100,\"color_scheme\":\"d3Category10\",\"show_legend\":false,\"legendType\":\"scroll\",\"legendOrientation\":\"top\",\"layout\":\"circular\",\"edgeSymbol\":\"none,arrow\",\"roam\":true,\"selectedMode\":\"single\",\"baseNodeSize\":20,\"baseEdgeWidth\":3,\"edgeLength\":400,\"gravity\":0.3,\"repulsion\":1000,\"friction\":0.2,\"extra_form_data\":{},\"force\":false,\"result_format\":\"json\",\"result_type\":\"full\"},\"result_format\":\"json\",\"result_type\":\"full\"}",
+                            "slice_name": "Coin flow",
+                            "viz_type": "graph_chart"
+                        }
+                    },
+                    {
+                        "__Slice__": {
+                            "cache_timeout": null,
+                            "datasource_name": "public.transaction",
+                            "datasource_type": "table",
+                            "id": 2,
+                            "params": "{\"adhoc_filters\": [], \"all_columns\": [], \"color_pn\": true, \"conditional_formatting\": [], \"datasource\": \"1__table\", \"extra_form_data\": {}, \"granularity_sqla\": \"time_stamp\", \"groupby\": [\"fromaccount_hash\"], \"metrics\": [{\"aggregate\": \"SUM\", \"column\": {\"certification_details\": null, \"certified_by\": null, \"column_name\": \"amount\", \"description\": null, \"expression\": null, \"filterable\": true, \"groupby\": true, \"id\": 2, \"is_certified\": false, \"is_dttm\": false, \"python_date_format\": null, \"type\": \"DOUBLE PRECISION\", \"type_generic\": 0, \"verbose_name\": null, \"warning_markdown\": null}, \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": false, \"isNew\": false, \"label\": \"SUM(amount)\", \"optionName\": \"metric_mnkyt8feoxo_n3w7dd8cqsm\", \"sqlExpression\": null}], \"order_by_cols\": [], \"order_desc\": true, \"percent_metrics\": [{\"aggregate\": \"SUM\", \"column\": {\"certification_details\": null, \"certified_by\": null, \"column_name\": \"amount\", \"description\": null, \"expression\": null, \"filterable\": true, \"groupby\": true, \"id\": 2, \"is_certified\": false, \"is_dttm\": false, \"python_date_format\": null, \"type\": \"DOUBLE PRECISION\", \"type_generic\": 0, \"verbose_name\": null, \"warning_markdown\": null}, \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": false, \"isNew\": false, \"label\": \"SUM(amount)\", \"optionName\": \"metric_9h7sl4mu324_c5khewtgscn\", \"sqlExpression\": null}], \"query_mode\": \"aggregate\", \"row_limit\": 10, \"server_page_length\": 10, \"show_cell_bars\": true, \"slice_id\": 2, \"table_timestamp_format\": \"smart_date\", \"time_grain_sqla\": null, \"time_range\": \"No filter\", \"time_range_endpoints\": [\"inclusive\", \"exclusive\"], \"url_params\": {}, \"viz_type\": \"table\", \"remote_id\": 2, \"datasource_name\": \"transaction\", \"schema\": \"public\", \"database_name\": \"ORI\"}",
+                            "query_context": "{\"datasource\":{\"id\":1,\"type\":\"table\"},\"force\":false,\"queries\":[{\"time_range\":\"No filter\",\"granularity\":\"time_stamp\",\"filters\":[],\"extras\":{\"time_grain_sqla\":null,\"time_range_endpoints\":[\"inclusive\",\"exclusive\"],\"having\":\"\",\"having_druid\":[],\"where\":\"\"},\"applied_time_extras\":{},\"columns\":[\"fromaccount_hash\"],\"metrics\":[{\"aggregate\":\"SUM\",\"column\":{\"certification_details\":null,\"certified_by\":null,\"column_name\":\"amount\",\"description\":null,\"expression\":null,\"filterable\":true,\"groupby\":true,\"id\":2,\"is_certified\":false,\"is_dttm\":false,\"python_date_format\":null,\"type\":\"DOUBLE PRECISION\",\"type_generic\":0,\"verbose_name\":null,\"warning_markdown\":null},\"expressionType\":\"SIMPLE\",\"hasCustomLabel\":false,\"isNew\":false,\"label\":\"SUM(amount)\",\"optionName\":\"metric_mnkyt8feoxo_n3w7dd8cqsm\",\"sqlExpression\":null}],\"orderby\":[[{\"aggregate\":\"SUM\",\"column\":{\"certification_details\":null,\"certified_by\":null,\"column_name\":\"amount\",\"description\":null,\"expression\":null,\"filterable\":true,\"groupby\":true,\"id\":2,\"is_certified\":false,\"is_dttm\":false,\"python_date_format\":null,\"type\":\"DOUBLE PRECISION\",\"type_generic\":0,\"verbose_name\":null,\"warning_markdown\":null},\"expressionType\":\"SIMPLE\",\"hasCustomLabel\":false,\"isNew\":false,\"label\":\"SUM(amount)\",\"optionName\":\"metric_mnkyt8feoxo_n3w7dd8cqsm\",\"sqlExpression\":null},false]],\"annotation_layers\":[],\"row_limit\":10,\"timeseries_limit\":0,\"order_desc\":true,\"url_params\":{},\"custom_params\":{},\"custom_form_data\":{},\"post_processing\":[{\"operation\":\"contribution\",\"options\":{\"columns\":[\"SUM(amount)\"],\"rename_columns\":[\"%SUM(amount)\"]}}]}],\"form_data\":{\"viz_type\":\"table\",\"datasource\":\"1__table\",\"slice_id\":2,\"url_params\":{},\"time_range_endpoints\":[\"inclusive\",\"exclusive\"],\"granularity_sqla\":\"time_stamp\",\"time_grain_sqla\":null,\"time_range\":\"No filter\",\"query_mode\":\"aggregate\",\"groupby\":[\"fromaccount_hash\"],\"metrics\":[{\"aggregate\":\"SUM\",\"column\":{\"certification_details\":null,\"certified_by\":null,\"column_name\":\"amount\",\"description\":null,\"expression\":null,\"filterable\":true,\"groupby\":true,\"id\":2,\"is_certified\":false,\"is_dttm\":false,\"python_date_format\":null,\"type\":\"DOUBLE PRECISION\",\"type_generic\":0,\"verbose_name\":null,\"warning_markdown\":null},\"expressionType\":\"SIMPLE\",\"hasCustomLabel\":false,\"isNew\":false,\"label\":\"SUM(amount)\",\"optionName\":\"metric_mnkyt8feoxo_n3w7dd8cqsm\",\"sqlExpression\":null}],\"all_columns\":[],\"percent_metrics\":[{\"aggregate\":\"SUM\",\"column\":{\"certification_details\":null,\"certified_by\":null,\"column_name\":\"amount\",\"description\":null,\"expression\":null,\"filterable\":true,\"groupby\":true,\"id\":2,\"is_certified\":false,\"is_dttm\":false,\"python_date_format\":null,\"type\":\"DOUBLE PRECISION\",\"type_generic\":0,\"verbose_name\":null,\"warning_markdown\":null},\"expressionType\":\"SIMPLE\",\"hasCustomLabel\":false,\"isNew\":false,\"label\":\"SUM(amount)\",\"optionName\":\"metric_9h7sl4mu324_c5khewtgscn\",\"sqlExpression\":null}],\"adhoc_filters\":[],\"order_by_cols\":[],\"row_limit\":10,\"server_page_length\":10,\"order_desc\":true,\"table_timestamp_format\":\"smart_date\",\"show_cell_bars\":true,\"color_pn\":true,\"conditional_formatting\":[],\"extra_form_data\":{},\"force\":false,\"result_format\":\"json\",\"result_type\":\"full\"},\"result_format\":\"json\",\"result_type\":\"full\"}",
+                            "slice_name": "Top 10 outflows",
+                            "viz_type": "table"
+                        }
+                    },
+                    {
+                        "__Slice__": {
+                            "cache_timeout": null,
+                            "datasource_name": "public.transaction",
+                            "datasource_type": "table",
+                            "id": 3,
+                            "params": "{\"adhoc_filters\": [], \"all_columns\": [], \"color_pn\": true, \"datasource\": \"1__table\", \"extra_form_data\": {}, \"granularity_sqla\": \"time_stamp\", \"groupby\": [\"toaccount_hash\"], \"metrics\": [{\"aggregate\": \"SUM\", \"column\": {\"certification_details\": null, \"certified_by\": null, \"column_name\": \"amount\", \"description\": null, \"expression\": null, \"filterable\": true, \"groupby\": true, \"id\": 2, \"is_certified\": false, \"is_dttm\": false, \"python_date_format\": null, \"type\": \"DOUBLE PRECISION\", \"type_generic\": 0, \"verbose_name\": null, \"warning_markdown\": null}, \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": false, \"isNew\": false, \"label\": \"SUM(amount)\", \"optionName\": \"metric_cnwa7jbus1h_ebxn1t2j4as\", \"sqlExpression\": null}], \"order_by_cols\": [], \"order_desc\": true, \"percent_metrics\": [{\"aggregate\": \"SUM\", \"column\": {\"certification_details\": null, \"certified_by\": null, \"column_name\": \"amount\", \"description\": null, \"expression\": null, \"filterable\": true, \"groupby\": true, \"id\": 2, \"is_certified\": false, \"is_dttm\": false, \"python_date_format\": null, \"type\": \"DOUBLE PRECISION\", \"type_generic\": 0, \"verbose_name\": null, \"warning_markdown\": null}, \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": false, \"isNew\": false, \"label\": \"SUM(amount)\", \"optionName\": \"metric_zl33tyd4jr_2xq9ercd5a2\", \"sqlExpression\": null}], \"query_mode\": \"aggregate\", \"row_limit\": 10, \"server_page_length\": 10, \"show_cell_bars\": true, \"slice_id\": 3, \"table_timestamp_format\": \"smart_date\", \"time_grain_sqla\": null, \"time_range\": \"No filter\", \"time_range_endpoints\": [\"inclusive\", \"exclusive\"], \"url_params\": {}, \"viz_type\": \"table\", \"remote_id\": 3, \"datasource_name\": \"transaction\", \"schema\": \"public\", \"database_name\": \"ORI\"}",
+                            "query_context": "{\"datasource\":{\"id\":1,\"type\":\"table\"},\"force\":false,\"queries\":[{\"time_range\":\"No filter\",\"granularity\":\"time_stamp\",\"filters\":[],\"extras\":{\"time_grain_sqla\":null,\"time_range_endpoints\":[\"inclusive\",\"exclusive\"],\"having\":\"\",\"having_druid\":[],\"where\":\"\"},\"applied_time_extras\":{},\"columns\":[\"toaccount_hash\"],\"metrics\":[{\"aggregate\":\"SUM\",\"column\":{\"certification_details\":null,\"certified_by\":null,\"column_name\":\"amount\",\"description\":null,\"expression\":null,\"filterable\":true,\"groupby\":true,\"id\":2,\"is_certified\":false,\"is_dttm\":false,\"python_date_format\":null,\"type\":\"DOUBLE PRECISION\",\"type_generic\":0,\"verbose_name\":null,\"warning_markdown\":null},\"expressionType\":\"SIMPLE\",\"hasCustomLabel\":false,\"isNew\":false,\"label\":\"SUM(amount)\",\"optionName\":\"metric_cnwa7jbus1h_ebxn1t2j4as\",\"sqlExpression\":null}],\"orderby\":[[{\"aggregate\":\"SUM\",\"column\":{\"certification_details\":null,\"certified_by\":null,\"column_name\":\"amount\",\"description\":null,\"expression\":null,\"filterable\":true,\"groupby\":true,\"id\":2,\"is_certified\":false,\"is_dttm\":false,\"python_date_format\":null,\"type\":\"DOUBLE PRECISION\",\"type_generic\":0,\"verbose_name\":null,\"warning_markdown\":null},\"expressionType\":\"SIMPLE\",\"hasCustomLabel\":false,\"isNew\":false,\"label\":\"SUM(amount)\",\"optionName\":\"metric_cnwa7jbus1h_ebxn1t2j4as\",\"sqlExpression\":null},false]],\"annotation_layers\":[],\"row_limit\":10,\"timeseries_limit\":0,\"order_desc\":true,\"url_params\":{},\"custom_params\":{},\"custom_form_data\":{},\"post_processing\":[{\"operation\":\"contribution\",\"options\":{\"columns\":[\"SUM(amount)\"],\"rename_columns\":[\"%SUM(amount)\"]}}]}],\"form_data\":{\"viz_type\":\"table\",\"datasource\":\"1__table\",\"slice_id\":3,\"url_params\":{},\"time_range_endpoints\":[\"inclusive\",\"exclusive\"],\"granularity_sqla\":\"time_stamp\",\"time_grain_sqla\":null,\"time_range\":\"No filter\",\"query_mode\":\"aggregate\",\"groupby\":[\"toaccount_hash\"],\"metrics\":[{\"aggregate\":\"SUM\",\"column\":{\"certification_details\":null,\"certified_by\":null,\"column_name\":\"amount\",\"description\":null,\"expression\":null,\"filterable\":true,\"groupby\":true,\"id\":2,\"is_certified\":false,\"is_dttm\":false,\"python_date_format\":null,\"type\":\"DOUBLE PRECISION\",\"type_generic\":0,\"verbose_name\":null,\"warning_markdown\":null},\"expressionType\":\"SIMPLE\",\"hasCustomLabel\":false,\"isNew\":false,\"label\":\"SUM(amount)\",\"optionName\":\"metric_cnwa7jbus1h_ebxn1t2j4as\",\"sqlExpression\":null}],\"all_columns\":[],\"percent_metrics\":[{\"aggregate\":\"SUM\",\"column\":{\"certification_details\":null,\"certified_by\":null,\"column_name\":\"amount\",\"description\":null,\"expression\":null,\"filterable\":true,\"groupby\":true,\"id\":2,\"is_certified\":false,\"is_dttm\":false,\"python_date_format\":null,\"type\":\"DOUBLE PRECISION\",\"type_generic\":0,\"verbose_name\":null,\"warning_markdown\":null},\"expressionType\":\"SIMPLE\",\"hasCustomLabel\":false,\"isNew\":false,\"label\":\"SUM(amount)\",\"optionName\":\"metric_zl33tyd4jr_2xq9ercd5a2\",\"sqlExpression\":null}],\"adhoc_filters\":[],\"order_by_cols\":[],\"row_limit\":10,\"server_page_length\":10,\"order_desc\":true,\"table_timestamp_format\":\"smart_date\",\"show_cell_bars\":true,\"color_pn\":true,\"extra_form_data\":{},\"force\":false,\"result_format\":\"json\",\"result_type\":\"full\"},\"result_format\":\"json\",\"result_type\":\"full\"}",
+                            "slice_name": "Top 10 inflows",
+                            "viz_type": "table"
+                        }
+                    },
+                    {
+                        "__Slice__": {
+                            "cache_timeout": null,
+                            "datasource_name": "public.transaction",
+                            "datasource_type": "table",
+                            "id": 4,
+                            "params": "{\"adhoc_filters\": [], \"datasource\": \"1__table\", \"extra_form_data\": {}, \"granularity_sqla\": \"time_stamp\", \"header_font_size\": 0.4, \"metric\": {\"aggregate\": \"SUM\", \"column\": {\"certification_details\": null, \"certified_by\": null, \"column_name\": \"amount\", \"description\": null, \"expression\": null, \"filterable\": true, \"groupby\": true, \"id\": 2, \"is_certified\": false, \"is_dttm\": false, \"python_date_format\": null, \"type\": \"DOUBLE PRECISION\", \"type_generic\": 0, \"verbose_name\": null, \"warning_markdown\": null}, \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": false, \"isNew\": false, \"label\": \"SUM(amount)\", \"optionName\": \"metric_rm068rc5zy_fyp5mbcft1w\", \"sqlExpression\": null}, \"subheader_font_size\": 0.15, \"time_format\": \"smart_date\", \"time_grain_sqla\": null, \"time_range\": \"No filter\", \"time_range_endpoints\": [\"inclusive\", \"exclusive\"], \"url_params\": {}, \"viz_type\": \"big_number_total\", \"y_axis_format\": \"SMART_NUMBER\", \"remote_id\": 4, \"datasource_name\": \"transaction\", \"schema\": \"public\", \"database_name\": \"ORI\"}",
+                            "query_context": "{\"datasource\":{\"id\":1,\"type\":\"table\"},\"force\":false,\"queries\":[{\"time_range\":\"No filter\",\"granularity\":\"time_stamp\",\"filters\":[],\"extras\":{\"time_grain_sqla\":null,\"time_range_endpoints\":[\"inclusive\",\"exclusive\"],\"having\":\"\",\"having_druid\":[],\"where\":\"\"},\"applied_time_extras\":{},\"columns\":[],\"metrics\":[{\"expressionType\":\"SIMPLE\",\"column\":{\"id\":2,\"column_name\":\"amount\",\"verbose_name\":null,\"description\":null,\"expression\":null,\"filterable\":true,\"groupby\":true,\"is_dttm\":false,\"type\":\"DOUBLE PRECISION\",\"type_generic\":0,\"python_date_format\":null,\"is_certified\":false,\"certified_by\":null,\"certification_details\":null,\"warning_markdown\":null},\"aggregate\":\"SUM\",\"sqlExpression\":null,\"isNew\":false,\"hasCustomLabel\":false,\"label\":\"SUM(amount)\",\"optionName\":\"metric_rm068rc5zy_fyp5mbcft1w\"}],\"annotation_layers\":[],\"timeseries_limit\":0,\"order_desc\":true,\"url_params\":{},\"custom_params\":{},\"custom_form_data\":{}}],\"form_data\":{\"viz_type\":\"big_number_total\",\"datasource\":\"1__table\",\"url_params\":{},\"time_range_endpoints\":[\"inclusive\",\"exclusive\"],\"granularity_sqla\":\"time_stamp\",\"time_grain_sqla\":null,\"time_range\":\"No filter\",\"metric\":{\"expressionType\":\"SIMPLE\",\"column\":{\"id\":2,\"column_name\":\"amount\",\"verbose_name\":null,\"description\":null,\"expression\":null,\"filterable\":true,\"groupby\":true,\"is_dttm\":false,\"type\":\"DOUBLE PRECISION\",\"type_generic\":0,\"python_date_format\":null,\"is_certified\":false,\"certified_by\":null,\"certification_details\":null,\"warning_markdown\":null},\"aggregate\":\"SUM\",\"sqlExpression\":null,\"isNew\":false,\"hasCustomLabel\":false,\"label\":\"SUM(amount)\",\"optionName\":\"metric_rm068rc5zy_fyp5mbcft1w\"},\"adhoc_filters\":[],\"header_font_size\":0.4,\"subheader_font_size\":0.15,\"y_axis_format\":\"SMART_NUMBER\",\"time_format\":\"smart_date\",\"extra_form_data\":{},\"force\":false,\"result_format\":\"json\",\"result_type\":\"full\"},\"result_format\":\"json\",\"result_type\":\"full\"}",
+                            "slice_name": "Total amount",
+                            "viz_type": "big_number_total"
+                        }
+                    },
+                    {
+                        "__Slice__": {
+                            "cache_timeout": null,
+                            "datasource_name": "public.transaction",
+                            "datasource_type": "table",
+                            "id": 5,
+                            "params": "{\"adhoc_filters\": [], \"datasource\": \"1__table\", \"extra_form_data\": {}, \"granularity_sqla\": \"time_stamp\", \"header_font_size\": 0.4, \"metric\": {\"aggregate\": \"COUNT\", \"column\": {\"certification_details\": null, \"certified_by\": null, \"column_name\": \"amount\", \"description\": null, \"expression\": null, \"filterable\": true, \"groupby\": true, \"id\": 2, \"is_certified\": false, \"is_dttm\": false, \"python_date_format\": null, \"type\": \"DOUBLE PRECISION\", \"type_generic\": 0, \"verbose_name\": null, \"warning_markdown\": null}, \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": false, \"isNew\": false, \"label\": \"COUNT(amount)\", \"optionName\": \"metric_ai68h2om03w_nqf9rvk24e\", \"sqlExpression\": null}, \"subheader_font_size\": 0.15, \"time_format\": \"smart_date\", \"time_grain_sqla\": null, \"time_range\": \"No filter\", \"time_range_endpoints\": [\"inclusive\", \"exclusive\"], \"url_params\": {}, \"viz_type\": \"big_number_total\", \"y_axis_format\": \"SMART_NUMBER\", \"remote_id\": 5, \"datasource_name\": \"transaction\", \"schema\": \"public\", \"database_name\": \"ORI\"}",
+                            "query_context": "{\"datasource\":{\"id\":1,\"type\":\"table\"},\"force\":false,\"queries\":[{\"time_range\":\"No filter\",\"granularity\":\"time_stamp\",\"filters\":[],\"extras\":{\"time_grain_sqla\":null,\"time_range_endpoints\":[\"inclusive\",\"exclusive\"],\"having\":\"\",\"having_druid\":[],\"where\":\"\"},\"applied_time_extras\":{},\"columns\":[],\"metrics\":[{\"expressionType\":\"SIMPLE\",\"column\":{\"id\":2,\"column_name\":\"amount\",\"verbose_name\":null,\"description\":null,\"expression\":null,\"filterable\":true,\"groupby\":true,\"is_dttm\":false,\"type\":\"DOUBLE PRECISION\",\"type_generic\":0,\"python_date_format\":null,\"is_certified\":false,\"certified_by\":null,\"certification_details\":null,\"warning_markdown\":null},\"aggregate\":\"COUNT\",\"sqlExpression\":null,\"isNew\":false,\"hasCustomLabel\":false,\"label\":\"COUNT(amount)\",\"optionName\":\"metric_ai68h2om03w_nqf9rvk24e\"}],\"annotation_layers\":[],\"timeseries_limit\":0,\"order_desc\":true,\"url_params\":{},\"custom_params\":{},\"custom_form_data\":{}}],\"form_data\":{\"viz_type\":\"big_number_total\",\"datasource\":\"1__table\",\"url_params\":{},\"time_range_endpoints\":[\"inclusive\",\"exclusive\"],\"granularity_sqla\":\"time_stamp\",\"time_grain_sqla\":null,\"time_range\":\"No filter\",\"metric\":{\"expressionType\":\"SIMPLE\",\"column\":{\"id\":2,\"column_name\":\"amount\",\"verbose_name\":null,\"description\":null,\"expression\":null,\"filterable\":true,\"groupby\":true,\"is_dttm\":false,\"type\":\"DOUBLE PRECISION\",\"type_generic\":0,\"python_date_format\":null,\"is_certified\":false,\"certified_by\":null,\"certification_details\":null,\"warning_markdown\":null},\"aggregate\":\"COUNT\",\"sqlExpression\":null,\"isNew\":false,\"hasCustomLabel\":false,\"label\":\"COUNT(amount)\",\"optionName\":\"metric_ai68h2om03w_nqf9rvk24e\"},\"adhoc_filters\":[],\"header_font_size\":0.4,\"subheader_font_size\":0.15,\"y_axis_format\":\"SMART_NUMBER\",\"time_format\":\"smart_date\",\"extra_form_data\":{},\"force\":false,\"result_format\":\"json\",\"result_type\":\"full\"},\"result_format\":\"json\",\"result_type\":\"full\"}",
+                            "slice_name": "Total transactions",
+                            "viz_type": "big_number_total"
+                        }
+                    }
+                ],
+                "slug": null
+            }
+        }
+    ],
+    "datasources": [
+        {
+            "__SqlaTable__": {
+                "cache_timeout": null,
+                "columns": [
+                    {
+                        "__TableColumn__": {
+                            "changed_by_fk": 1,
+                            "changed_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "column_name": "hash",
+                            "created_by_fk": 1,
+                            "created_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "description": null,
+                            "expression": null,
+                            "extra": null,
+                            "filterable": true,
+                            "groupby": true,
+                            "id": 1,
+                            "is_active": true,
+                            "is_dttm": false,
+                            "python_date_format": null,
+                            "table_id": 1,
+                            "type": "VARCHAR(255)",
+                            "uuid": "30dbf26f-1b2a-4ed0-a8ae-82217e8e863b",
+                            "verbose_name": null
+                        }
+                    },
+                    {
+                        "__TableColumn__": {
+                            "changed_by_fk": 1,
+                            "changed_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "column_name": "amount",
+                            "created_by_fk": 1,
+                            "created_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "description": null,
+                            "expression": null,
+                            "extra": null,
+                            "filterable": true,
+                            "groupby": true,
+                            "id": 2,
+                            "is_active": true,
+                            "is_dttm": false,
+                            "python_date_format": null,
+                            "table_id": 1,
+                            "type": "DOUBLE PRECISION",
+                            "uuid": "f160f0be-be1b-438a-bd67-f54a94085f77",
+                            "verbose_name": null
+                        }
+                    },
+                    {
+                        "__TableColumn__": {
+                            "changed_by_fk": 1,
+                            "changed_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "column_name": "time_stamp",
+                            "created_by_fk": 1,
+                            "created_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "description": null,
+                            "expression": null,
+                            "extra": null,
+                            "filterable": true,
+                            "groupby": true,
+                            "id": 3,
+                            "is_active": true,
+                            "is_dttm": true,
+                            "python_date_format": null,
+                            "table_id": 1,
+                            "type": "TIMESTAMP WITHOUT TIME ZONE",
+                            "uuid": "b41b05b8-1ca8-423f-903e-adb2f59bdd24",
+                            "verbose_name": null
+                        }
+                    },
+                    {
+                        "__TableColumn__": {
+                            "changed_by_fk": 1,
+                            "changed_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "column_name": "token_symbol",
+                            "created_by_fk": 1,
+                            "created_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "description": null,
+                            "expression": null,
+                            "extra": null,
+                            "filterable": true,
+                            "groupby": true,
+                            "id": 4,
+                            "is_active": true,
+                            "is_dttm": false,
+                            "python_date_format": null,
+                            "table_id": 1,
+                            "type": "VARCHAR(255)",
+                            "uuid": "403f7410-f418-4c87-a421-6009e5257079",
+                            "verbose_name": null
+                        }
+                    },
+                    {
+                        "__TableColumn__": {
+                            "changed_by_fk": 1,
+                            "changed_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "column_name": "block_hash",
+                            "created_by_fk": 1,
+                            "created_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "description": null,
+                            "expression": null,
+                            "extra": null,
+                            "filterable": true,
+                            "groupby": true,
+                            "id": 5,
+                            "is_active": true,
+                            "is_dttm": false,
+                            "python_date_format": null,
+                            "table_id": 1,
+                            "type": "VARCHAR(255)",
+                            "uuid": "a45ed45b-cea1-494e-93ef-c5f3a0cb670b",
+                            "verbose_name": null
+                        }
+                    },
+                    {
+                        "__TableColumn__": {
+                            "changed_by_fk": 1,
+                            "changed_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "column_name": "block_token_symbol",
+                            "created_by_fk": 1,
+                            "created_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "description": null,
+                            "expression": null,
+                            "extra": null,
+                            "filterable": true,
+                            "groupby": true,
+                            "id": 6,
+                            "is_active": true,
+                            "is_dttm": false,
+                            "python_date_format": null,
+                            "table_id": 1,
+                            "type": "VARCHAR(255)",
+                            "uuid": "6b6c88fc-c5cf-45aa-a093-8b79f5ebaa0e",
+                            "verbose_name": null
+                        }
+                    },
+                    {
+                        "__TableColumn__": {
+                            "changed_by_fk": 1,
+                            "changed_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "column_name": "fromaccount_hash",
+                            "created_by_fk": 1,
+                            "created_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "description": null,
+                            "expression": null,
+                            "extra": null,
+                            "filterable": true,
+                            "groupby": true,
+                            "id": 7,
+                            "is_active": true,
+                            "is_dttm": false,
+                            "python_date_format": null,
+                            "table_id": 1,
+                            "type": "VARCHAR(255)",
+                            "uuid": "ee31a1aa-d49c-48ff-9ce0-a2e163c27f8e",
+                            "verbose_name": null
+                        }
+                    },
+                    {
+                        "__TableColumn__": {
+                            "changed_by_fk": 1,
+                            "changed_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "column_name": "fromaccount_token_symbol",
+                            "created_by_fk": 1,
+                            "created_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "description": null,
+                            "expression": null,
+                            "extra": null,
+                            "filterable": true,
+                            "groupby": true,
+                            "id": 8,
+                            "is_active": true,
+                            "is_dttm": false,
+                            "python_date_format": null,
+                            "table_id": 1,
+                            "type": "VARCHAR(255)",
+                            "uuid": "633d5a81-129f-4954-81db-012b984f8e32",
+                            "verbose_name": null
+                        }
+                    },
+                    {
+                        "__TableColumn__": {
+                            "changed_by_fk": 1,
+                            "changed_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "column_name": "toaccount_hash",
+                            "created_by_fk": 1,
+                            "created_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "description": null,
+                            "expression": null,
+                            "extra": null,
+                            "filterable": true,
+                            "groupby": true,
+                            "id": 9,
+                            "is_active": true,
+                            "is_dttm": false,
+                            "python_date_format": null,
+                            "table_id": 1,
+                            "type": "VARCHAR(255)",
+                            "uuid": "c921a26e-9214-4c2c-9a00-80eb01264616",
+                            "verbose_name": null
+                        }
+                    },
+                    {
+                        "__TableColumn__": {
+                            "changed_by_fk": 1,
+                            "changed_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "column_name": "toaccount_token_symbol",
+                            "created_by_fk": 1,
+                            "created_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "description": null,
+                            "expression": null,
+                            "extra": null,
+                            "filterable": true,
+                            "groupby": true,
+                            "id": 10,
+                            "is_active": true,
+                            "is_dttm": false,
+                            "python_date_format": null,
+                            "table_id": 1,
+                            "type": "VARCHAR(255)",
+                            "uuid": "b3847eab-a59c-4bba-b8cb-b2635bcc8108",
+                            "verbose_name": null
+                        }
+                    }
+                ],
+                "database_id": 1,
+                "default_endpoint": null,
+                "description": null,
+                "extra": null,
+                "fetch_values_predicate": null,
+                "filter_select_enabled": false,
+                "main_dttm_col": "time_stamp",
+                "metrics": [
+                    {
+                        "__SqlMetric__": {
+                            "changed_by_fk": 1,
+                            "changed_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "created_by_fk": 1,
+                            "created_on": {
+                                "__datetime__": "2022-02-22T20:40:59"
+                            },
+                            "d3format": null,
+                            "description": null,
+                            "expression": "COUNT(*)",
+                            "extra": null,
+                            "id": 1,
+                            "metric_name": "count",
+                            "metric_type": "count",
+                            "table_id": 1,
+                            "uuid": "56db7c50-1840-402a-b2dc-aa19602a1533",
+                            "verbose_name": "COUNT(*)",
+                            "warning_text": null
+                        }
+                    }
+                ],
+                "offset": 0,
+                "params": "{\"remote_id\": 1, \"database_name\": \"ORI\"}",
+                "schema": "public",
+                "sql": null,
+                "table_name": "transaction",
+                "template_params": null
+            }
+        }
+    ]
+}
