@@ -1,0 +1,85 @@
+#run the following command
+# docker-compose up -d
+version: '2.1'
+services:
+  ori_postgresql_prod:
+    image: postgres:13.1
+    environment:
+      POSTGRES_USER: quarkus_prod
+      POSTGRES_PASSWORD: quarkus_prod
+      POSTGRES_DB: quarkus_prod
+    ports:
+      - 5432:5432
+    networks:
+      - ori 
+
+  ori:
+    image: syntifi.com/ori/ori-api:0.2.0-SNAPSHOT
+    depends_on:
+      - ori_postgresql_prod
+    environment:
+      ORI_POSTGRES_HOST: ori_postgresql_prod
+      ORI_POSTGRES_PORT: 5432
+      ORI_POSTGRES_USER: quarkus_prod
+      ORI_POSTGRES_PASSWORD: quarkus_prod
+      ORI_POSTGRES_DB: quarkus_prod
+      ORI_AML_REPORTING_THRESHOLD: 10000 
+      ORI_AML_LONG_WINDOW_DAYS: 30 
+      ORI_AML_MID_WINDOW_DAYS: 14
+      ORI_AML_SHORT_WINDOW_DAYS: 7
+      ORI_AML_MAX_TRACE_LENGTH: 200
+    ports:
+      - 8080:8080
+    networks:
+      - ori 
+
+  dashboard:
+    image: syntifi.com/ori/ori-dashboard:0.1.0-SNAPSHOT
+    ports:
+      - 8088:8088
+    depends_on:
+      - ori_postgresql_prod
+    environment:
+      SUPERSET_ADMIN_USER_NAME: admin
+      SUPERSET_ADMIN_FIRST_NAME: admin
+      SUPERSET_ADMIN_LAST_NAME: admin
+      SUPERSET_ADMIN_EMAIL: admin@admin.com
+      SUPERSET_ADMIN_PASSWORD: admin
+      ORI_POSTGRES_USER: quarkus_prod
+      ORI_POSTGRES_PASSWORD: quarkus_prod
+      ORI_POSTGRES_HOST: ori_postgresql_prod
+      ORI_POSTGRES_PORT: 5432
+      ORI_POSTGRES_DB: quarkus_dev
+    networks:
+      - ori 
+  
+  geth:
+    image: ethereum/client-go
+    ports:
+      - 8545:8545
+      - 30303:30303
+    volumes:
+      - ./eth_data:/root/.ethereum ethereum/client-go:rw
+    command: --syncmode "fast" --cache=512 --http --http.addr "0.0.0.0" --http.vhosts=*
+
+
+  ori-chains-eth:
+    image: syntifi.com/ori/ori-chains/ori-eth
+    depends_on:
+      - geth
+      - ori
+    environment:
+      ORI_POSTGRES_HOST: ori_postgresql_prod
+      ORI_POSTGRES_PORT: 5432
+      ORI_POSTGRES_USER: quarkus_prod
+      ORI_POSTGRES_PASSWORD: quarkus_prod
+      ORI_REST_API: http
+      ORI_REST_API_ADDRESS: ori
+      ORI_REST_API_PORT: 8080
+      ORI_CHAIN_SCHEME: http
+      ORI_CHAIN_ADDRESS: geth
+      ORI_CHAIN_PORT: 8585
+
+networks:
+  ori:
+    driver: bridge 

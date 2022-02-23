@@ -15,7 +15,7 @@
 #
 ###
 FROM quay.io/quarkus/quarkus-distroless-image:1.0
-COPY ori-api/target/*-runner /application
+COPY target/*-runner /application
 
 EXPOSE 8080
 USER nonroot
