@@ -1,24 +1,28 @@
-#run the following command
+# make sure network ori exists.
+# create running: `docker network create ori`
+# then run the following command
 # docker-compose up -d
-version: '2.1'
+version: '3.8'
 services:
-  ori_postgresql_prod:
+  ori-postgresql-prod:
     image: postgres:13.1
+    hostname: ori-postgresql-prod
     environment:
       POSTGRES_USER: quarkus_prod
       POSTGRES_PASSWORD: quarkus_prod
       POSTGRES_DB: quarkus_prod
     ports:
-      - 5432:5432
+      - "5432:5432"
     networks:
       - ori 
 
-  ori:
+  ori-api:
     image: ori-native
+    hostname: ori-api
     depends_on:
-      - ori_postgresql_prod
+      - ori-postgresql-prod
     environment:
-      ORI_POSTGRES_HOST: ori_postgresql_prod
+      ORI_POSTGRES_HOST: ori-postgresql-prod
       ORI_POSTGRES_PORT: 5432
       ORI_POSTGRES_USER: quarkus_prod
       ORI_POSTGRES_PASSWORD: quarkus_prod
@@ -29,10 +33,10 @@ services:
       ORI_AML_SHORT_WINDOW_DAYS: 7
       ORI_AML_MAX_TRACE_LENGTH: 200
     ports:
-      - 8080:8080
+      - "8080:8080"
     networks:
       - ori 
 
 networks:
   ori:
-    driver: bridge 
+    external: true
