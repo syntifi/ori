@@ -89,7 +89,7 @@ PACKAGE_JSON_FILE = pkg_resources.resource_filename(
 #     "type": "image/png"
 #     "rel": "icon"
 # },
-FAVICONS = [{"href": "/static/assets/images/favicon.png"}]
+FAVICONS = [{"href": "/static/assets/images/icon.png"}]
 
 
 def _try_json_readversion(filepath: str) -> Optional[str]:
@@ -234,7 +234,7 @@ PROXY_FIX_CONFIG = {"x_for": 1, "x_proto": 1, "x_host": 1, "x_port": 1, "x_prefi
 APP_NAME = "Superset"
 
 # Specify the App icon
-APP_ICON = "/static/assets/images/superset-logo-horiz.png"
+APP_ICON = "/static/assets/images/logo.png"
 APP_ICON_WIDTH = 126
 
 # Specify where clicking the logo would take the user
