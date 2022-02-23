@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.syntifi.ori</groupId>
@@ -11,9 +12,8 @@
   <version>0.2.0-SNAPSHOT</version>
   <properties>
     <ori-frontend.version>0.1.0-SNAPSHOT</ori-frontend.version>
-    <ori-shared.version>0.1.0-SNAPSHOT</ori-shared.version>
     <ori-risk-metric.version>0.1.0-SNAPSHOT</ori-risk-metric.version>
-
+    <ori-shared.version>0.1.0-SNAPSHOT</ori-shared.version>
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
     <quarkus.platform.version>2.7.1.Final</quarkus.platform.version>
@@ -30,7 +30,6 @@
     </dependencies>
   </dependencyManagement>
   <dependencies>
-    <!-- ensure front-end files were generated before packaging ori-api -->
     <dependency>
       <groupId>com.syntifi.ori</groupId>
       <artifactId>ori-frontend</artifactId>
@@ -84,8 +83,6 @@
       <artifactId>commons-io</artifactId>
       <version>2.11.0</version>
     </dependency>
-    <!-- Included joda-time to workaround quarkus native build error:
-      https://github.com/quarkusio/quarkus/issues/5508 -->
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
@@ -94,6 +91,10 @@
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-container-image-docker</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
