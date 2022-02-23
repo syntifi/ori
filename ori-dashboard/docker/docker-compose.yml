@@ -1,0 +1,27 @@
+# make sure network ori exists.
+# create running: `docker network create ori`
+# then run the following command
+# docker-compose up -d
+version: '3.8'
+services:
+  dashboard:
+    image: syntifi.com/ori/ori-dashboard
+    ports:
+      - "8088:8088"
+    environment:
+      SUPERSET_ADMIN_USER_NAME: admin
+      SUPERSET_ADMIN_FIRST_NAME: admin
+      SUPERSET_ADMIN_LAST_NAME: admin
+      SUPERSET_ADMIN_EMAIL: admin@admin.com
+      SUPERSET_ADMIN_PASSWORD: admin
+      ORI_POSTGRES_HOST: ori-postgresql
+      ORI_POSTGRES_PORT: 5432
+      ORI_POSTGRES_USER: ori_api
+      ORI_POSTGRES_PASSWORD: ori_api
+      ORI_POSTGRES_DB: ori_api
+    networks:
+      - ori 
+
+networks:
+  ori:
+    external: true

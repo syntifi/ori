@@ -32,7 +32,7 @@
                         </goals>
                         <configuration>
                             <executable>docker</executable>
-                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <workingDirectory>${project.basedir}/image</workingDirectory>
                             <arguments>
                                 <argument>rmi</argument>
                                 <argument>${image.prefix}/${project.artifactId}:${project.version}</argument>
@@ -48,11 +48,13 @@
                         </goals>
                         <configuration>
                             <executable>docker</executable>
-                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <workingDirectory>${project.basedir}/image</workingDirectory>
                             <arguments>
                                 <argument>build</argument>
                                 <argument>-t</argument>
                                 <argument>${image.prefix}/${project.artifactId}:${project.version}</argument>
+                                <argument>-t</argument>
+                                <argument>${image.prefix}/${project.artifactId}:latest</argument>
                                 <argument>.</argument>
                             </arguments>
                         </configuration>
@@ -67,7 +69,7 @@
                         </goals>
                         <configuration>
                             <executable>docker</executable>
-                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <workingDirectory>${project.basedir}/image</workingDirectory>
                             <arguments>
                                 <argument>login</argument>
                                 <argument>-u</argument>
@@ -86,10 +88,11 @@
                         </goals>
                         <configuration>
                             <executable>docker</executable>
-                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <workingDirectory>${project.basedir}/image</workingDirectory>
                             <arguments>
                                 <argument>push</argument>
-                                <argument>${image.prefix}/${project.artifactId}:${project.version}</argument>
+                                <argument>--all-tags</argument>
+                                <argument>${image.prefix}/${project.artifactId}</argument>
                             </arguments>
                         </configuration>
                     </execution>
