@@ -116,7 +116,10 @@
               <enabled>true</enabled>
             </layers>
             <image>
-              <name>${image.prefix}/ori-chains/${project.artifactId}</name>
+              <name>${image.prefix}/ori-chains/${project.artifactId}:${project.version}</name>
+              <tags>
+                <tag>${image.prefix}/ori-chains/${project.artifactId}:latest</tag>
+              </tags>
             </image>
           </configuration>
           <executions>

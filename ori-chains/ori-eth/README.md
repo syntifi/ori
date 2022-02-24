@@ -10,7 +10,7 @@ The application can be packaged using:
 
 This will create the following docker image locally:
 ```
-syntifi.com/ori/ori-chains/ori-eth
+syntifi.com/ori/ori-chains/ori-eth:latest
 ``` 
 
 ## Running the application
@@ -22,6 +22,12 @@ Please make sure that ORI-API is running either on a docker, in dev mode or in a
 > docker run --name geth -d -p 127.0.0.1:8545:8545 -p 30303:30303 ethereum/client-go:latest --syncmode "full" --cache=512 --http --http.addr "0.0.0.0"
 > ```
 
+Then run the container either using:
 ```shell script
-docker run syntifi.com/ori/ori-chains/ori-eth
+docker run syntifi.com/ori/ori-chains/ori-eth:latest
+```
+
+Or using docker-compose:
+```shell script
+docker-compose -f ori-chains/ori-eth/src/main/docker/docker-compose.yml up -d
 ```

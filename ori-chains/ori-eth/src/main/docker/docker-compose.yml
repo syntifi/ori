@@ -1,0 +1,37 @@
+# make sure network ori exists.
+# create running: `docker network create ori`
+# then run the following command
+# docker-compose up -d
+version: '3.8'
+services:
+  geth-node:
+    image: ethereum/client-go
+    hostname: geth-node
+    command: --syncmode "full" --cache=512 --http --http.addr "0.0.0.0" --http.vhosts=*
+    volumes:
+      - ./.eth-data:/root/:ethereum
+    networks:
+      - ori
+
+  ori-eth:
+    image: syntifi.com/ori/ori-chains/ori-eth
+    depends_on:
+      - geth-node
+    environment:
+      ORI_BATCH_POSTGRES_HOST: ori-postgresql
+      ORI_BATCH_POSTGRES_PORT: 5432
+      ORI_BATCH_POSTGRES_USER: ori_api
+      ORI_BATCH_POSTGRES_PASSWORD: ori_api
+      ORI_BATCH_POSTGRES_DB: ori_api
+      ORI_REST_API_SCHEME: http
+      ORI_REST_API_ADDRESS: ori-api
+      ORI_REST_API_PORT: 8080
+      ORI_CHAIN_SCHEME: http
+      ORI_CHAIN_ADDRESS: geth-node
+      ORI_CHAIN_PORT: 8545
+    networks:
+      - ori
+
+networks:
+  ori:
+    external: true

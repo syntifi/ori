@@ -1,10 +1,10 @@
 #!/bin/bash
 echo "============================> Creating Admin"
 superset fab create-admin \
-               --username ${SUPERSET_ADMIN_USER_NAME}\
-               --firstname ${SUPERSET_ADMIN_FIRST_NAME}\
-               --lastname ${SUPERSET_ADMIN_LAST_NAME}\
-               --email ${SUPERSET_ADMIN_EMAIL}\
+               --username ${SUPERSET_ADMIN_USER_NAME} \
+               --firstname ${SUPERSET_ADMIN_FIRST_NAME} \
+               --lastname ${SUPERSET_ADMIN_LAST_NAME} \
+               --email ${SUPERSET_ADMIN_EMAIL} \
                --password ${SUPERSET_ADMIN_PASSWORD} 
 
 echo "============================> Upgrading DB"
