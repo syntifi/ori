@@ -20,6 +20,8 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework. If you want 
 - [Ori client](ori-client/README.md)
 - [Ori frontend](ori-frontend/README.md)
 - [Ori shared](ori-shared/README.md)
+- [Ori risk metric](ori-risk-metric/README.md)
+- [Ori dashboard](ori-dashboard/README.md)
 
 ## Build instructions
 
@@ -90,3 +92,4 @@ The module ori-chains implements the batch jobs to crawl a specific chain and po
 
 - [REST API](ori-api/README.md)
 - [Risk metrics](ori-risk-metric/README.md)
+- [Dashboard](ori-dashboard/README.md)
