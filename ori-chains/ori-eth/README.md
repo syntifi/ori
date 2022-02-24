@@ -31,3 +31,6 @@ Or using docker-compose:
 ```shell script
 docker-compose -f ori-chains/ori-eth/src/main/docker/docker-compose.yml up -d
 ```
+
+> **_NOTE:_** The crawler depends on a local ETH node and the docker-compose starts both. That being said, it is often the case that the ETH node docker is up and running but it didn't yet have time to synchronize with other nodes in the network. This might result in a failure to run the crawler. **For now the prefered option is to run each docker independently**.
+
