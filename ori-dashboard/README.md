@@ -4,7 +4,7 @@
 
 First build the image with:
 ```shell script
-docker build -f ori-dashboard/Dockerfile -t ori-dashboard .
+docker build -f Dockerfile -t ori-dashboard .
 ```
 
 Then run the container using:
