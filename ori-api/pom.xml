@@ -32,12 +32,6 @@
   <dependencies>
     <dependency>
       <groupId>com.syntifi.ori</groupId>
-      <artifactId>ori-frontend</artifactId>
-      <version>${ori-frontend.version}</version>
-      <type>pom</type>
-    </dependency>
-    <dependency>
-      <groupId>com.syntifi.ori</groupId>
       <artifactId>ori-shared</artifactId>
       <version>${ori-shared.version}</version>
     </dependency>
