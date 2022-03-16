@@ -46,9 +46,9 @@ docker run -i --rm -p 8080:8080 syntifi.com/ori/ori-native-native
 
 ## Docker-compose
 
-The application makes use of Postgresql as persistency layer. 
+The application makes use of Postgresql as persistence layer. 
 
-Alternatively, it is possible to run all necessary images using docker-compose:
+Alternatively, it is possible to run all necessary containers using docker-compose:
 
 ```shell script
 docker-compose -f ori-api/src/main/docker/docker-compose-jvm.yml up

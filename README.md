@@ -36,7 +36,7 @@ The project is divided into several modules with some interdependency. For this 
 ### Running the application in dev mode
 > **_NOTE:_** Please run the following docker container to run a Postgresql instance used in dev mode:
 > ```shell script
-> docker run -d --name ori_postgres_dev --ulimit memlock=-1:-1 -it --memory-swappiness=0 --name postgresql_quarkus_dev -e POSTGRES_USER=quarkus_dev -e POSTGRES_PASSWORD=quarkus_dev -e POSTGRES_DB=quarkus_dev -p 5433:5432 postgres:13.1
+> docker run -d --name postgresql_ori_db --ulimit memlock=-1:-1 -it --memory-swappiness=0 -e POSTGRES_USER=ori_db_user -e POSTGRES_PASSWORD=ori_db_pwd -e POSTGRES_DB=ori_db -p 5432:5432 postgres:13.1
 >  ```
 
 After the packaging and test run you can run the application in dev mode that enables live coding using:

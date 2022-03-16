@@ -15,11 +15,11 @@ docker run -i --rm -p 8088:8088 \
             -e SUPERSET_ADMIN_LAST_NAME='admin' \
             -e SUPERSET_ADMIN_EMAIL='admin@admin.com' \
             -e SUPERSET_ADMIN_PASSWORD='admin' \
-            -e ORI_POSTGRES_USER='quarkus_dev' \
-            -e ORI_POSTGRES_PASSWORD='quarkus_dev' \
+            -e ORI_POSTGRES_USER='ori_db_user' \
+            -e ORI_POSTGRES_PASSWORD='ori_db_pwd' \
             -e ORI_POSTGRES_HOST='localhost' \
             -e ORI_POSTGRES_PORT='5432' \
-            -e ORI_POSTGRES_DB='quarkus_dev' \
+            -e ORI_POSTGRES_DB='ori_db' \
             syntifi.com/ori/ori-dashboard
 ```
 

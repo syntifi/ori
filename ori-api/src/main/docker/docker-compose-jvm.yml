@@ -8,9 +8,9 @@ services:
     image: postgres:13.1
     hostname: ori-postgresql
     environment:
-      POSTGRES_USER: ori_api
-      POSTGRES_PASSWORD: ori_api
-      POSTGRES_DB: ori_api
+      POSTGRES_USER: ori_db_user
+      POSTGRES_PASSWORD: ori_db_pwd
+      POSTGRES_DB: ori_db
     volumes:
       - ./.postgres-data:/var/lib/postgresql/data
     ports:
@@ -26,9 +26,9 @@ services:
     environment:
       ORI_POSTGRES_HOST: ori-postgresql
       ORI_POSTGRES_PORT: 5432
-      ORI_POSTGRES_USER: ori_api
-      ORI_POSTGRES_PASSWORD: ori_api
-      ORI_POSTGRES_DB: ori_api
+      ORI_POSTGRES_USER: ori_db_user
+      ORI_POSTGRES_PASSWORD: ori_db_pwd
+      ORI_POSTGRES_DB: ori_db
       ORI_AML_REPORTING_THRESHOLD: 10000 
       ORI_AML_LONG_WINDOW_DAYS: 30 
       ORI_AML_MID_WINDOW_DAYS: 14
