@@ -66,6 +66,7 @@ public class OriChainConfig {
     /**
      * Getter for Spring Batch {@link DataSource}
      *
+     * @param props
      * @return the bean of the datasource for Spring Batch database
      */
     @Bean

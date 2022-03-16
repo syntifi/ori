@@ -26,8 +26,6 @@ public abstract class AbstractChainProcessor<T> implements ItemProcessor<T, OriD
 
     /**
      * {@link OriChainConfigProperties} reference
-     * 
-     * @return the {@link OriChainConfigProperties} object
      */
     @Getter(value = AccessLevel.PROTECTED)
     protected final OriChainConfigProperties oriChainConfigProperties;
