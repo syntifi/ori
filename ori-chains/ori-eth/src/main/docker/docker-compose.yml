@@ -9,7 +9,7 @@ services:
     hostname: geth-node
     command: --syncmode "full" --cache=512 --http --http.addr "0.0.0.0" --http.vhosts=*
     volumes:
-      - ./.eth-data:/root/:ethereum
+      - ./.eth-data:/root/.ethereum
     networks:
       - ori
 
