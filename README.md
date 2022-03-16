@@ -12,6 +12,7 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework. If you want 
 - Java 11 
 - [Maven](https://maven.apache.org/) (3.8.1 or above)
 - [Docker](https://www.docker.com/)
+- [Docker compose](https://docs.docker.com/compose/) (version 1.29.2 or above)
 - [Node.js](https://nodejs.org/) (>=14.0.0) [manual-installation](https://github.com/nodesource/distributions#manual-installation)
 
 ## Modules
