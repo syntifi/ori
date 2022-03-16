@@ -14,7 +14,7 @@ docker build -f ori-api/src/main/docker/Dockerfile.jvm -t syntifi.com/ori/ori-ap
 
 Then run the container using:
 ```shell script
-docker run -i --rm -p 8080:8080 ori-jvm
+docker run -i --rm -p 8080:8080 syntifi.com/ori/ori-jvm
 ```
 
 Then run the container using :
@@ -40,7 +40,7 @@ docker build -f ori-api/src/main/docker/Dockerfile.native -t syntifi.com/ori/ori
 Then run the container using:
 
 ```shell script
-docker run -i --rm -p 8080:8080 ori-native-native
+docker run -i --rm -p 8080:8080 syntifi.com/ori/ori-native-native
 ```
 
 
