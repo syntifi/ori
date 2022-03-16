@@ -19,28 +19,28 @@
         <artifactId>exec-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>pnpm-install</id>
+            <id>npm-install</id>
             <phase>generate-resources</phase>
             <goals>
               <goal>exec</goal>
             </goals>
             <configuration>
               <workingDirectory>./</workingDirectory>
-              <executable>pnpm</executable>
+              <executable>npm</executable>
               <arguments>
                 <argument>install</argument>
               </arguments>
             </configuration>
           </execution>
           <execution>
-            <id>pnpm-build</id>
+            <id>npm-build</id>
             <phase>generate-resources</phase>
             <goals>
               <goal>exec</goal>
             </goals>
             <configuration>
               <workingDirectory>./</workingDirectory>
-              <executable>pnpm</executable>
+              <executable>npm</executable>
               <arguments>
                 <argument>run</argument>
                 <argument>build</argument>
