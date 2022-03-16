@@ -53,7 +53,7 @@ docker_ori-cspr_1   /cnb/process/web   Up
 
 `docker-compose -f ori-chains/ori-cspr/src/main/docker/docker-compose.yml logs -f`
 
-## 9. Access the dashboard 
+## 9. Access the front-end 
 Should be up at [http://localhost:8080](http://localhost:8080). 
 
 
@@ -62,3 +62,27 @@ It will take a while to populate useful data for testing.
 You should access the postgres database with the credentials set in docker-compose.yml to check for accounts, transactions, blocks, etc.
 
 You can use [pgAdmin](https://www.pgadmin.org/) or [Squirrel SQL](http://squirrel-sql.sourceforge.net/) to access the postgresql database.
+
+## 10. Start the dashboard
+
+`docker-compose -f ori-dashboard/docker/docker-compose.yml up -d`
+
+## 11. Check if dashboard is up
+
+`docker-compose -f ori-dashboard/docker/docker-compose.yml ps`
+
+Should output: 
+```text
+       Name                   Command               State               Ports         
+--------------------------------------------------------------------------------------
+docker_dashboard_1   sh ./docker/entrypoint.sh   Up (healthy)   0.0.0.0:8088->8088/tcp
+```
+
+## 12. Access the dashboard
+
+Should be up at [http://localhost:8088](http://localhost:8088). 
+
+``` text
+login: admin
+password: admin
+```
