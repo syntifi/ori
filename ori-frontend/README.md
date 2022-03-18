@@ -44,3 +44,30 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Use case
+
+Once the service is up and running one should see the following login screen when accessing [http://localhost:8080](http://localhost:8080): 
+
+![Langing page](https://github.com/syntifi/docs/blob/main/ori_frontend_landing_page.png?raw=true)
+
+On the lefthand side there are 3 buttons: one pointing to syntifi.com, one to the swagger-ui and another to this github repository. 
+
+![Swagger UI](https://github.com/syntifi/docs/blob/main/ori_frontend_swagger_ui.png?raw=true)
+
+On the righthand side there is a burger menu:
+
+![Menu](https://github.com/syntifi/docs/blob/main/ori_frontend_menu.png?raw=true)
+
+with the links to the transactions page:
+
+![Transaction](https://github.com/syntifi/docs/blob/main/ori_frontend_transaction.png?raw=true)
+
+with the links to the backtrace page:
+
+![BackTrace](https://github.com/syntifi/docs/blob/main/ori_frontend_back_trace.png?raw=true)
+
+and the forward trace page:
+
+![ForwardTrace](https://github.com/syntifi/docs/blob/main/ori_frontend_forward_trace.png?raw=true)
+![ForwardTraceHierarchical](https://github.com/syntifi/docs/blob/main/ori_frontend_forward_trace_hierarchical.png?raw=true)
