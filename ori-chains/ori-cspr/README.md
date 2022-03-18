@@ -29,3 +29,10 @@ Or using docker-compose:
 ```shell script
 docker-compose -f ori-chains/ori-cspr/src/main/docker/docker-compose.yml up -d
 ```
+
+## Loading sample data
+
+> **_NOTE:_** It is possible to load a sample 
+> ```shell script
+> docker exec -i docker_ori-postgresql_1 psql -U ori_db_user ori_db < ori-chains/ori-cspr/src/test/resources/db-sample/ori_db_sample.sql
+> ```
