@@ -5,7 +5,7 @@ ORI (On-chain Risk Intelligence tool) in an open-source project available under 
   - followed by an [API](ori-api/README.md), that provides access to the services to trace the coin the risk metrics of an account
   - as well as a [front-end](ori-frontend/README.md), and a [dashboard](ori-dashboard/README.md) providing graphical capabilities to analyse the data.
 
-In the sections that follow it is possible to find more information about [each module](#modules), build [instructions](build-instructions), and the guidelines to [contribute](CONTRIBUTING.md).
+In the sections that follow it is possible to find more information about [each module](#modules), build [instructions](#build-instructions), and the guidelines to [contribute](CONTRIBUTING.md).
 
 ## Content
 - [Dependencies](#dependencies)
