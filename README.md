@@ -1,6 +1,11 @@
 # ORI (Onchain Risk Intelligence) 
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework. If you want to learn more about Quarkus, please visit its website: https://quarkus.io/.
+ORI (On-chain Risk Intelligence tool) in an open-source project available under [Apache 2](LICENSE) license. It provides the tools and functionalities to analyse and assess risk on transactions happening on public chains. The project is divided into several submodules that implement the different pieces needed for such an analysis:
+  - tt begins with a [crawler engine](ori-chains/README.md), that crawls the blockchains and stores the relevant data in an indexed DB
+  - followed by an [API](ori-api/README.md), that provides access to the services to trace the coin the risk metrics of an account
+  - as well as a [front-end](ori-frontend/README.md), and a [dashboard](ori-dashboard/README.md) providing graphical capabilities to analyse the data.
+
+In the sections that follow it is possible to find more information about [each module](#modules), build [instructions](build-instructions), and the guidelines to [contribute](CONTRIBUTING.md).
 
 ## Content
 - [Dependencies](#dependencies)
