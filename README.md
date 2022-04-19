@@ -1,3 +1,6 @@
+[![Java CI](https://github.com/syntifi/ori/actions/workflows/maven.yml/badge.svg)](https://github.com/syntifi/ori/actions/workflows/maven.yml)
+[![Project license](https://img.shields.io/badge/license-Apache%202-blue)](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
 # ORI (Onchain Risk Intelligence) 
 
 ORI (On-chain Risk Intelligence tool) in an open-source project available under [Apache 2](LICENSE) license. It provides the tools and functionalities to analyse and assess risk on transactions happening on public chains. The project is divided into several submodules that implement the different pieces needed for such an analysis:
