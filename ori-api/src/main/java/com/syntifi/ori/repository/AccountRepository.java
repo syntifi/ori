@@ -16,35 +16,35 @@ import com.syntifi.ori.model.Account;
 public class AccountRepository implements OriRepository<Account> {
 
     /**
-     * Find an account given it's PK (token, hash)
+     * Find an account given it's PK (chain, hash)
      * 
-     * @param tokenSymbol
+     * @param chainName
      * @param hash
      * @return
      */
-    public Account findByTokenSymbolAndHash(String tokenSymbol, String hash) {
-        return find("token_symbol = ?1 and hash = ?2", tokenSymbol, hash).singleResult();
+    public Account findByChainNameAndHash(String chainName, String hash) {
+        return find("chain_name= ?1 and hash = ?2", chainName, hash).singleResult();
     }
 
     /**
-     * return the number of accounts with the given (token, hash) pair 
+     * return the number of accounts with the given (chain, hash) pair
      * 
-     * @param tokenSymbol
+     * @param chainName
      * @param hash
      * @return
      */
-    public long countByTokenSymbolAndHash(String tokenSymbol, String hash) {
-        return count("token_symbol = ?1 and hash = ?2", tokenSymbol, hash);
+    public long countByChainNameAndHash(String chainName, String hash) {
+        return count("chain_name= ?1 and hash = ?2", chainName, hash);
     }
 
     /**
      * checks if the account with the pair (token, hash) exists already
      *  
-     * @param tokenSymbol
+     * @param chainName
      * @param hash
      * @return
      */
-    public boolean existsAlready(String tokenSymbol, String hash) {
-        return countByTokenSymbolAndHash(tokenSymbol, hash) > 0;
+    public boolean existsAlready(String chainName, String hash) {
+        return countByChainNameAndHash(chainName, hash) > 0;
     }
 }

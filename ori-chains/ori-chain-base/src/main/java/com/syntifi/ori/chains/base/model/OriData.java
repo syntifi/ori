@@ -5,7 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.syntifi.ori.dto.BlockDTO;
-import com.syntifi.ori.dto.TransactionDTO;
+import com.syntifi.ori.dto.TransferDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,5 +43,5 @@ public class OriData {
      * @return list of ori transaction DTO object
      */
     @Valid
-    private List<TransactionDTO> transfers;
+    private List<TransferDTO> transfers;
 }

@@ -8,10 +8,10 @@ import javax.ws.rs.core.Response.Status;
 
 import com.syntifi.ori.RiskMetrics;
 import com.syntifi.ori.dto.AMLRulesDTO;
-import com.syntifi.ori.dto.TransactionDTO;
+import com.syntifi.ori.dto.TransferDTO;
 import com.syntifi.ori.exception.ORIException;
-import com.syntifi.ori.mapper.TransactionMapper;
-import com.syntifi.ori.model.Transaction;
+import com.syntifi.ori.mapper.TransferMapper;
+import com.syntifi.ori.model.Transfer;
 
 import org.eclipse.microprofile.config.ConfigProvider;
 
@@ -25,8 +25,8 @@ import org.eclipse.microprofile.config.ConfigProvider;
 @Singleton
 public class AMLService {
 
-    private static int minNumberOfTransactions = ConfigProvider.getConfig()
-            .getValue("ori.aml.min-number-transactions", int.class);
+    private static int minNumberOfTransfers = ConfigProvider.getConfig()
+            .getValue("ori.aml.min-number-transfers", int.class);
 
     /**
      * Method to calculate the risk metrics scores and return a AMLRulesDTO object
@@ -39,8 +39,8 @@ public class AMLService {
      * @return
      * @throws ORIException
      */
-    public AMLRulesDTO calculateScores(List<Transaction> in, List<Transaction> out, Double thresh,
-            Integer sWindow, Integer lWindow)
+    public AMLRulesDTO calculateScores(List<Transfer> in, List<Transfer> out, Double thresh,
+                                       Integer sWindow, Integer lWindow)
             throws ORIException {
         sanityCheck(in, out);
         double threshold = thresh == null
@@ -54,34 +54,34 @@ public class AMLService {
                 : lWindow;
 
         AMLRulesDTO scores = new AMLRulesDTO();
-        List<TransactionDTO> inDTO = in.stream()
-                .map(TransactionMapper::fromModel)
+        List<TransferDTO> inDTO = in.stream()
+                .map(TransferMapper::fromModel)
                 .collect(Collectors.toList());
-        List<TransactionDTO> outDTO = out.stream()
-                .map(TransactionMapper::fromModel)
+        List<TransferDTO> outDTO = out.stream()
+                .map(TransferMapper::fromModel)
                 .collect(Collectors.toList());
 
         scores.setFlowThroughScore(
                 RiskMetrics.calculateFlowThroughScore(inDTO, outDTO, longWindow,
-                        minNumberOfTransactions));
+                        minNumberOfTransfers));
         scores.setStructuringOverTimeScore(
                 RiskMetrics.calculateStructuringOverTimeScore(inDTO, outDTO, threshold,
-                        minNumberOfTransactions));
+                        minNumberOfTransfers));
         scores.setUnusualBehaviorScore(
                 RiskMetrics.calculateUnusualBehaviourScore(outDTO, shortWindow,
-                        minNumberOfTransactions));
+                        minNumberOfTransfers));
         scores.setUnusualOutgoingVolumeScore(
                 RiskMetrics.calculateUnusualOutgoingVolumeScore(outDTO, shortWindow, longWindow,
-                        minNumberOfTransactions));
+                        minNumberOfTransfers));
         return scores;
     }
 
     // TODO: Throw an ORIException in a service? Does it make sense?
-    private void sanityCheck(List<Transaction> in, List<Transaction> out) throws ORIException {
+    private void sanityCheck(List<Transfer> in, List<Transfer> out) throws ORIException {
         int n = (in == null ? 0 : in.size()) + (out == null ? 0 : out.size());
         if (n == 0) {
             throw new ORIException(
-                    "Unable to calculate scores because the given account does not contain any transaction",
+                    "Unable to calculate scores because the given account does not contain any transfer",
                     Status.NOT_FOUND.getStatusCode());
         }
     }

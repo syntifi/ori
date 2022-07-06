@@ -12,7 +12,7 @@ public class AccountDTOTest {
     @Test
     public void testSerializer() {
         ObjectNode account = mapper.createObjectNode();
-        account.put("tokenSymbol", "TKN");
+        account.put("chainName", "CHAIN");
         account.put("hash", "from");
         account.put("publicKey", "key");
         account.put("label", "from");

@@ -16,7 +16,7 @@ import com.syntifi.ori.chains.base.model.OriData;
 import com.syntifi.ori.chains.base.service.MockTestChainService;
 import com.syntifi.ori.client.MockOriRestClient;
 import com.syntifi.ori.dto.BlockDTO;
-import com.syntifi.ori.dto.TransactionDTO;
+import com.syntifi.ori.dto.TransferDTO;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -107,7 +107,7 @@ public class OriWriterTest {
         BlockDTO block = mockTestChainService.getNextBlock().toDTO();
         block.setTokenSymbol(oriChainConfigProperties.getChain().getTokenSymbol());
 
-        List<TransactionDTO> transfers = mockTestChainService.getTransfers(block.getHash())
+        List<TransferDTO> transfers = mockTestChainService.getTransfers(block.getHash())
                 .stream()
                 .map(t -> t.toDTO())
                 .collect(Collectors.toList());

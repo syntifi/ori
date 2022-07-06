@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  * @author Alexandre Carvalho
  * @author Andre Bertolace 
  * @since 0.1.0
- */
+ **/
 @Retention(RUNTIME)
 @Target({ FIELD, PARAMETER })
 public @interface LocalDateTimeFormat {

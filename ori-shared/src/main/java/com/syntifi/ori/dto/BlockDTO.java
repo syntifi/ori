@@ -49,5 +49,5 @@ public class BlockDTO implements OriDTO {
     private String parent;
 
     @NotNull
-    private String tokenSymbol;
+    private String chainName;
 }

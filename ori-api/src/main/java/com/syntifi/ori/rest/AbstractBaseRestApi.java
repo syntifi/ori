@@ -7,8 +7,10 @@ import javax.ws.rs.core.Response.Status;
 
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.model.Account;
+import com.syntifi.ori.model.Chain;
 import com.syntifi.ori.model.Token;
 import com.syntifi.ori.repository.AccountRepository;
+import com.syntifi.ori.repository.ChainRepository;
 import com.syntifi.ori.repository.TokenRepository;
 
 /**
@@ -27,9 +29,22 @@ public abstract class AbstractBaseRestApi {
     @Inject
     protected AccountRepository accountRepository;
 
-    protected Token getTokenOr404(String symbol) {
+    @Inject
+    protected ChainRepository chainRepository;
+
+    protected Chain getChainOr404(String name) {
         try {
-            return tokenRepository.findBySymbol(symbol);
+            return chainRepository.findByName(name);
+        } catch (NoResultException e) {
+            throw new ORIException(name + " not found", Status.NOT_FOUND);
+        } catch (NonUniqueResultException e) {
+            throw new ORIException(name + " not unique", Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    protected Token getTokenOr404(String chainName, String symbol) {
+        try {
+            return tokenRepository.findByChainAndSymbol(chainName, symbol);
         } catch (NoResultException e) {
             throw new ORIException(symbol + " not found", Status.NOT_FOUND);
         } catch (NonUniqueResultException e) {
@@ -37,9 +52,9 @@ public abstract class AbstractBaseRestApi {
         }
     }
 
-    protected Account getAccountOr404(String symbol, String hash) {
+    protected Account getAccountOr404(String chainName, String hash) {
         try {
-            return accountRepository.findByTokenSymbolAndHash(symbol, hash);
+            return accountRepository.findByChainNameAndHash(chainName, hash);
         } catch (NoResultException e) {
             throw new ORIException(hash + " not found", Status.NOT_FOUND);
         } catch (NonUniqueResultException e) {

@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
  * @author Andre Bertolace
  * 
  * @since 0.1.0
- */
+ **/
 @Data
 @Builder
 @NoArgsConstructor

@@ -109,13 +109,13 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
     private StepBuilderFactory stepBuilderFactory;
 
     /**
-     * Check if token already exists on ORI and create if it does not
+     * Check if chain already exists on ORI and create if it does not
      */
-    private void createTokenIfNeeded() {
+    private void createChainIfNeeded() {
         try {
-            logger.info("Getting token from properties...");
+            logger.info("Getting chain from properties...");
 
-            oriClient.getToken(oriChainConfigProperties.getChain().getTokenSymbol());
+            oriClient.getChain(oriChainConfigProperties.getChain().getTokenSymbol());
 
             logger.info(String.format("...found for value \"%s\".",
                     oriChainConfigProperties.getChain().getTokenSymbol()));
@@ -132,9 +132,42 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
                 TokenDTO token = new TokenDTO();
                 token.setSymbol(oriChainConfigProperties.getChain().getTokenSymbol());
                 token.setName(oriChainConfigProperties.getChain().getTokenName());
-                token.setProtocol(oriChainConfigProperties.getChain().getTokenProtocol());
+                token.setChainName(oriChainConfigProperties.getChain().getTokenProtocol());
                 token.check();
-                oriClient.postToken(token);
+                oriClient.postToken(token.getChainName(), token);
+
+                logger.info(String.format("...token \"%s\" created!",
+                        oriChainConfigProperties.getChain().getTokenSymbol()));
+            }
+        }
+    }
+    /**
+     * Check if token already exists on ORI and create if it does not
+     */
+    private void createTokenIfNeeded() {
+        try {
+            logger.info("Getting token from properties...");
+
+            oriClient.getChain(oriChainConfigProperties.getChain().getTokenSymbol());
+
+            logger.info(String.format("...found for value \"%s\".",
+                    oriChainConfigProperties.getChain().getTokenSymbol()));
+        } catch (WebClientResponseException e) {
+            logger.info(
+                    String.format("...not found for value \"%s\".",
+                            oriChainConfigProperties.getChain().getTokenSymbol()),
+                    e);
+
+            if (e.getRawStatusCode() == 404) {
+                logger.info(String.format("Token \"%s\" not found. Creating...",
+                        oriChainConfigProperties.getChain().getTokenSymbol()));
+
+                TokenDTO token = new TokenDTO();
+                token.setSymbol(oriChainConfigProperties.getChain().getTokenSymbol());
+                token.setName(oriChainConfigProperties.getChain().getTokenName());
+                token.setChainName(oriChainConfigProperties.getChain().getTokenProtocol());
+                token.check();
+                oriClient.postToken(token.getChainName(), token);
 
                 logger.info(String.format("...token \"%s\" created!",
                         oriChainConfigProperties.getChain().getTokenSymbol()));
@@ -221,6 +254,7 @@ public abstract class AbstractChainCrawlerJob<S, T extends ChainData<?, ?>> {
      */
     @Bean
     public Job oriCrawlerJob() {
+        createChainIfNeeded();
         createTokenIfNeeded();
         addBlockZeroIfNeeded();
 

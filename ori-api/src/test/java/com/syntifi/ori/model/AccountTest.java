@@ -32,7 +32,7 @@ public class AccountTest {
     @Test
     public void testNullToken() {
         var account = new Account();
-        account.setToken(null);
+        account.setChain(null);
         account.setHash("hash");
         account.setPublicKey("key");
         account.setLabel("from");
@@ -43,11 +43,9 @@ public class AccountTest {
     @Test
     public void testNotNullToken() {
         var account = new Account();
-        var token = new Token();
-        token.setSymbol("symbol");
-        token.setName("name");
-        token.setProtocol("protocol");
-        account.setToken(token);
+        var chain = new Chain();
+        chain.setName("chain");
+        account.setChain(chain);
         account.setHash("hash");
         account.setPublicKey("key");
         account.setLabel("from");

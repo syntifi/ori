@@ -48,7 +48,7 @@ public class GatewayResource {
         this.apiResource = apiResource;
     }
 
-    @Path("/api/v2")
+    @Path("/api/v3")
     public RestApiResource getApiResource() {
         return apiResource;
     }

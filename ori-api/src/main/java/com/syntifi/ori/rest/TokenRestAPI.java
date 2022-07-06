@@ -1,39 +1,30 @@
 package com.syntifi.ori.rest;
 
-import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.syntifi.ori.dto.TokenDTO;
+import com.syntifi.ori.exception.ORIException;
+import com.syntifi.ori.mapper.TokenMapper;
+import com.syntifi.ori.model.Token;
+import io.quarkus.arc.Unremovable;
+import io.quarkus.runtime.annotations.RegisterForReflection;
+import io.vertx.core.json.JsonObject;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import javax.inject.Singleton;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.transaction.Transactional;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import com.syntifi.ori.dto.TokenDTO;
-import com.syntifi.ori.exception.ORIException;
-import com.syntifi.ori.mapper.TokenMapper;
-import com.syntifi.ori.model.Token;
-
-import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-
-import io.quarkus.arc.Unremovable;
-import io.quarkus.panache.common.Sort;
-import io.quarkus.runtime.annotations.RegisterForReflection;
-import io.vertx.core.json.JsonObject;
+import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Ori Rest Api for {@link Token} endpoints
- * 
+ *
  * @author Alexandre Carvalho
  * @author Andre Bertolace
- * 
  * @since 0.1.0
  */
 @Singleton
@@ -44,16 +35,21 @@ public class TokenRestAPI extends AbstractBaseRestApi {
 
     /**
      * POST method to persist a new token in the DB
-     * 
+     *
+     * @param chain
      * @param tokenDTO
      * @return
      */
     @POST
     @Transactional
-    public Response addToken(TokenDTO tokenDTO) {
+    public Response addToken(@PathParam("chain") String chain, TokenDTO tokenDTO) {
+        getChainOr404(chain);
+
+        tokenDTO.setChainName(chain);
+
         Token token = TokenMapper.toModel(tokenDTO);
 
-        boolean exists = tokenRepository.existsAlready(token.getSymbol());
+        boolean exists = tokenRepository.existsAlready(chain, token.getSymbol());
         if (exists) {
             throw new ORIException(token.getSymbol() + " exists already", Status.CONFLICT);
         }
@@ -61,63 +57,68 @@ public class TokenRestAPI extends AbstractBaseRestApi {
         tokenRepository.check(token);
         tokenRepository.persist(token);
 
-        return Response.ok(new JsonObject().put("created",
-                URI.create("/token/" + token.getSymbol())))
+        return Response.ok(new JsonObject()
+                        .put("method", "POST")
+                        .put("uri", URI.create(String.format("/chain/%s/token/%s", chain, token.getSymbol()))))
                 .build();
     }
 
     /**
      * GET method to return all tokens stored in the DB
-     * 
+     *
      * @return
      */
     @GET
-    public List<TokenDTO> getAllTokens() {
-        return tokenRepository.listAll(Sort.ascending("symbol")).stream().map(TokenMapper::fromModel)
+    public List<TokenDTO> getAllTokens(@PathParam("chain") String chain) {
+        return tokenRepository.findByChain(chain).stream().map(TokenMapper::fromModel)
                 .collect(Collectors.toList());
     }
 
     /**
      * GET method to return a token given its symbol
-     * 
-     * @param symbol
+     *
+     * @param chain
+     * @param tokenSymbol
      * @return
      */
     @GET
     @Path("/{tokenSymbol}")
-    public TokenDTO getTokenBySymbol(@PathParam("tokenSymbol") String symbol) {
+    public TokenDTO getTokenBySymbol(@PathParam("chain") String chain,
+                                     @PathParam("tokenSymbol") String tokenSymbol) {
         try {
-            Token result = tokenRepository.findBySymbol(symbol);
+            Token result = tokenRepository.findByChainAndSymbol(chain, tokenSymbol);
             return TokenMapper.fromModel(result);
         } catch (NoResultException e) {
-            throw new ORIException(symbol + " not found", Status.NOT_FOUND);
+            throw new ORIException(tokenSymbol + " not found", Status.NOT_FOUND);
         } catch (NonUniqueResultException e) {
-            throw new ORIException(symbol + " not unique", Status.INTERNAL_SERVER_ERROR);
+            throw new ORIException(tokenSymbol + " not unique", Status.INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
      * DELETE method to drop a tiven token from the database
-     * 
-     * @param symbol
+     *
+     * @param chain
+     * @param tokenSymbol
      * @return
      */
     @DELETE
     @Transactional
     @Path("/{tokenSymbol}")
-    public Response deleteToken(@PathParam("tokenSymbol") String symbol) {
+    public Response deleteToken(@PathParam("chain") String chain, @PathParam("tokenSymbol") String tokenSymbol) {
         try {
-            Token token = tokenRepository.findBySymbol(symbol);
+            Token token = tokenRepository.findByChainAndSymbol(chain, tokenSymbol);
 
             tokenRepository.delete(token);
 
             return Response.ok(new JsonObject()
-                    .put("method", "DELETE")
-                    .put("uri", "/token/" + symbol)).build();
+                            .put("method", "DELETE")
+                            .put("uri", String.format("/chain/%s/token/%s", chain, tokenSymbol)))
+                    .build();
         } catch (NoResultException e) {
-            throw new ORIException(symbol + " not found", Status.NOT_FOUND);
+            throw new ORIException(tokenSymbol + " not found", Status.NOT_FOUND);
         } catch (NonUniqueResultException e) {
-            throw new ORIException(symbol + " not unique", Status.INTERNAL_SERVER_ERROR);
+            throw new ORIException(tokenSymbol + " not unique", Status.INTERNAL_SERVER_ERROR);
         }
     }
 }

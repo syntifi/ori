@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 
-import com.syntifi.ori.dto.TransactionDTO;
+import com.syntifi.ori.dto.TransferDTO;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -21,8 +21,8 @@ public class MockChainTransfer {
     private double amount;
     private long timestamp;
 
-    public TransactionDTO toDTO() {
-        return TransactionDTO.builder()
+    public TransferDTO toDTO() {
+        return TransferDTO.builder()
                 .hash(hash)
                 .toHash(toHash)
                 .fromHash(fromHash)

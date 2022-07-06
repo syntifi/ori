@@ -31,20 +31,19 @@ public class BlockRestAPITest {
 
     @Test
     @Order(1)
-    public void createToken() throws Exception {
-        var token = new JsonObject();
-        token.put("symbol", "ABC");
-        token.put("name", "Token ABC");
-        token.put("protocol", "A");
+    public void createChain() throws Exception {
+        var chain = new JsonObject();
+        chain.put("name", "Chain");
         given()
-                .body(token.toString())
+                .body(chain.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
                 .when()
-                .post("/api/v2/token")
+                .post("/api/v3/chain")
                 .then()
                 .statusCode(200)
-                .body("created", equalTo("/token/ABC"));
+                .body("method", equalTo("POST"))
+                .body("uri", equalTo("/chain/Chain"));
     }
 
     @Test
@@ -60,21 +59,27 @@ public class BlockRestAPITest {
         given()
                 .body(block.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
+                .pathParam("chain", "Chain")
                 .when()
-                .post("/api/v2/block/ABC")
+                .post("/api/v3/chain/{chain}/block")
                 .then()
-                .statusCode(201);
+                .statusCode(200)
+                .body("method", equalTo("POST"))
+                .body("uri", equalTo("/chain/Chain/block/mockBlock"));
     }
 
     @Test
     @Order(3)
     public void testGetBlock() {
         given()
+                .pathParam("chain", "Chain")
+                .pathParam("block", "mockBlock")
                 .when()
-                .get("/api/v2/block/ABC/hash/mockBlock")
+                .get("/api/v3/chain/{chain}/block/{block}")
                 .then()
                 .statusCode(200)
-                .body("tokenSymbol", equalTo("ABC"))
+                .body("chainName", equalTo("Chain"))
                 .body("era", equalTo(0))
                 .body("hash", equalTo("mockBlock"))
                 .body("height", equalTo(0))
@@ -89,11 +94,12 @@ public class BlockRestAPITest {
     public void testGetBlocks() {
         given()
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                .pathParam("chain", "Chain")
                 .when()
-                .get("/api/v2/block/ABC")
+                .get("/api/v3/chain/{chain}/block")
                 .then()
                 .statusCode(200)
-                .body("[0].tokenSymbol", equalTo("ABC"))
+                .body("[0].chainName", equalTo("Chain"))
                 .body("[0].era", equalTo(0))
                 .body("[0].hash", equalTo("mockBlock"))
                 .body("[0].height", equalTo(0))
@@ -108,11 +114,12 @@ public class BlockRestAPITest {
     public void testGetLastBlock() {
         given()
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                .pathParam("chain", "Chain")
                 .when()
-                .get("/api/v2/block/ABC/last")
+                .get("/api/v3/chain/{chain}/block/last")
                 .then()
                 .statusCode(200)
-                .body("tokenSymbol", equalTo("ABC"))
+                .body("chainName", equalTo("Chain"))
                 .body("era", equalTo(0))
                 .body("hash", equalTo("mockBlock"))
                 .body("height", equalTo(0))
@@ -126,8 +133,10 @@ public class BlockRestAPITest {
     @Order(6)
     public void testGetNonExistingBlock() {
         given()
+                .pathParam("chain", "Chain")
+                .pathParam("block", "noBlock")
                 .when()
-                .get("/api/v2/block/ABC/hash/noBlock")
+                .get("/api/v3/chain/{chain}/block/{block}")
                 .then()
                 .statusCode(404)
                 .body("error", equalTo("noBlock not found"));
@@ -147,10 +156,11 @@ public class BlockRestAPITest {
         given()
                 .body(block.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .pathParam("chain", "Chain")
                 .when()
-                .post("/api/v2/block/ABC")
+                .post("/api/v3/chain/{chain}/block")
                 .then()
-                .statusCode(201);
+                .statusCode(200);
     }
 
     @Test
@@ -171,8 +181,9 @@ public class BlockRestAPITest {
         given()
                 .body(blocks.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .pathParam("chain", "Chain")
                 .when()
-                .post("/api/v2/block/ABC/multiple")
+                .post("/api/v3/chain/{chain}/block/multiple")
                 .then()
                 .statusCode(201);
     }
@@ -181,38 +192,43 @@ public class BlockRestAPITest {
     @Order(9)
     public void testDeleteBlock() throws InterruptedException {
         given()
+                .pathParam("chain", "Chain")
+                .pathParam("block", "mockBlock2")
                 .when()
                 .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
-                .delete("/api/v2/block/ABC/hash/mockBlock2")
+                .delete("/api/v3/chain/{chain}/block/{block}")
                 .then()
                 .statusCode(200)
                 .body("method", equalTo("DELETE"))
-                .body("uri", equalTo("/block/ABC/hash/mockBlock2"));
+                .body("uri", equalTo("/chain/Chain/block/mockBlock2"));
     }
 
     @Test
     @Order(10)
     public void testDeleteBlock2() throws InterruptedException {
         given()
+                .pathParam("chain", "Chain")
+                .pathParam("block", "mockBlock")
                 .when()
                 .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
-                .delete("/api/v2/block/ABC/hash/mockBlock")
+                .delete("/api/v3/chain/{chain}/block/{block}")
                 .then()
                 .statusCode(200)
                 .body("method", equalTo("DELETE"))
-                .body("uri", equalTo("/block/ABC/hash/mockBlock"));
+                .body("uri", equalTo("/chain/Chain/block/mockBlock"));
     }
 
     @Test
     @Order(11)
-    public void testDeleteToken() throws InterruptedException {
+    public void testDeleteChain() throws InterruptedException {
         given()
+                .pathParam("chain", "Chain")
                 .when()
                 .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
-                .delete("/api/v2/token/ABC")
+                .delete("/api/v3/chain/{chain}")
                 .then()
                 .statusCode(200)
                 .body("method", equalTo("DELETE"))
-                .body("uri", equalTo("/token/ABC"));
+                .body("uri", equalTo("/chain/Chain"));
     }
 }

@@ -13,14 +13,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
- * {@link Transaction} model tests
+ * {@link Transfer} model tests
  * 
  * @author Alexandre Carvalho
  * @author Andre Bertolace
  * 
  * @since 0.1.0
  */
-public class TransactionTest {
+public class TransferTest {
     private static Validator validator;
 
     @BeforeAll
@@ -35,15 +35,15 @@ public class TransactionTest {
         var from = new Account();
         var to = new Account();
         var block = new Block();
-        var transaction = new Transaction();
+        var transfer = new Transfer();
+        var chain = new Chain();
+        chain.setName("chain");
         token.setSymbol("SYM");
         token.setName("name");
-        token.setProtocol("protocol");
-        from.setToken(token);
+        token.setChain(chain);
         from.setHash("from");
         from.setPublicKey("key");
         from.setLabel("from");
-        to.setToken(token);
         to.setHash("to");
         to.setPublicKey("key");
         to.setLabel("from");
@@ -54,14 +54,14 @@ public class TransactionTest {
         block.setTimeStamp(OffsetDateTime.now());
         block.setValidator("validator");
         block.setParent(null);
-        transaction.setTimeStamp(OffsetDateTime.now());
-        transaction.setHash("mockTransaction");
-        transaction.setToken(token);
-        transaction.setFromAccount(from);
-        transaction.setToAccount(to);
-        transaction.setAmount(1234.);
-        transaction.setBlock(block);
-        Set<ConstraintViolation<Transaction>> constraintViolations = validator.validate(transaction);
+        transfer.setTimeStamp(OffsetDateTime.now());
+        transfer.setHash("mockTransfer");
+        transfer.setToken(token);
+        transfer.setFromAccount(from);
+        transfer.setToAccount(to);
+        transfer.setAmount(1234.);
+        transfer.setBlock(block);
+        Set<ConstraintViolation<Transfer>> constraintViolations = validator.validate(transfer);
         Assertions.assertEquals(0, constraintViolations.size());
     }
 }

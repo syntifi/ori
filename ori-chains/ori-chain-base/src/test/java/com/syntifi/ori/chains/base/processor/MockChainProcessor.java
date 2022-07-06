@@ -7,7 +7,7 @@ import com.syntifi.ori.chains.base.model.MockChainData;
 import com.syntifi.ori.chains.base.model.MockChainTransfer;
 import com.syntifi.ori.chains.base.model.OriData;
 import com.syntifi.ori.dto.BlockDTO;
-import com.syntifi.ori.dto.TransactionDTO;
+import com.syntifi.ori.dto.TransferDTO;
 
 import org.springframework.stereotype.Component;
 
@@ -30,10 +30,10 @@ public class MockChainProcessor extends AbstractChainProcessor<MockChainData> {
 
         result.setTransfers(new LinkedList<>());
         for (MockChainTransfer transfer : item.getChainTransfers()) {
-            TransactionDTO transactionDTO = transfer.toDTO();
-            transactionDTO.setTokenSymbol(getOriChainConfigProperties().getChain().getTokenSymbol());
-            transactionDTO.check();
-            result.getTransfers().add(transactionDTO);
+            TransferDTO transferDTO = transfer.toDTO();
+            transferDTO.setTokenSymbol(getOriChainConfigProperties().getChain().getTokenSymbol());
+            transferDTO.check();
+            result.getTransfers().add(transferDTO);
         }
 
         return result;

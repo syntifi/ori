@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Ori Entity for Transaction data
+ * Ori Entity for Transfer data
  * 
  * @author Alexandre Carvalho
  * @author Andre Bertolace
@@ -33,7 +33,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @IdClass(HashTokenId.class)
-public class Transaction extends PanacheEntityBase {
+public class Transfer extends PanacheEntityBase {
 
     @Id
     @NotNull

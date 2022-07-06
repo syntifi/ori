@@ -1,29 +1,26 @@
 package com.syntifi.ori.repository;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-import javax.persistence.NoResultException;
-import javax.transaction.Transactional;
-import javax.validation.ConstraintViolationException;
-
+import com.syntifi.ori.model.Chain;
 import com.syntifi.ori.model.Token;
-
+import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import io.quarkus.test.junit.QuarkusTest;
+import javax.inject.Inject;
+import javax.persistence.NoResultException;
+import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * {@link TokenRepository} tests
- * 
+ *
  * @author Alexandre Carvalho
  * @author Andre Bertolace
- * 
  * @since 0.1.0
  */
 @QuarkusTest
@@ -32,9 +29,13 @@ public class TokenRespositoryTest {
     @Inject
     TokenRepository tokenRepository;
 
+    @Inject
+    ChainRepository chainRepository;
+
     @Test
     public void testGetNonExistingToken() {
-        Assertions.assertThrows(NoResultException.class, () -> tokenRepository.findBySymbol("testToken"));
+        Assertions.assertThrows(NoResultException.class,
+                () -> tokenRepository.findByChainAndSymbol("CHAIN", "testToken"));
     }
 
     @Test
@@ -47,29 +48,31 @@ public class TokenRespositoryTest {
         Assertions.assertEquals(1, e.getConstraintViolations().size());
         List<String> violatedFields = e.getConstraintViolations().stream()
                 .map(v -> v.getPropertyPath().iterator().next().getName()).collect(Collectors.toList());
-        Assertions.assertTrue(violatedFields.contains("protocol"));
+        Assertions.assertTrue(violatedFields.contains("chain"));
     }
 
     @Test
     @Order(2)
     public void testEmptyDB() {
-        Assertions.assertFalse(tokenRepository.existsAlready("ABC"));
-        Assertions.assertEquals(0, tokenRepository.countBySymbol("ABC"));
+        Assertions.assertFalse(tokenRepository.existsAlready("CHAIN", "ABC"));
+        Assertions.assertEquals(0, tokenRepository.countByChainAndSymbol("CHAIN","ABC"));
         Assertions.assertThrowsExactly(NoResultException.class,
-                () -> tokenRepository.findBySymbol("ABC"));
+                () -> tokenRepository.findByChainAndSymbol("CHAIN", "ABC"));
     }
 
     @Test
     @Transactional
     @Order(3)
     public void testNonEmptyDB() {
-        Token token = Token.builder().symbol("ABC").protocol("ABC").name("ABC").build();
+        Chain chain = Chain.builder().name("CHAIN").build();
+        Token token = Token.builder().symbol("ABC").chain(chain).name("ABC").build();
+        chainRepository.persistAndFlush(chain);
         tokenRepository.persistAndFlush(token);
 
-        Assertions.assertTrue(tokenRepository.existsAlready("ABC"));
-        Assertions.assertEquals(1, tokenRepository.countBySymbol("ABC"));
-        Assertions.assertNotNull(tokenRepository.findBySymbol("ABC"));
-        Assertions.assertEquals(token, tokenRepository.findBySymbol("ABC"));
+        Assertions.assertTrue(tokenRepository.existsAlready("CHAIN", "ABC"));
+        Assertions.assertEquals(1, tokenRepository.countByChainAndSymbol("CHAIN", "ABC"));
+        Assertions.assertNotNull(tokenRepository.findByChainAndSymbol("CHAIN", "ABC"));
+        Assertions.assertEquals(token, tokenRepository.findByChainAndSymbol("CHAIN", "ABC"));
     }
 
     @Test
@@ -78,9 +81,9 @@ public class TokenRespositoryTest {
     public void testCleanDB() {
         tokenRepository.deleteAll();
 
-        Assertions.assertFalse(tokenRepository.existsAlready("ABC"));
-        Assertions.assertEquals(0, tokenRepository.countBySymbol("ABC"));
+        Assertions.assertFalse(tokenRepository.existsAlready("CHAIN", "ABC"));
+        Assertions.assertEquals(0, tokenRepository.countByChainAndSymbol("CHAIN", "ABC"));
         Assertions.assertThrowsExactly(NoResultException.class,
-                () -> tokenRepository.findBySymbol("ABC"));
+                () -> tokenRepository.findByChainAndSymbol("CHAIN", "ABC"));
     }
 }

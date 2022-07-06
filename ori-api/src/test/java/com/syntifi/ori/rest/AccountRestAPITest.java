@@ -1,48 +1,47 @@
 package com.syntifi.ori.rest;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.equalTo;
-
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-
+import io.quarkus.test.junit.QuarkusTest;
+import io.vertx.core.json.JsonObject;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import io.quarkus.test.junit.QuarkusTest;
-import io.vertx.core.json.JsonObject;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 /**
  * {@link AccountRestAPI} tests
- * 
+ *
  * @author Alexandre Carvalho
  * @author Andre Bertolace
- * 
  * @since 0.1.0
  */
 @QuarkusTest
 @TestMethodOrder(OrderAnnotation.class)
 public class AccountRestAPITest {
 
+
     @Test
     @Order(1)
-    public void createToken() throws Exception {
-        var token = new JsonObject();
-        token.put("symbol", "ABC");
-        token.put("name", "Token ABC");
-        token.put("protocol", "A");
+    public void createChain() throws Exception {
+        var chain = new JsonObject();
+        chain.put("name", "Chain");
         given()
-                .body(token.toString())
+                .body(chain.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
                 .when()
-                .post("/api/v2/token")
+                .post("/api/v3/chain")
                 .then()
                 .statusCode(200)
-                .body("created", equalTo("/token/ABC"));
+                .body("method", equalTo("POST"))
+                .body("uri", equalTo("/chain/Chain"));
     }
+
 
     @Test
     @Order(2)
@@ -54,22 +53,26 @@ public class AccountRestAPITest {
         given()
                 .body(block.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .pathParam("chain", "Chain")
                 .when()
-                .post("/api/v2/account/ABC")
+                .post("/api/v3/chain/{chain}/account")
                 .then()
                 .statusCode(200)
-                .body("created", equalTo("/account/ABC/mockAccount"));
+                .body("method", equalTo("POST"))
+                .body("uri", equalTo("/chain/Chain/account/mockAccount"));
     }
 
     @Test
     @Order(3)
     public void testGetAccount() {
         given()
+                .pathParam("chain", "Chain")
+                .pathParam("account", "mockAccount")
                 .when()
-                .get("/api/v2/account/ABC/hash/mockAccount")
+                .get("/api/v3/chain/{chain}/account/{account}")
                 .then()
                 .statusCode(200)
-                .body("tokenSymbol", equalTo("ABC"))
+                .body("chainName", equalTo("Chain"))
                 .body("hash", equalTo("mockAccount"))
                 .body("publicKey", equalTo("key"))
                 .body("label", equalTo("label"));
@@ -80,11 +83,12 @@ public class AccountRestAPITest {
     public void testGetAccounts() {
         given()
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                .pathParam("chain", "Chain")
                 .when()
-                .get("/api/v2/account/ABC")
+                .get("/api/v3/chain/{chain}/account")
                 .then()
                 .statusCode(200)
-                .body("[0].tokenSymbol", equalTo("ABC"))
+                .body("[0].chainName", equalTo("Chain"))
                 .body("[0].hash", equalTo("mockAccount"))
                 .body("[0].publicKey", equalTo("key"))
                 .body("[0].label", equalTo("label"));
@@ -94,8 +98,10 @@ public class AccountRestAPITest {
     @Order(5)
     public void testGetNonExistingAccount() {
         given()
+                .pathParam("chain", "Chain")
+                .pathParam("account", "noAccount")
                 .when()
-                .get("/api/v2/account/ABC/hash/noAccount")
+                .get("/api/v3/chain/{chain}/account/{account}")
                 .then()
                 .statusCode(404)
                 .body("error", equalTo("noAccount not found"));
@@ -105,25 +111,28 @@ public class AccountRestAPITest {
     @Order(6)
     public void testDeleteAccount() throws InterruptedException {
         given()
+                .pathParam("chain", "Chain")
+                .pathParam("account", "mockAccount")
                 .when()
                 .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
-                .delete("/api/v2/account/ABC/hash/mockAccount")
+                .delete("/api/v3/chain/{chain}/account/{account}")
                 .then()
                 .statusCode(200)
                 .body("method", equalTo("DELETE"))
-                .body("uri", equalTo("/account/ABC/hash/mockAccount"));
+                .body("uri", equalTo("/chain/Chain/account/mockAccount"));
     }
 
     @Test
     @Order(7)
-    public void testDeleteToken() throws InterruptedException {
+    public void testDeleteChain() throws InterruptedException {
         given()
+                .pathParam("chain", "Chain")
                 .when()
                 .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
-                .delete("/api/v2/token/ABC")
+                .delete("/api/v3/chain/{chain}")
                 .then()
                 .statusCode(200)
                 .body("method", equalTo("DELETE"))
-                .body("uri", equalTo("/token/ABC"));
+                .body("uri", equalTo("/chain/Chain"));
     }
 }

@@ -4,10 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.syntifi.ori.model.Account;
-import com.syntifi.ori.model.Block;
-import com.syntifi.ori.model.Token;
-import com.syntifi.ori.model.Transaction;
+import com.syntifi.ori.model.*;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -27,13 +24,14 @@ public class AMLServiceTest {
 
     @Test
     public void testcalculateScores() {
+        Chain chain = Chain.builder().name("chain").build();
         Token token = Token.builder()
                 .symbol("ABC")
                 .name("ABC")
-                .protocol("ABC").build();
+                .chain(chain).build();
         Block block = Block.builder()
                 .hash("block")
-                .token(token)
+                .chain(chain)
                 .era(0L)
                 .height(0L)
                 .root("root")
@@ -44,10 +42,10 @@ public class AMLServiceTest {
         Account b = Account.builder().hash("B").build();
         Double[] amount = { 5E3, 9.5E3, 8E3, 9.36E3, 7E3, 5E3, 0.1E3, 9.234E3, 9.6E3, 8E3 };
         var now = OffsetDateTime.now();
-        List<Transaction> in = new LinkedList<>();
-        List<Transaction> out = new LinkedList<>();
+        List<Transfer> in = new LinkedList<>();
+        List<Transfer> out = new LinkedList<>();
         for (int i = 0; i < amount.length; i++) {
-            var ini = new Transaction();
+            var ini = new Transfer();
             ini.setAmount(amount[i]);
             ini.setFromAccount(a);
             ini.setToAccount(b);
@@ -56,7 +54,7 @@ public class AMLServiceTest {
             ini.setHash("in" + ("" + i));
             ini.setTimeStamp(now.minusDays(10L - i));
             in.add(ini);
-            var outi = new Transaction();
+            var outi = new Transfer();
             outi.setAmount(amount[i]);
             outi.setFromAccount(a);
             outi.setToAccount(b);

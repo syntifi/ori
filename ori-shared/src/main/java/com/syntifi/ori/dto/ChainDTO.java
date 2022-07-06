@@ -1,38 +1,28 @@
 package com.syntifi.ori.dto;
 
-import javax.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigInteger;
+import javax.validation.constraints.NotNull;
 
 /**
  * Ori DTO for Token data
- * 
+ *
  * @author Alexandre Carvalho
  * @author Andre Bertolace
- * 
- * @since 0.1.0
+ *
+ * @since 0.2.0
  */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TokenDTO implements OriDTO {
+public class ChainDTO {
 
     @NotNull
-    private String symbol;
-
     private String name;
-
-    @NotNull
-    private String chainName;
-
-    @NotNull
-    private BigInteger quantization;
 }

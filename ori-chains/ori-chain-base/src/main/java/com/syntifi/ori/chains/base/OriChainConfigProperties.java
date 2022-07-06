@@ -76,12 +76,20 @@ public class OriChainConfigProperties {
         private String tokenName;
 
         /**
-         * Chain token protocol
+         * Chain token quantization
+         *
+         * @return the chain token minimal unit
+         * @param tokenQuantitation the chain token name to set
+         */
+        private String tokenQuantization;
+
+        /**
+         * Chain name
          * 
          * @return the chain token protocol
-         * @param tokenProtocol the chain token protocol to set
+         * @param chainName the chain token protocol to set
          */
-        private String tokenProtocol;
+        private String chainName;
 
         /**
          * Chain block zero hash

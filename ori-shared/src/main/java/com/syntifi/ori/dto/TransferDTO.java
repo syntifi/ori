@@ -25,7 +25,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TransactionDTO implements OriDTO {
+public class TransferDTO implements OriDTO {
 
     @NotNull
     private String hash;
@@ -47,4 +47,7 @@ public class TransactionDTO implements OriDTO {
 
     @NotNull
     private String tokenSymbol;
+
+    @NotNull
+    private String chainName;
 }

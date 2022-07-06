@@ -13,7 +13,7 @@ import com.syntifi.ori.chains.base.model.OriData;
 import com.syntifi.ori.chains.base.processor.AbstractChainProcessor;
 import com.syntifi.ori.chains.cspr.model.CsprChainData;
 import com.syntifi.ori.dto.BlockDTO;
-import com.syntifi.ori.dto.TransactionDTO;
+import com.syntifi.ori.dto.TransferDTO;
 
 import org.springframework.stereotype.Component;
 
@@ -52,10 +52,10 @@ public class CsprChainProcessor extends AbstractChainProcessor<CsprChainData> {
         result.setBlock(block);
 
         // Transfer processor
-        List<TransactionDTO> transfers = new LinkedList<>();
+        List<TransferDTO> transfers = new LinkedList<>();
         result.setTransfers(transfers);
         for (Transfer chainTransfer : item.getChainTransfers()) {
-            TransactionDTO oriTransfer = new TransactionDTO();
+            TransferDTO oriTransfer = new TransferDTO();
             oriTransfer.setTokenSymbol(oriChainConfigProperties.getChain().getTokenSymbol());
             oriTransfer.setBlockHash(block.getHash());
             oriTransfer.setFromHash(chainTransfer.getFrom());

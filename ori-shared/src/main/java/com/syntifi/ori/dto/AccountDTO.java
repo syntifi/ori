@@ -31,5 +31,5 @@ public class AccountDTO implements OriDTO {
     private String label;
 
     @NotNull
-    private String tokenSymbol;
+    private String chainName;
 }

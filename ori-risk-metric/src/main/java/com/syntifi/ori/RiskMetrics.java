@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.syntifi.ori.dto.TransactionDTO;
+import com.syntifi.ori.dto.TransferDTO;
 
 /**
  * Ori Risk Metric calculator
@@ -33,8 +33,8 @@ public class RiskMetrics {
      * @param minNumberOfTransactions
      * @return
      */
-    public static double calculateStructuringOverTimeScore(List<TransactionDTO> in, List<TransactionDTO> out,
-            Double threshold, int minNumberOfTransactions) {
+    public static double calculateStructuringOverTimeScore(List<TransferDTO> in, List<TransferDTO> out,
+                                                           Double threshold, int minNumberOfTransactions) {
         double[] interval = { 0.9 * threshold, 1.0 * threshold };
         int n = in.size() + out.size();
         Long nIn = in.stream()
@@ -57,11 +57,11 @@ public class RiskMetrics {
      * @param minNumberOfTransactions
      * @return
      */
-    public static double calculateUnusualOutgoingVolumeScore(List<TransactionDTO> out, Integer shortWindow,
-            Integer longWindow, int minNumberOfTransactions) {
+    public static double calculateUnusualOutgoingVolumeScore(List<TransferDTO> out, Integer shortWindow,
+                                                             Integer longWindow, int minNumberOfTransactions) {
 
         OffsetDateTime lastDate = out.get(0).getTimeStamp();
-        for (TransactionDTO tx : out) {
+        for (TransferDTO tx : out) {
             if (lastDate.isBefore(tx.getTimeStamp())) {
                 lastDate = tx.getTimeStamp();
             }
@@ -75,7 +75,7 @@ public class RiskMetrics {
         double amountOutShortWindow = 0;
         double amountOutLongWindow = 0;
         int nOutLongWindow = 0;
-        for (TransactionDTO transaction : out) {
+        for (TransferDTO transaction : out) {
             if (transaction.getTimeStamp().isAfter(dates[1])) {
                 amountOutShortWindow = amountOutShortWindow + transaction.getAmount();
             }
@@ -97,8 +97,8 @@ public class RiskMetrics {
      * @param minNumberOfTransactions
      * @return
      */
-    public static double calculateUnusualBehaviourScore(List<TransactionDTO> out, Integer window,
-            int minNumberOfTransactions) {
+    public static double calculateUnusualBehaviourScore(List<TransferDTO> out, Integer window,
+                                                        int minNumberOfTransactions) {
         OffsetDateTime fromDate = out.get(0).getTimeStamp().minusDays(window);
         List<Double> windowOut = out.stream()
                 .filter(x -> x.getTimeStamp().isAfter(fromDate))
@@ -130,8 +130,8 @@ public class RiskMetrics {
      * @param minNumberOfTransactions
      * @return
      */
-    public static double calculateFlowThroughScore(List<TransactionDTO> in, List<TransactionDTO> out,
-            Integer window, int minNumberOfTransactions) {
+    public static double calculateFlowThroughScore(List<TransferDTO> in, List<TransferDTO> out,
+                                                   Integer window, int minNumberOfTransactions) {
         OffsetDateTime lastDate = out.get(0).getTimeStamp().isAfter(in.get(0).getTimeStamp())
                 ? out.get(0).getTimeStamp()
                 : in.get(0).getTimeStamp();

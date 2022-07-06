@@ -1,12 +1,9 @@
 package com.syntifi.ori.model;
 
+import java.math.BigInteger;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
@@ -40,11 +37,12 @@ public class Token extends PanacheEntityBase {
     private String name;
 
     @NotNull
-    private String protocol;
+    @ManyToOne
+    private Chain chain;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "token")
-    private Set<Block> blocks;
+    @NotNull
+    private Double quantization;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "token")
-    private Set<Account> accounts;
+
+
 }

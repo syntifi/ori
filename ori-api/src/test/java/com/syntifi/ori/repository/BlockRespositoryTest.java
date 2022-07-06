@@ -7,6 +7,7 @@ import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 
 import com.syntifi.ori.model.Block;
+import com.syntifi.ori.model.Chain;
 import com.syntifi.ori.model.Token;
 
 import org.junit.jupiter.api.Assertions;
@@ -34,30 +35,33 @@ public class BlockRespositoryTest {
     @Inject
     TokenRepository tokenRepository;
 
+    @Inject
+    ChainRepository chainRepository;
+
     @Test
     @Order(1)
     public void testGetNonExistingBlock() {
         Assertions.assertThrows(NoResultException.class,
-                () -> blockRepository.findByTokenSymbolAndHash("symbol", "testBlock"));
+                () -> blockRepository.findByChainNameAndHash("symbol", "testBlock"));
     }
 
     @Test
     @Order(2)
     public void testEmptyDB() {
         Assertions.assertFalse(blockRepository.existsAlready("ABC", "Block"));
-        Assertions.assertEquals(0, blockRepository.countByTokenSymbolAndHash("ABC", "Block"));
+        Assertions.assertEquals(0, blockRepository.countByChainNameAndHash("ABC", "Block"));
         Assertions.assertThrowsExactly(NoResultException.class,
-                () -> blockRepository.findByTokenSymbolAndHash("ABC", "Block"));
+                () -> blockRepository.findByChainNameAndHash("ABC", "Block"));
         Assertions.assertNull(blockRepository.getLastBlock("ABC"));
         Assertions.assertEquals(0, blockRepository.getBlocks("ABC").size());
-        Assertions.assertFalse(blockRepository.existsAnyByToken("ABC"));
+        Assertions.assertFalse(blockRepository.existsAnyByChain("ABC"));
     }
 
     @Test
     @Transactional
     @Order(3)
     public void testNonEmptyDB() {
-        Token token = Token.builder().symbol("ABC").protocol("ABC").name("ABC").build();
+        Chain chain = Chain.builder().name("CHAIN").build();
 
         Block block = Block.builder()
                 .hash("Block")
@@ -67,16 +71,17 @@ public class BlockRespositoryTest {
                 .root("root")
                 .validator("validator")
                 .timeStamp(OffsetDateTime.now())
-                .token(token)
+                .chain(chain)
                 .build();
+        chainRepository.persistAndFlush(chain);
         blockRepository.persistAndFlush(block);
 
-        Assertions.assertTrue(blockRepository.existsAlready("ABC", "Block"));
-        Assertions.assertEquals(1, blockRepository.countByTokenSymbolAndHash("ABC", "Block"));
-        Assertions.assertNotNull(blockRepository.findByTokenSymbolAndHash("ABC", "Block"));
-        Assertions.assertNotNull(blockRepository.getLastBlock("ABC"));
-        Assertions.assertEquals(1, blockRepository.getBlocks("ABC").size());
-        Assertions.assertTrue(blockRepository.existsAnyByToken("ABC"));
+        Assertions.assertTrue(blockRepository.existsAlready("CHAIN", "Block"));
+        Assertions.assertEquals(1, blockRepository.countByChainNameAndHash("CHAIN", "Block"));
+        Assertions.assertNotNull(blockRepository.findByChainNameAndHash("CHAIN", "Block"));
+        Assertions.assertNotNull(blockRepository.getLastBlock("CHAIN"));
+        Assertions.assertEquals(1, blockRepository.getBlocks("CHAIN").size());
+        Assertions.assertTrue(blockRepository.existsAnyByChain("CHAIN"));
     }
 
     @Test
@@ -87,12 +92,12 @@ public class BlockRespositoryTest {
         tokenRepository.deleteAll();
 
         Assertions.assertFalse(blockRepository.existsAlready("ABC", "Block"));
-        Assertions.assertEquals(0, blockRepository.countByTokenSymbolAndHash("ABC", "Block"));
+        Assertions.assertEquals(0, blockRepository.countByChainNameAndHash("ABC", "Block"));
         Assertions.assertThrowsExactly(NoResultException.class,
-                () -> blockRepository.findByTokenSymbolAndHash("ABC", "Block"));
+                () -> blockRepository.findByChainNameAndHash("ABC", "Block"));
         Assertions.assertNull(blockRepository.getLastBlock("ABC"));
         Assertions.assertEquals(0, blockRepository.getBlocks("ABC").size());
-        Assertions.assertFalse(blockRepository.existsAnyByToken("ABC"));
+        Assertions.assertFalse(blockRepository.existsAnyByChain("ABC"));
     }
 
 }

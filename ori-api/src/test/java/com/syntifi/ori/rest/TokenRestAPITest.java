@@ -28,70 +28,109 @@ public class TokenRestAPITest {
 
     @Test
     @Order(1)
-    public void createToken() throws Exception {
-        var token = new JsonObject();
-        token.put("symbol", "ABC");
-        token.put("name", "Token ABC");
-        token.put("protocol", "A");
+    public void createChain() throws Exception {
+        var chain = new JsonObject();
+        chain.put("name", "Chain");
         given()
-                .body(token.toString())
+                .body(chain.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
                 .when()
-                .post("/api/v2/token")
+                .post("/api/v3/chain")
                 .then()
                 .statusCode(200)
-                .body("created", equalTo("/token/ABC"));
+                .body("method", equalTo("POST"))
+                .body("uri", equalTo("/chain/Chain"));
     }
 
     @Test
     @Order(2)
-    public void testGetToken() {
+    public void createToken() throws Exception {
+        var token = new JsonObject();
+        token.put("symbol", "ABC");
+        token.put("name", "Token ABC");
         given()
+                .body(token.toString())
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
+                .pathParam("chain", "Chain")
                 .when()
-                .get("/api/v2/token/ABC")
+                .post("/api/v3/chain/{chain}/token")
                 .then()
                 .statusCode(200)
-                .body("symbol", equalTo("ABC"))
-                .body("name", equalTo("Token ABC"))
-                .body("protocol", equalTo("A"));
+                .body("method", equalTo("POST"))
+                .body("uri", equalTo("/chain/Chain/token/ABC"));
     }
 
     @Test
     @Order(3)
-    public void testGetTokens() {
+    public void testGetToken() {
         given()
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
                 .when()
-                .get("/api/v2/token")
+                .pathParam("chain", "Chain")
+                .pathParam("token", "ABC")
+                .get("/api/v3/chain/{chain}/token/{token}")
                 .then()
                 .statusCode(200)
-                .body("[0].symbol", equalTo("ABC"))
-                .body("[0].name", equalTo("Token ABC"))
-                .body("[0].protocol", equalTo("A"));
+                .body("symbol", equalTo("ABC"))
+                .body("name", equalTo("Token ABC"))
+                .body("chainName", equalTo("Chain"));
     }
 
     @Test
     @Order(4)
+    public void testGetTokens() {
+        given()
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                .pathParam("chain", "Chain")
+                .when()
+                .get("/api/v3/chain/{chain}/token")
+                .then()
+                .statusCode(200)
+                .body("[0].symbol", equalTo("ABC"))
+                .body("[0].name", equalTo("Token ABC"))
+                .body("[0].chainName", equalTo("Chain"));
+    }
+
+    @Test
+    @Order(5)
     public void testGetNonExistingToken() {
         given()
+                .pathParam("chain", "Chain")
+                .pathParam("token", "EFG")
                 .when()
-                .get("/api/v2/token/EFG")
+                .get("/api/v3/chain/{chain}/token/{token}")
                 .then()
                 .statusCode(404)
                 .body("error", equalTo("EFG not found"));
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     public void testDeleteToken() throws InterruptedException {
         given()
+                .pathParam("chain", "Chain")
+                .pathParam("token", "ABC")
                 .when()
                 .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
-                .delete("/api/v2/token/ABC")
+                .delete("/api/v3/chain/{chain}/token/{token}")
                 .then()
                 .statusCode(200)
                 .body("method", equalTo("DELETE"))
-                .body("uri", equalTo("/token/ABC"));
+                .body("uri", equalTo("/chain/Chain/token/ABC"));
+    }
+
+    @Test
+    @Order(7)
+    public void testDeleteChain() throws InterruptedException {
+        given()
+                .pathParam("chain", "Chain")
+                .when()
+                .header(HttpHeaders.ACCEPT, MediaType.MEDIA_TYPE_WILDCARD)
+                .delete("/api/v3/chain/{chain}")
+                .then()
+                .statusCode(200)
+                .body("method", equalTo("DELETE"))
+                .body("uri", equalTo("/chain/Chain"));
     }
 }

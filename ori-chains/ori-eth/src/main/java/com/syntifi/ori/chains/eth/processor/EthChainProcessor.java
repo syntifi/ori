@@ -11,7 +11,7 @@ import com.syntifi.ori.chains.base.model.OriData;
 import com.syntifi.ori.chains.base.processor.AbstractChainProcessor;
 import com.syntifi.ori.chains.eth.model.EthChainData;
 import com.syntifi.ori.dto.BlockDTO;
-import com.syntifi.ori.dto.TransactionDTO;
+import com.syntifi.ori.dto.TransferDTO;
 
 import org.springframework.stereotype.Component;
 import org.web3j.protocol.core.methods.response.EthBlock.TransactionObject;
@@ -50,9 +50,9 @@ public class EthChainProcessor extends AbstractChainProcessor<EthChainData> {
         result.setBlock(block);
 
         // Transfer processor
-        List<TransactionDTO> transfers = new LinkedList<>();
+        List<TransferDTO> transfers = new LinkedList<>();
         for (TransactionObject t : item.getChainTransfers()) {
-            TransactionDTO transfer = new TransactionDTO();
+            TransferDTO transfer = new TransferDTO();
             transfer.setTokenSymbol(oriChainConfigProperties.getChain().getTokenSymbol());
             transfer.setHash(t.getHash());
             transfer.setBlockHash(t.getBlockHash());

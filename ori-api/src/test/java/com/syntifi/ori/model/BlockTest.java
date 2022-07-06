@@ -35,7 +35,8 @@ public class BlockTest {
     public void testNullHash() {
         var block = new Block();
         var dad = new Block();
-        var token = new Token();
+        var chain = new Chain();
+        chain.setName("name");
         block.setEra(0L);
         block.setHash(null);
         block.setHeight(0L);
@@ -43,7 +44,7 @@ public class BlockTest {
         block.setTimeStamp(OffsetDateTime.now());
         block.setValidator("validator");
         block.setParent(dad);
-        block.setToken(token);
+        block.setChain(chain);
         Set<ConstraintViolation<Block>> constraintViolations = validator.validate(block);
         Assertions.assertEquals(1, constraintViolations.size());
     }
@@ -59,7 +60,7 @@ public class BlockTest {
         block.setTimeStamp(OffsetDateTime.now());
         block.setValidator("validator");
         block.setParent(dad);
-        block.setToken(null);
+        block.setChain(null);
         Set<ConstraintViolation<Block>> constraintViolations = validator.validate(block);
         Assertions.assertEquals(1, constraintViolations.size());
     }
@@ -67,7 +68,8 @@ public class BlockTest {
     @Test
     public void testNullParent() {
         var block = new Block();
-        var token = new Token();
+        var chain = new Chain();
+        chain.setName("name");
         block.setEra(0L);
         block.setHash("mockBlock0");
         block.setHeight(0L);
@@ -75,7 +77,7 @@ public class BlockTest {
         block.setTimeStamp(OffsetDateTime.now());
         block.setValidator("validator");
         block.setParent(null);
-        block.setToken(token);
+        block.setChain(chain);
         Set<ConstraintViolation<Block>> constraintViolations = validator.validate(block);
         Assertions.assertEquals(0, constraintViolations.size());
     }
@@ -84,7 +86,8 @@ public class BlockTest {
     public void testNotNullParent() {
         var parent = new Block();
         var child = new Block();
-        var token = new Token();
+        var chain = new Chain();
+        chain.setName("name");
         parent.setEra(0L);
         parent.setHash("mockBlock0");
         parent.setHeight(0L);
@@ -92,7 +95,7 @@ public class BlockTest {
         parent.setTimeStamp(OffsetDateTime.now());
         parent.setValidator("validator");
         parent.setParent(null);
-        parent.setToken(token);
+        parent.setChain(chain);
         child.setEra(0L);
         child.setHash("mockBlock1");
         child.setHeight(1L);
@@ -100,7 +103,7 @@ public class BlockTest {
         child.setTimeStamp(OffsetDateTime.now());
         child.setValidator("validator");
         child.setParent(parent);
-        child.setToken(token);
+        child.setChain(chain);
         Set<ConstraintViolation<Block>> constraintViolations = validator.validate(child);
         Assertions.assertEquals(0, constraintViolations.size());
     }

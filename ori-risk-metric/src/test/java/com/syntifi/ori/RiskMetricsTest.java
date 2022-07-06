@@ -4,7 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.syntifi.ori.dto.TransactionDTO;
+import com.syntifi.ori.dto.TransferDTO;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -23,10 +23,10 @@ public class RiskMetricsTest {
     public void testcalculateScores() {
         Double[] amount = { 5E3, 9.5E3, 8E3, 9.36E3, 7E3, 5E3, 0.1E3, 9.234E3, 9.6E3, 8E3 };
         var now = OffsetDateTime.now();
-        List<TransactionDTO> in = new LinkedList<>();
-        List<TransactionDTO> out = new LinkedList<>();
+        List<TransferDTO> in = new LinkedList<>();
+        List<TransferDTO> out = new LinkedList<>();
         for (int i = 0; i < amount.length; i++) {
-            var ini = new TransactionDTO();
+            var ini = new TransferDTO();
             ini.setAmount(amount[i]);
             ini.setFromHash("A");
             ini.setToHash("B");
@@ -35,7 +35,7 @@ public class RiskMetricsTest {
             ini.setHash("in" + ("" + i));
             ini.setTimeStamp(now.minusDays(10L - i));
             in.add(ini);
-            var outi = new TransactionDTO();
+            var outi = new TransferDTO();
             outi.setAmount(amount[i]);
             outi.setFromHash("A");
             outi.setToHash("B");

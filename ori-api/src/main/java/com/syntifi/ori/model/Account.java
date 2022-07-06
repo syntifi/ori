@@ -34,7 +34,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@IdClass(HashTokenId.class)
+@IdClass(HashChainId.class)
 public class Account extends PanacheEntityBase {
 
     @Id
@@ -43,9 +43,9 @@ public class Account extends PanacheEntityBase {
 
     @Id
     @NotNull
-    @MapsId("symbol")
+    @MapsId("name")
     @ManyToOne
-    private Token token;
+    private Chain chain;
 
     @Column(name = "public_key")
     private String publicKey;
@@ -53,8 +53,8 @@ public class Account extends PanacheEntityBase {
     private String label;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "fromAccount")
-    private Set<Transaction> out;
+    private Set<Transfer> out;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "toAccount")
-    private Set<Transaction> in;
+    private Set<Transfer> in;
 }

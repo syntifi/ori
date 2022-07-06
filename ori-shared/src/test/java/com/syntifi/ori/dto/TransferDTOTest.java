@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class TransactionDTOTest {
+public class TransferDTOTest {
     final static ObjectMapper mapper = new ObjectMapper();
 
     @Test
@@ -19,7 +19,7 @@ public class TransactionDTOTest {
         transaction.put("amount", 1234);
         transaction.put("blockHash", "block");
         var e = Assertions.assertThrows(Exception.class,
-                () -> mapper.readValue(transaction.toString(), TransactionDTO.class));
+                () -> mapper.readValue(transaction.toString(), TransferDTO.class));
         Assertions.assertTrue(e.getMessage().contains("Date"));
     }
 }

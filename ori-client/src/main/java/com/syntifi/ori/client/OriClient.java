@@ -3,10 +3,7 @@ package com.syntifi.ori.client;
 import java.util.List;
 
 import com.google.gson.JsonObject;
-import com.syntifi.ori.dto.AccountDTO;
-import com.syntifi.ori.dto.BlockDTO;
-import com.syntifi.ori.dto.TokenDTO;
-import com.syntifi.ori.dto.TransactionDTO;
+import com.syntifi.ori.dto.*;
 
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
@@ -20,28 +17,32 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
  */
 public interface OriClient {
 
-        public TokenDTO getToken(String tokenSymbol) throws WebClientResponseException;
+        public ChainDTO getChain(String chainName) throws WebClientResponseException;
 
-        public JsonObject postToken(TokenDTO token) throws WebClientResponseException;
+        public JsonObject postChain(ChainDTO chain) throws WebClientResponseException;
 
-        public BlockDTO getBlock(String tokenSymbol, String hash) throws WebClientResponseException;
+        public TokenDTO getToken(String chainName, String tokenName) throws WebClientResponseException;
 
-        public BlockDTO getLastBlock(String tokenSymbol) throws WebClientResponseException;
+        public JsonObject postToken(String chainName, TokenDTO token) throws WebClientResponseException;
 
-        public JsonObject postBlock(String tokenSymbol, BlockDTO block)
+        public BlockDTO getBlock(String chainName, String hash) throws WebClientResponseException;
+
+        public BlockDTO getLastBlock(String chainName) throws WebClientResponseException;
+
+        public JsonObject postBlock(String chainName, BlockDTO block)
                         throws WebClientResponseException;
 
-        public JsonObject postBlocks(String tokenSymbol, List<BlockDTO> blocks)
+        public JsonObject postBlocks(String chainName, List<BlockDTO> blocks)
                         throws WebClientResponseException;
 
-        public AccountDTO getAccount(String tokenSymbol, String hash) throws WebClientResponseException;
+        public AccountDTO getAccount(String chainName, String hash) throws WebClientResponseException;
 
-        public JsonObject postAccount(String tokenSymbol, AccountDTO account) throws WebClientResponseException;
+        public JsonObject postAccount(String chainName, AccountDTO account) throws WebClientResponseException;
 
-        public TransactionDTO getTransfer(String tokenSymbol, String hash) throws WebClientResponseException;
+        public TransferDTO getTransfer(String chainName, String hash) throws WebClientResponseException;
 
-        public JsonObject postTransfer(String tokenSymbol, TransactionDTO transfer) throws WebClientResponseException;
+        public JsonObject postTransfer(String chainName, TransferDTO transfer) throws WebClientResponseException;
 
-        public JsonObject postTransfers(String tokenSymbol, List<TransactionDTO> transfers)
+        public JsonObject postTransfers(String chainName, List<TransferDTO> transfers)
                         throws WebClientResponseException;
 }

@@ -5,14 +5,8 @@ import java.time.OffsetDateTime;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import com.syntifi.ori.model.Account;
-import com.syntifi.ori.model.Block;
-import com.syntifi.ori.model.Token;
-import com.syntifi.ori.model.Transaction;
-import com.syntifi.ori.repository.AccountRepository;
-import com.syntifi.ori.repository.BlockRepository;
-import com.syntifi.ori.repository.TokenRepository;
-import com.syntifi.ori.repository.TransactionRepository;
+import com.syntifi.ori.model.*;
+import com.syntifi.ori.repository.*;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -23,7 +17,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import io.quarkus.test.junit.QuarkusTest;
 
 /**
- * {@link TransactionService} tests
+ * {@link TransferService} tests
  * 
  * @author Alexandre Carvalho
  * @author Andre Bertolace
@@ -32,9 +26,9 @@ import io.quarkus.test.junit.QuarkusTest;
  */
 @QuarkusTest
 @TestMethodOrder(OrderAnnotation.class)
-public class TransactionServiceTest {
+public class TransferServiceTest {
         @Inject
-        TransactionRepository transactionRepository;
+        TransferRepository transferRepository;
 
         @Inject
         TokenRepository tokenRepository;
@@ -46,7 +40,10 @@ public class TransactionServiceTest {
         BlockRepository blockRepository;
 
         @Inject
-        TransactionService transactionService;
+        ChainRepository chainRepository;
+
+        @Inject
+        TransferService transferService;
 
         @Test
         @Order(1)
@@ -54,16 +51,18 @@ public class TransactionServiceTest {
                 var now = OffsetDateTime.now();
 
                 Assertions.assertEquals(0,
-                                transactionService.forwardGraphWalk("ABC", "from", now.minusHours(1), now).size());
+                                transferService.forwardGraphWalk("Chain", "from", now.minusHours(1), now).size());
                 Assertions.assertEquals(0,
-                                transactionService.reverseGraphWalk("ABC", "to", now.minusHours(1), now).size());
+                                transferService.reverseGraphWalk("Chain", "to", now.minusHours(1), now).size());
         }
 
         @Test
         @Transactional
         @Order(2)
         public void testNonEmptyDB() {
-                Token token = Token.builder().symbol("ABC").protocol("ABC").name("ABC").build();
+                Chain chain = Chain.builder().name("Chain").build();
+                Token token = Token.builder().symbol("ABC").chain(chain).name("ABC").build();
+                chainRepository.persistAndFlush(chain);
                 tokenRepository.persistAndFlush(token);
 
                 Block block = Block.builder()
@@ -74,16 +73,16 @@ public class TransactionServiceTest {
                                 .root("root")
                                 .validator("validator")
                                 .timeStamp(OffsetDateTime.now())
-                                .token(token)
+                                .chain(chain)
                                 .build();
                 blockRepository.persistAndFlush(block);
 
-                Account from = Account.builder().hash("from").label("label").publicKey("key").token(token).build();
-                Account to = Account.builder().hash("to").label("label").publicKey("key").token(token).build();
+                Account from = Account.builder().hash("from").label("label").publicKey("key").chain(chain).build();
+                Account to = Account.builder().hash("to").label("label").publicKey("key").chain(chain).build();
                 accountRepository.persistAndFlush(from);
                 accountRepository.persistAndFlush(to);
 
-                Transaction tx1 = Transaction.builder()
+                Transfer tx1 = Transfer.builder()
                                 .amount(10.)
                                 .block(block)
                                 .fromAccount(from)
@@ -92,7 +91,7 @@ public class TransactionServiceTest {
                                 .timeStamp(OffsetDateTime.now().minusSeconds(5))
                                 .hash("tx1")
                                 .build();
-                Transaction tx2 = Transaction.builder()
+                Transfer tx2 = Transfer.builder()
                                 .amount(5.)
                                 .block(block)
                                 .fromAccount(to)
@@ -101,21 +100,21 @@ public class TransactionServiceTest {
                                 .timeStamp(OffsetDateTime.now())
                                 .hash("tx2")
                                 .build();
-                transactionRepository.persistAndFlush(tx1);
-                transactionRepository.persistAndFlush(tx2);
+                transferRepository.persistAndFlush(tx1);
+                transferRepository.persistAndFlush(tx2);
 
                 var now = OffsetDateTime.now();
 
                 Assertions.assertEquals(2,
-                                transactionService.forwardGraphWalk("ABC", "from", now.minusHours(1), now).size());
+                                transferService.forwardGraphWalk("Chain", "from", now.minusHours(1), now).size());
                 Assertions.assertEquals(1,
-                                transactionService.reverseGraphWalk("ABC", "to", now.minusHours(1), now).size());
+                                transferService.reverseGraphWalk("Chain", "to", now.minusHours(1), now).size());
 
                 Assertions.assertEquals(0,
-                                transactionService.forwardGraphWalk("ABC", "from", now.minusHours(5), now.minusHours(2))
+                                transferService.forwardGraphWalk("Chain", "from", now.minusHours(5), now.minusHours(2))
                                                 .size());
                 Assertions.assertEquals(0,
-                                transactionService.reverseGraphWalk("ABC", "to", now.minusHours(5), now.minusHours(2))
+                                transferService.reverseGraphWalk("Chain", "to", now.minusHours(5), now.minusHours(2))
                                                 .size());
         }
 
@@ -125,15 +124,16 @@ public class TransactionServiceTest {
         public void testCleanDB() {
                 var now = OffsetDateTime.now();
 
-                transactionRepository.deleteAll();
+                transferRepository.deleteAll();
                 accountRepository.deleteAll();
                 blockRepository.deleteAll();
                 tokenRepository.deleteAll();
+                chainRepository.deleteAll();
 
                 Assertions.assertEquals(0,
-                                transactionService.forwardGraphWalk("ABC", "from", now.minusHours(1), now).size());
+                                transferService.forwardGraphWalk("Chain", "from", now.minusHours(1), now).size());
                 Assertions.assertEquals(0,
-                                transactionService.reverseGraphWalk("ABC", "to", now.minusHours(1), now).size());
+                                transferService.reverseGraphWalk("Chain", "to", now.minusHours(1), now).size());
         }
 
 }

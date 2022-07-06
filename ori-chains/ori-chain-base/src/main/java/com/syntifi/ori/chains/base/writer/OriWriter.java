@@ -8,7 +8,7 @@ import com.syntifi.ori.chains.base.exception.OriItemWriterException;
 import com.syntifi.ori.chains.base.model.OriData;
 import com.syntifi.ori.client.OriClient;
 import com.syntifi.ori.dto.AccountDTO;
-import com.syntifi.ori.dto.TransactionDTO;
+import com.syntifi.ori.dto.TransferDTO;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -119,7 +119,7 @@ public class OriWriter implements ItemWriter<OriData> {
     private void writeTransactions(List<? extends OriData> oriDataList) {
         for (OriData oriDataItem : oriDataList) {
             if (oriDataItem.getTransfers() != null) {
-                for (TransactionDTO transfer : oriDataItem.getTransfers()) {
+                for (TransferDTO transfer : oriDataItem.getTransfers()) {
                     writeAccount(transfer.getFromHash());
                     writeAccount(transfer.getToHash());
                     try {
