@@ -36,6 +36,7 @@ public class TokenTest {
         var chain = new Chain();
         chain.setName("chain");
         token.setName("name");
+        token.setUnit(1E-18);;
         token.setChain(chain);
         token.setSymbol(null);
         Set<ConstraintViolation<Token>> constraintViolations = validator.validate(token);
@@ -47,6 +48,7 @@ public class TokenTest {
         var token = new Token();
         var chain = new Chain();
         chain.setName("chain");
+        token.setUnit(1E-18);;
         token.setName(null);
         token.setChain(chain);
         token.setSymbol("SYM");
@@ -59,6 +61,20 @@ public class TokenTest {
         var token = new Token();
         token.setName("name");
         token.setChain(null);
+        token.setUnit(1E-18);;
+        token.setSymbol("SYM");
+        Set<ConstraintViolation<Token>> constraintViolations = validator.validate(token);
+        Assertions.assertEquals(1, constraintViolations.size());
+    }
+
+    @Test
+    public void testNullUnit() {
+        var token = new Token();
+        var chain = new Chain();
+        chain.setName("chain");
+        token.setName("name");
+        token.setChain(chain);
+        token.setUnit(null);;
         token.setSymbol("SYM");
         Set<ConstraintViolation<Token>> constraintViolations = validator.validate(token);
         Assertions.assertEquals(1, constraintViolations.size());
@@ -70,6 +86,7 @@ public class TokenTest {
         var chain = new Chain();
         chain.setName("chain");
         token.setName("name");
+        token.setUnit(1E-18);;
         token.setChain(chain);
         token.setSymbol("SYM");
         Set<ConstraintViolation<Token>> constraintViolations = validator.validate(token);

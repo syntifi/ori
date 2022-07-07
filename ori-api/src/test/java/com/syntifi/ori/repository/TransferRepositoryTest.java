@@ -125,7 +125,7 @@ public class TransferRepositoryTest {
         Chain chain = Chain.builder().name("Chain").build();
         chainRepository.persistAndFlush(chain);
 
-        Token token = Token.builder().symbol("ABC").chain(chain).name("ABC").build();
+        Token token = Token.builder().symbol("ABC").chain(chain).name("ABC").unit(1E-18).build();
         tokenRepository.persistAndFlush(token);
 
         Block block = Block.builder()

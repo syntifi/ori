@@ -44,6 +44,7 @@ public class TokenRespositoryTest {
         var token = new Token();
         token.setSymbol("SYM");
         token.setName("name");
+        token.setUnit(1E-18);
         var e = Assertions.assertThrowsExactly(ConstraintViolationException.class, () -> tokenRepository.check(token));
         Assertions.assertEquals(1, e.getConstraintViolations().size());
         List<String> violatedFields = e.getConstraintViolations().stream()
@@ -65,7 +66,7 @@ public class TokenRespositoryTest {
     @Order(3)
     public void testNonEmptyDB() {
         Chain chain = Chain.builder().name("CHAIN").build();
-        Token token = Token.builder().symbol("ABC").chain(chain).name("ABC").build();
+        Token token = Token.builder().symbol("ABC").chain(chain).name("ABC").unit(1E-18).build();
         chainRepository.persistAndFlush(chain);
         tokenRepository.persistAndFlush(token);
 

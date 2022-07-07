@@ -1,8 +1,5 @@
 package com.syntifi.ori.model;
 
-import java.math.BigInteger;
-import java.util.Set;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -41,8 +38,6 @@ public class Token extends PanacheEntityBase {
     private Chain chain;
 
     @NotNull
-    private Double quantization;
-
-
+    private Double unit;
 
 }

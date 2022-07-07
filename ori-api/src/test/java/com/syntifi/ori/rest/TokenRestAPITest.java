@@ -49,6 +49,7 @@ public class TokenRestAPITest {
         var token = new JsonObject();
         token.put("symbol", "ABC");
         token.put("name", "Token ABC");
+        token.put("unit", 1E-18);
         given()
                 .body(token.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
@@ -74,6 +75,7 @@ public class TokenRestAPITest {
                 .statusCode(200)
                 .body("symbol", equalTo("ABC"))
                 .body("name", equalTo("Token ABC"))
+                .body("unit", equalTo(1E-18F))
                 .body("chainName", equalTo("Chain"));
     }
 
@@ -89,6 +91,7 @@ public class TokenRestAPITest {
                 .statusCode(200)
                 .body("[0].symbol", equalTo("ABC"))
                 .body("[0].name", equalTo("Token ABC"))
+                .body("[0].unit", equalTo(1E-18F))
                 .body("[0].chainName", equalTo("Chain"));
     }
 

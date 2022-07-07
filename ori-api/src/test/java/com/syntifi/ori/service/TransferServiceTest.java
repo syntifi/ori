@@ -61,7 +61,7 @@ public class TransferServiceTest {
         @Order(2)
         public void testNonEmptyDB() {
                 Chain chain = Chain.builder().name("Chain").build();
-                Token token = Token.builder().symbol("ABC").chain(chain).name("ABC").build();
+                Token token = Token.builder().symbol("ABC").chain(chain).name("ABC").unit(1E-18).build();
                 chainRepository.persistAndFlush(chain);
                 tokenRepository.persistAndFlush(token);
 

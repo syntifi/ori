@@ -23,7 +23,7 @@ public class TokenMapper {
                 .symbol(model.getSymbol())
                 .name(model.getName())
                 .chainName(model.getChain().getName())
-                .quantization(model.getQuantization())
+                .unit(model.getUnit())
                 .build()
                 : DEFAULT_DTO_VALUE;
     }
@@ -33,7 +33,7 @@ public class TokenMapper {
         return Token.builder()
                 .symbol(dto.getSymbol())
                 .name(dto.getName())
-                .quantization(dto.getQuantization())
+                .unit(dto.getUnit())
                 .chain(chain)
                 .build();
     }

@@ -51,6 +51,7 @@ public class TransferMonitorRestAPITest {
         var token = new JsonObject();
         token.put("symbol", "ABC");
         token.put("name", "Token ABC");
+        token.put("unit", 1E-18);
         given()
                 .pathParam("chain", "Chain")
                 .body(token.toString())

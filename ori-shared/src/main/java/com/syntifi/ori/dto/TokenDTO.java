@@ -34,5 +34,5 @@ public class TokenDTO implements OriDTO {
     private String chainName;
 
     @NotNull
-    private BigInteger quantization;
+    private Double unit;
 }
