@@ -172,6 +172,14 @@ public class TransferRepository implements OriRepository<Transfer> {
         return find("token.chain.name", Sort.descending("time_stamp"), chainName);
     }
 
+    /**
+     * get all transfers in a given chain in the interval between [fromDate, toDate]
+     *
+     * @param chainName
+     * @param fromDate
+     * @param toDate
+     * @return
+     */
     public PanacheQuery<Transfer> getAllTransfers(String chainName,
                                                      OffsetDateTime fromDate,
                                                      OffsetDateTime toDate) {

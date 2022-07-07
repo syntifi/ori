@@ -1,6 +1,7 @@
 package com.syntifi.ori.repository;
 
 import com.syntifi.ori.model.Block;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Sort;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -54,8 +55,8 @@ public class BlockRepository implements OriRepository<Block> {
      * @param chainName
      * @return
      */
-    public List<Block> getBlocks(String chainName) {
-        return list("chain_name", Sort.descending("time_stamp"), chainName);
+    public PanacheQuery<Block> getAllBlocks(String chainName) {
+        return find("chain_name", Sort.descending("time_stamp"), chainName);
     }
 
     /**

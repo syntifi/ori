@@ -1,6 +1,8 @@
 package com.syntifi.ori.repository;
 
 import com.syntifi.ori.model.Token;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Sort;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.List;
@@ -29,14 +31,13 @@ public class TokenRepository implements OriRepository<Token> {
 
 
     /**
-     * Returns the token given its symbol
+     * Returns all tokens for a given chain
      *
      * @param chain
      * @return
      */
-    //TODO: pagination
-    public List<Token> findByChain(String chain) {
-        return list("chain_name", chain);
+    public PanacheQuery<Token> getAllTokens(String chain) {
+        return find("chain_name", Sort.ascending("chain_name", "name"), chain);
     }
 
     /**

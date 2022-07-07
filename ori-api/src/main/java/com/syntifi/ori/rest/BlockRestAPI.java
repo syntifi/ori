@@ -2,10 +2,12 @@ package com.syntifi.ori.rest;
 
 import com.syntifi.ori.dto.BlockDTO;
 import com.syntifi.ori.exception.ORIException;
+import com.syntifi.ori.mapper.AccountMapper;
 import com.syntifi.ori.mapper.BlockMapper;
 import com.syntifi.ori.model.Block;
 import com.syntifi.ori.repository.BlockRepository;
 import io.quarkus.arc.Unremovable;
+import io.quarkus.panache.common.Page;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.vertx.core.json.JsonObject;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -143,11 +145,18 @@ public class BlockRestAPI extends AbstractBaseRestApi {
      * @throws ORIException
      */
     @GET
-    public List<BlockDTO> getAllBlocks(@PathParam("chain") String chain) throws ORIException {
+    public List<BlockDTO> getAllBlocks(@PathParam("chain") String chain,
+                                       @DefaultValue("0") @QueryParam("page") int page,
+                                       @DefaultValue("25") @QueryParam("pagesSize") int pageSize) throws ORIException {
 
         getChainOr404(chain);
 
-        return blockRepository.getBlocks(chain).stream().map(BlockMapper::fromModel)
+
+        return blockRepository.getAllBlocks(chain)
+                .page(Page.of(page, pageSize))
+                .list()
+                .stream()
+                .map(BlockMapper::fromModel)
                 .collect(Collectors.toList());
     }
 

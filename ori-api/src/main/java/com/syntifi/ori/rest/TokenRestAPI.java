@@ -2,9 +2,11 @@ package com.syntifi.ori.rest;
 
 import com.syntifi.ori.dto.TokenDTO;
 import com.syntifi.ori.exception.ORIException;
+import com.syntifi.ori.mapper.AccountMapper;
 import com.syntifi.ori.mapper.TokenMapper;
 import com.syntifi.ori.model.Token;
 import io.quarkus.arc.Unremovable;
+import io.quarkus.panache.common.Page;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.vertx.core.json.JsonObject;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -69,8 +71,17 @@ public class TokenRestAPI extends AbstractBaseRestApi {
      * @return
      */
     @GET
-    public List<TokenDTO> getAllTokens(@PathParam("chain") String chain) {
-        return tokenRepository.findByChain(chain).stream().map(TokenMapper::fromModel)
+    public List<TokenDTO> getAllTokens(@PathParam("chain") String chain,
+                                       @DefaultValue("0") @QueryParam("page") int page,
+                                       @DefaultValue("25") @QueryParam("pagesSize") int pageSize) throws ORIException {
+
+        getChainOr404(chain);
+
+        return tokenRepository.getAllTokens(chain)
+                .page(Page.of(page, pageSize))
+                .list()
+                .stream()
+                .map(TokenMapper::fromModel)
                 .collect(Collectors.toList());
     }
 

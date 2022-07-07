@@ -4,8 +4,10 @@ package com.syntifi.ori.rest;
 import com.syntifi.ori.dto.ChainDTO;
 import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.mapper.ChainMapper;
+import com.syntifi.ori.mapper.TokenMapper;
 import com.syntifi.ori.model.Chain;
 import io.quarkus.arc.Unremovable;
+import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.vertx.core.json.JsonObject;
@@ -26,7 +28,6 @@ import java.util.stream.Collectors;
  *
  * @author Alexandre Carvalho
  * @author Andre Bertolace
- *
  * @since 0.2.0
  */
 @Singleton
@@ -66,8 +67,14 @@ public class ChainRestAPI extends AbstractBaseRestApi {
      * @return list of ChainDTOs
      */
     @GET
-    public List<ChainDTO> getAllChains() {
-        return chainRepository.listAll(Sort.ascending("name")).stream().map(ChainMapper::fromModel)
+    public List<ChainDTO> getAllChains(@DefaultValue("0") @QueryParam("page") int page,
+                                       @DefaultValue("25") @QueryParam("pagesSize") int pageSize) throws ORIException {
+
+        return chainRepository.getAllChains()
+                .page(Page.of(page, pageSize))
+                .list()
+                .stream()
+                .map(ChainMapper::fromModel)
                 .collect(Collectors.toList());
     }
 
@@ -84,9 +91,9 @@ public class ChainRestAPI extends AbstractBaseRestApi {
             Chain result = chainRepository.findByName(chain);
             return ChainMapper.fromModel(result);
         } catch (NoResultException e) {
-            throw new ORIException(chain+ " not found", Response.Status.NOT_FOUND);
+            throw new ORIException(chain + " not found", Response.Status.NOT_FOUND);
         } catch (NonUniqueResultException e) {
-            throw new ORIException(chain+ " not unique", Response.Status.INTERNAL_SERVER_ERROR);
+            throw new ORIException(chain + " not unique", Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 

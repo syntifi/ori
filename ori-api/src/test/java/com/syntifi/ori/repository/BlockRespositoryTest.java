@@ -8,7 +8,6 @@ import javax.transaction.Transactional;
 
 import com.syntifi.ori.model.Block;
 import com.syntifi.ori.model.Chain;
-import com.syntifi.ori.model.Token;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -53,7 +52,7 @@ public class BlockRespositoryTest {
         Assertions.assertThrowsExactly(NoResultException.class,
                 () -> blockRepository.findByChainNameAndHash("ABC", "Block"));
         Assertions.assertNull(blockRepository.getLastBlock("ABC"));
-        Assertions.assertEquals(0, blockRepository.getBlocks("ABC").size());
+        Assertions.assertEquals(0, blockRepository.getAllBlocks("ABC").page(0,25).list().size());
         Assertions.assertFalse(blockRepository.existsAnyByChain("ABC"));
     }
 
@@ -80,7 +79,7 @@ public class BlockRespositoryTest {
         Assertions.assertEquals(1, blockRepository.countByChainNameAndHash("CHAIN", "Block"));
         Assertions.assertNotNull(blockRepository.findByChainNameAndHash("CHAIN", "Block"));
         Assertions.assertNotNull(blockRepository.getLastBlock("CHAIN"));
-        Assertions.assertEquals(1, blockRepository.getBlocks("CHAIN").size());
+        Assertions.assertEquals(1, blockRepository.getAllBlocks("CHAIN").page(0,25).list().size());
         Assertions.assertTrue(blockRepository.existsAnyByChain("CHAIN"));
     }
 
@@ -96,7 +95,7 @@ public class BlockRespositoryTest {
         Assertions.assertThrowsExactly(NoResultException.class,
                 () -> blockRepository.findByChainNameAndHash("ABC", "Block"));
         Assertions.assertNull(blockRepository.getLastBlock("ABC"));
-        Assertions.assertEquals(0, blockRepository.getBlocks("ABC").size());
+        Assertions.assertEquals(0, blockRepository.getAllBlocks("ABC").page(0,25).list().size());
         Assertions.assertFalse(blockRepository.existsAnyByChain("ABC"));
     }
 

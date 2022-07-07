@@ -3,6 +3,8 @@ package com.syntifi.ori.repository;
 import javax.enterprise.context.ApplicationScoped;
 
 import com.syntifi.ori.model.Account;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Sort;
 
 /**
  * Ori Repository for {@link Account} model
@@ -14,6 +16,16 @@ import com.syntifi.ori.model.Account;
  */
 @ApplicationScoped
 public class AccountRepository implements OriRepository<Account> {
+
+    /**
+     *  get all accounts in a given chain
+     *
+     * @param chainName
+     * @return
+     */
+    public PanacheQuery<Account> getAllAccounts(String chainName) {
+        return find("chain_name", Sort.descending("hash"), chainName);
+    }
 
     /**
      * Find an account given it's PK (chain, hash)

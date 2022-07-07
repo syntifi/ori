@@ -1,6 +1,9 @@
 package com.syntifi.ori.repository;
 
 import com.syntifi.ori.model.Chain;
+import com.syntifi.ori.model.Token;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Sort;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -43,5 +46,15 @@ public class ChainRepository implements OriRepository<Chain> {
         //return list("select exists(select 1 from chain where name=:name)",
         //        Parameters.with("name", chainName)).size() > 0;
         return countByName(chainName) > 0;
+    }
+
+
+    /**
+     * Returns all chains
+     *
+     * @return
+     */
+    public PanacheQuery<Chain> getAllChains() {
+        return findAll(Sort.ascending("name"));
     }
 }

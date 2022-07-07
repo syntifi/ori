@@ -5,7 +5,7 @@ import com.syntifi.ori.exception.ORIException;
 import com.syntifi.ori.mapper.AccountMapper;
 import com.syntifi.ori.model.Account;
 import io.quarkus.arc.Unremovable;
-import io.quarkus.panache.common.Sort;
+import io.quarkus.panache.common.Page;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.vertx.core.json.JsonObject;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -75,11 +75,17 @@ public class AccountRestAPI extends AbstractBaseRestApi {
      * @throws ORIException
      */
     @GET
-    public List<AccountDTO> getAllAccounts(@PathParam("chain") String chain) throws ORIException {
+    public List<AccountDTO> getAllAccounts(@PathParam("chain") String chain,
+                                           @DefaultValue("0") @QueryParam("page") int page,
+                                           @DefaultValue("25") @QueryParam("pagesSize") int pageSize) throws ORIException {
 
         getChainOr404(chain);
 
-        return accountRepository.listAll(Sort.descending("hash")).stream().map(AccountMapper::fromModel)
+        return accountRepository.getAllAccounts(chain)
+                .page(Page.of(page, pageSize))
+                .list()
+                .stream()
+                .map(AccountMapper::fromModel)
                 .collect(Collectors.toList());
     }
 
